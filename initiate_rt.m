@@ -42,7 +42,7 @@ function [mainWindow windowSize colors device trigger workingDir logName matlabS
     %% find working dir (figure out which computer we're using)
     try %work computer
         ls('/Volumes/Macintosh HD/Users/amennen/Documents/Norman/MOT/motStudy03/');
-        workingDir = '/Volumes/Macintosh HD/Users/amennen/Documents/Norman/MOT/motStudy03/';
+        workingDir = '/Volumes/Macintosh HD/Users/amennen/Documents/Norman/MOT/motStudy04/';
         windowSize.degrees = [35 30];
         [keyboardIndices, productNames, allInfos] = GetKeyboardIndices;
         device = keyboardIndices(find(strcmp(productNames, '')));
@@ -50,7 +50,7 @@ function [mainWindow windowSize colors device trigger workingDir logName matlabS
     catch
         try % my laptop
             ls('/Users/amennen/mot_study')
-            workingDir = '/Users/amennen/motStudy03/';
+            workingDir = '/Users/amennen/motStudy04/';
             windowSize.degrees = [35 30];
         catch
             try  %computer testing room
@@ -61,7 +61,7 @@ function [mainWindow windowSize colors device trigger workingDir logName matlabS
                 catch
                     try %Skyra
                         ls('/Data1/code/motStudy03/')
-                        workingDir = '/Data1/code/motStudy03/code/';
+                        workingDir = '/Data1/code/motStudy04/code/';
                         fmri  = 1;
                         % special scanner keypress input
 %                         if debug_mode
@@ -132,6 +132,6 @@ function [mainWindow windowSize colors device trigger workingDir logName matlabS
 
 
     % matlab save file
-    matlabSaveFile = ['mot_realtime02_' num2str(subject) '_' num2str(session) '_' datestr(now,'ddmmmyy_HHMM') '.mat'];
+    matlabSaveFile = ['mot_realtime04_' num2str(subject) '_' num2str(session) '_' datestr(now,'ddmmmyy_HHMM') '.mat'];
 
 return

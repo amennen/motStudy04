@@ -1,4 +1,4 @@
-% syntax: mot_realtime02(SUBJECT,SESSION,SET_SPEED,scanNum,scanNow)
+% syntax: mot_realtime04(SUBJECT,SESSION,SET_SPEED,scanNum,scanNow)
 %
 % This is an implementation of a MOT memory experiment designed to
 % reactivate memory, adapted from a study by Ken Norman and J. Poppenk. I
@@ -12,7 +12,7 @@
 
 %%
 
-function mot_realtime02(SUBJECT,SESSION,SET_SPEED,scanNum,scanNow)
+function mot_realtime04(SUBJECT,SESSION,SET_SPEED,scanNum,scanNow)
 
 %SUBJECT: Subject number
 %SESSION: task that they're going to do (listed below)
@@ -32,7 +32,7 @@ COLORS.BGCOLOR = [50 50 50];
 WRAPCHARS = 70;
 %HideCursor;
 %% INITIALIZE EXPERIMENT
-NUM_TASK_RUNS = 3;
+NUM_TASK_RUNS = 4;
 % orientation session
 SETUP = 1; % stimulus assignment 1
 FAMILIARIZE = SETUP + 1; % rsvp study learn associates 2
@@ -63,8 +63,8 @@ for i=1:NUM_TASK_RUNS
     counter = counter + 1;
 end
 RECALL2 = MOT{end} + 1; % post-scan rsvp memory test
-ASSOCIATES = RECALL2 + 1; %25
-RATESIMILAR = ASSOCIATES + 1; %so would be 26
+DESCRIPTION = RECALL2 + 1; %25
+ASSOCIATES = DESCRIPTION + 1;
 %ANATOMICAL_PREP = ASSOCIATES + 1;
 % name strings
 SESSIONSTRINGS{SETUP} = 'GENERATE PAIRINGS'; % set up rsvp study learn associates
@@ -95,6 +95,7 @@ end
 SESSIONSTRINGS{RECALL_PRACTICE} = 'DELIBERATE RECALL PRACTICE'; % get used to task during anatomical
 SESSIONSTRINGS{RECALL1} = 'RECALL1'; % baseline recollection, used to train recollection classifier
 SESSIONSTRINGS{RECALL2} = 'RECALL2'; % post-test recollection, used to measure effectiveness of manipulation
+SESSIONSTRINGS{DESCRIPTION} = 'TYPING IMAGE DESCRIPTIONS'; 
 SESSIONSTRINGS{ASSOCIATES} = 'ASSOCIATES TASK'; % face-scene classification
 SESSIONSTRINGS{RATESIMILAR} = 'RATE IMAGE SIMILARITY';
 %SESSIONSTRINGS{ANATOMICAL_PREP} = 'ANATOMICAL PREP'; %prepping for first scan
@@ -146,7 +147,7 @@ documents_path = WORKING_DIR;
 %     documents_path = ['/Data1/code/motStudy01/'];
 % end
 data_dir = fullfile(documents_path, 'BehavioralData');
-dicom_dir = fullfile('/Data1/code/motStudy03/', 'data', SUBJ_NAME); %where all the dicom information is FOR THAT SUBJECT
+dicom_dir = fullfile('/Data1/code/motStudy04/', 'data', SUBJ_NAME); %where all the dicom information is FOR THAT SUBJECT
 if SESSION >= MOT{1}
     runNum = SESSION - MOT{1} + 1;
     classOutputDir = fullfile(dicom_dir,['motRun' num2str(runNum)], 'classOutput/');
@@ -154,7 +155,7 @@ end
 if ~exist(data_dir,'dir'), mkdir(data_dir); end
 ppt_dir = [data_dir filesep SUBJ_NAME filesep];
 if ~exist(ppt_dir,'dir'), mkdir(ppt_dir); end
-base_path = [fileparts(which('mot_realtime02.m')) filesep];
+base_path = [fileparts(which('mot_realtime04.m')) filesep];
 MATLAB_SAVE_FILE = [ppt_dir MATLAB_SAVE_FILE];
 LOG_NAME = [ppt_dir LOG_NAME];
 
@@ -290,7 +291,7 @@ LEARN = 6;
 LOC = 7;
 
 % stimulus filepaths
-MATLAB_STIM_FILE = [ppt_dir 'mot_realtime02_subj_' num2str(SUBJECT) '_stimAssignment.mat'];
+MATLAB_STIM_FILE = [ppt_dir 'mot_realtime04_subj_' num2str(SUBJECT) '_stimAssignment.mat'];
 CUELISTFILE_TARGETS = [base_path 'stimuli/text/wordpool_ONLYTARGETS.txt']; %changed for subject 15 just to be sure that the words for practice aren't going to be assigned to more people!
 TRAININGCUELIST = [base_path 'stimuli/text/wordpool_targets_training.txt'];
 CUETARGETFILE = [base_path 'stimuli/text/ed_plants.txt'];
@@ -425,13 +426,13 @@ switch SESSION
         stimmap = makeMap(preparedCues);
         
         % clean up
-        system(['cp ' base_path 'mot_realtime02.m ' ppt_dir 'mot_realtime02_executed.m']);
+        system(['cp ' base_path 'mot_realtime04.m ' ppt_dir 'mot_realtime04_executed.m']);
         save(MATLAB_STIM_FILE, 'cues','preparedCues','pics','pairIndex','lureWords','recogLures','stimmap', 'trainWords', 'trainPics');
         
         if previousYC
-            mot_realtime02(SUBJECT,FAMILIARIZE2,SET_SPEED,scanNum,scanNow);
+            mot_realtime04(SUBJECT,FAMILIARIZE2,SET_SPEED,scanNum,scanNow);
         else
-            mot_realtime02(SUBJECT,SESSION+1,SET_SPEED,scanNum,scanNow);
+            mot_realtime04(SUBJECT,SESSION+1,SET_SPEED,scanNum,scanNow);
         end
         
         
@@ -568,7 +569,7 @@ switch SESSION
         % return
         sca
         if SESSION ~= STIM_REFRESH
-            mot_realtime02(SUBJECT,SESSION+1,SET_SPEED,scanNum,scanNow); %don't continue if just refreshing on laptop
+            mot_realtime04(SUBJECT,SESSION+1,SET_SPEED,scanNum,scanNow); %don't continue if just refreshing on laptop
         end
         %% 2. LEARN TO CRITERION
     case {TOCRITERION1, TOCRITERION2, TOCRITERION2_REP, TOCRITERION3}
@@ -881,7 +882,7 @@ switch SESSION
         %return
         %normally would go to session 4 but instead we want to go to
         if SESSION ~= TOCRITERION3
-            mot_realtime02(SUBJECT,SESSION+1,SET_SPEED,scanNum,scanNow);
+            mot_realtime04(SUBJECT,SESSION+1,SET_SPEED,scanNum,scanNow);
         end
         
         %% 3. PRE/POST MEMORY TEST
@@ -889,7 +890,6 @@ switch SESSION
         % stimulus presentation parameters
         stim.promptDur = 8*SPEED; % cue word alone
         stim.prepDur = 2*SPEED;
-        stim.recordDur = 16*SPEED; % cue for multi choice
         stim.isiDuration = 4*SPEED; %
         stim.fixBlock = 20*SPEED;
         num_digit_qs = 3;
@@ -919,12 +919,7 @@ switch SESSION
             'adjust your rating based on how sure you are it''s the correct scene. Please make your rating based only on how much scene detail comes to you, ' ...
             'ignoring other mental imagery (e.g., you pictured a beach). You will use the provided rating scale to indicate details, using all five fingers on the key pad.'...
             '\n\n---- Press ' PROGRESS_TEXT ' once you understand these instructions,\n then press it again when you are done viewing the rating scale ---'];
-        stim.instruct3 = ['After the rating, you will verbally describe your mental image. A green cross will appear, signalling that '...
-            'the recording is beginning. You will have ' num2str(stim.recordDur) ' seconds to give as detailed an explanation '...
-            'as possible. Try your best to use the whole ' num2str(stim.recordDur) ' seconds to share your mental picture! \n\nMake sure to only describe the image itself, '...
-            'instead of how it related to the matching word. Your description should be detailed enough for someone else to identify the image against similar scenes. \n\n' ...
-            'Finally, you will be prompted to answer a series of odd-even questions in each trial (THUMB for even, PINKY for odd).' ...
-            final_instruct_continue];
+        
         
         
         % initialize stimulus order with initial warmup item
@@ -977,9 +972,9 @@ switch SESSION
         keymap_prompt = Screen('MakeTexture', mainWindow, keymap_image);
         Screen('DrawTexture',mainWindow,keymap_prompt,[],[],[]); %[0 0 keymap_dims],[topLeft topLeft+keymap_dims]);
         Screen('Flip',mainWindow);
-        waitForKeyboard(kbTrig_keycode,DEVICE);
-        displayText(mainWindow,stim.instruct3,minimumDisplay,'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
         stim.subjStartTime = waitForKeyboard(kbTrig_keycode,DEVICE);
+        %displayText(mainWindow,stim.instruct3,minimumDisplay,'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
+        %stim.subjStartTime = waitForKeyboard(kbTrig_keycode,DEVICE);
         
         %last instructions
         if SESSION == RECALL_PRACTICE
@@ -1034,21 +1029,16 @@ switch SESSION
         config.nTRs.ISI = stim.isiDuration/stim.TRlength;
         config.nTRs.prompt = stim.promptDur/stim.TRlength;
         config.nTRs.vis = subj_promptDur/stim.TRlength;
-        config.nTRs.prep = stim.prepDur/stim.TRlength;
-        config.nTRs.record = stim.recordDur/stim.TRlength;
         config.nTRs.math = (num_digit_qs*(digits_promptDur + digits_isi))/stim.TRlength;
         config.nTrials = length(stim.stim);
-        config.nTRs.perTrial = (config.nTRs.ISI + config.nTRs.prompt + config.nTRs.vis + ...
-            config.nTRs.prep + config.nTRs.record + config.nTRs.math);
+        config.nTRs.perTrial = (config.nTRs.ISI + config.nTRs.prompt + config.nTRs.vis + config.nTRs.math);
         config.nTRs.perBlock = config.wait/config.TR + (config.nTRs.perTrial)*config.nTrials+ config.nTRs.ISI; %includes the last ISI
         
         % calculate all future onsets
         timing.plannedOnsets.preITI(1:config.nTrials) = runStart + config.wait + ((0:config.nTrials-1)*config.nTRs.perTrial)*config.TR;
         timing.plannedOnsets.prompt(1:config.nTrials) = timing.plannedOnsets.preITI + config.nTRs.ISI*config.TR;
         timing.plannedOnsets.vis(1:config.nTrials) = timing.plannedOnsets.prompt + config.nTRs.prompt*config.TR;
-        timing.plannedOnsets.prep(1:config.nTrials) = timing.plannedOnsets.vis + config.nTRs.vis*config.TR;
-        timing.plannedOnsets.record(1:config.nTrials) = timing.plannedOnsets.prep + config.nTRs.prep*config.TR;
-        timing.plannedOnsets.math(1:config.nTrials) = timing.plannedOnsets.record + config.nTRs.record*config.TR;
+        timing.plannedOnsets.math(1:config.nTrials) = timing.plannedOnsets.vis + config.nTRs.vis*config.TR;
         timing.plannedOnsets.lastITI = timing.plannedOnsets.math(end) + config.nTRs.math*config.TR;%%make sure it pauses for this one
         
         cresp = keyCell(3:5);
@@ -1095,24 +1085,7 @@ switch SESSION
                 'cond', stim.cond(stim.trial), ...
                 'cresp', cresp, 'cresp_map', cresp_map, 'valid_map', subj_map);
             
-            %display prep screen for recording
-            if CURRENTLY_ONLINE && SESSION > TOCRITERION3
-                [timing.trig.prep(n), timing.trig.prep_Success(n)] = WaitTRPulse(TRIGGER_keycode,DEVICE,timing.plannedOnsets.prep(n));
-            end
-            timespec = timing.plannedOnsets.prep(n) - SLACK;
-            timing.actualOnsets.prep(n) = displayText_specific(mainWindow,'+','center',COLORS.MAINFONTCOLOR,WRAPCHARS,timespec);
-            fprintf('Flip time error = %.4f\n', timing.actualOnsets.prep(n)-timing.plannedOnsets.prep(n));
-            DrawFormattedText(mainWindow,'+','center','center',COLORS.GREEN,WRAPCHARS);
-            
-            %display green and start recording
-            if CURRENTLY_ONLINE && SESSION > TOCRITERION3
-                [timing.trig.record(n), timing.trig.record_Success(n)] = WaitTRPulse(TRIGGER_keycode,DEVICE,timing.plannedOnsets.record(n));
-            end
-            timespec = timing.plannedOnsets.record(n)-SLACK;
-            timing.actualOnsets.record(n) = Screen('Flip',mainWindow,timespec);
-            fprintf('Flip time error = %.4f\n', timing.actualOnsets.record(n)-timing.plannedOnsets.record(n));
-            wavfilename{n} = [ppt_dir 'SESSION_' num2str(SESSION) '_trial_' num2str(n) '.wav'];
-            audiodata{n} = recordaudio(timing.actualOnsets.record(n),stim.recordDur,look);
+           
             %endrecord = GetSecs;
             %display even/odd
             if CURRENTLY_ONLINE && SESSION > TOCRITERION3
@@ -1133,10 +1106,257 @@ switch SESSION
         timing.actualOnsets.lastITI = isi_specific(mainWindow,COLORS.MAINFONTCOLOR,timespec);
         fprintf('Flip time error = %.4f\n', timing.actualOnsets.lastITI-timing.plannedOnsets.lastITI);
         
-        %save all wave files
-        for i = 1:n
-            audiowrite(wavfilename{i}, audiodata{i}, 44100);
+        if GetSecs - timing.actualOnsets.lastITI < 2
+            WaitSecs(2 - (GetSecs - timing.actualOnsets.lastITI));
         end
+        %wait in scanner at end of run
+        if CURRENTLY_ONLINE && SESSION > TOCRITERION3
+            WaitSecs(10);
+        end
+        
+        % clean up
+        save(MATLAB_SAVE_FILE,'stim', 'timing', 'config');
+        
+        printlog(LOG_NAME,['\n\nSESSION ' int2str(SESSION) ' ended ' datestr(now) ' for SUBJECT number ' int2str(SUBJECT) '\n\n']);
+        
+        if SESSION == RECALL2
+            endSession(subjectiveEK,'Congratulations, you have completed the scan! All that is left is a short test outside the scanner. We will come and get you out in just a moment.');
+        elseif SESSION == RECALL_PRACTICE
+            endSession(subjectiveEK, 'Congratulations, you have completed the practice tasks!');
+        else
+            endSession(subjectiveEK, CONGRATS)
+        end
+        sca
+           %% 4. Typing description task
+    case {DESCRIPTION}
+        % stimulus presentation parameters
+        stim.promptDur = 8*SPEED; % cue word alone
+        stim.prepDur = 2*SPEED;
+        stim.isiDuration = 4*SPEED; %
+        stim.fixBlock = 20*SPEED;
+        num_digit_qs = 3;
+        digits_promptDur = 1.9*SPEED;
+        digits_isi = 0.1*SPEED;
+        digits_triggerNext = false;
+        minimal_format = true;
+        stim.TRlength = 2;
+        subj_triggerNext = false;
+        keymap_image = imread(KEY_MAPPING);
+        subj_promptDur = 4 * SPEED;
+        subj_listenDur = 0 * SPEED;
+        % stimulus data fields
+        stim.triggerCounter = 1;
+        stim.missedTriggers = 0;
+        PROGRESS_TEXT = 'INDEX';
+        
+        
+        % all the instructions
+        stim.instruct1 = ['MENTAL PICTURES TASK\n\nThis is a memory test, though it is not multiple choice anymore. When a word appears, picture the scene it names as vividly as if you were looking ' ...
+            'at it now. Picture its objects, features, and anything else you can imagine. HOLD the image, letting it continue to mature ' ...
+            'and take shape for the entire ' num2str(stim.promptDur) ' seconds it is on the screen. Don''t let it fade, and don''t let ' ...
+            'yourself "space out". It is essential you actually do this!\n\n' ...
+            '-- Press ' PROGRESS_TEXT ' once you understand these instructions --'];
+        stim.instruct2 = ['After you have had several seconds to form an image, we will ask you how detailed it was. This rating is not a "test": ' ...
+            'we want to understand your real experience, even if no image formed when you felt you SHOULD have had one. Similarly, you should not ' ...
+            'adjust your rating based on how sure you are it''s the correct scene. Please make your rating based only on how much scene detail comes to you, ' ...
+            'ignoring other mental imagery (e.g., you pictured a beach). You will use the provided rating scale to indicate details, using all five fingers on the key pad.'...
+            '\n\n---- Press ' PROGRESS_TEXT ' once you understand these instructions,\n then press it again when you are done viewing the rating scale ---'];
+        
+        
+        % let's have the first three trials be practice ones
+        % prepare counterbalanced trial sequence (at most 2 in a row)
+        [stim.cond stim.condString stim.describe] = counterbalance_items({cues{STIMULI}{REALTIME}{1}, cues{STIMULI}{OMIT}{1}},CONDSTRINGS);
+        stim.describe = [recogLures(1:3) stim.describe];
+        stim.cond = [PRACTICE PRACTICE PRACTICE stim.cond];
+        stim.condString = [CONDSTRINGS{PRACTICE} CONDSTRINGS{PRACTICE} CONDSTRINGS{PRACTICE} stim.condString];
+        % initialize stimulus order with initial warmup item
+        if SESSION == RECALL_PRACTICE
+            stim.stim = cues{STIMULI}{LEARN}{1}(1:3);
+            stim.cond = [PRACTICE, PRACTICE, PRACTICE];
+            condmap = makeMap({'PRACTICE'});
+            stim.condString = {CONDSTRINGS{PRACTICE}, CONDSTRINGS{PRACTICE}, CONDSTRINGS{PRACTICE}};
+            displayText(mainWindow,['MENTAL PICTURES TASK - PRACTICE\n\nThis is a memory test with some differences ' ...
+                'from earlier: you will get only one try per item, there is no feedback, and you will verbally recall the scenes instead of choosing the correct option.' ...
+                'Please carefully review today''s instructions, since many things have ' ...
+                'changed and it is important you follow them exactly.\n\n' ...
+                '-- Please press ' PROGRESS_TEXT ' to briefly review the instructions --'],minimumDisplay,'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
+            waitForKeyboard(kbTrig_keycode,DEVICE);
+        else
+            [stim.cond stim.condString stim.stim] = counterbalance_items({cues{STIMULI}{REALTIME}{1}, cues{STIMULI}{OMIT}{1}},CONDSTRINGS);
+            condmap = makeMap({'realtime','omit'});
+            if SESSION ==RECALL1
+                displayText(mainWindow,['The experiment will now ONLY involve the stimuli that you studied yesterday, both ' ...
+                    'for this next task and the rest of the experiment.\n\n' ...
+                    '-- Please press ' PROGRESS_TEXT ' to read the instructions for your next task --'],minimumDisplay,'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
+                waitForKeyboard(kbTrig_keycode,DEVICE);
+            end
+            if SESSION == RECALL2
+                displayText(mainWindow,['MENTAL PICTURES TASK\n\nThe format of this task is the same as earlier in today''s session.\n\n' ...
+                    '-- Please press ' PROGRESS_TEXT ' to briefly review the instructions again --'],minimumDisplay,'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
+                waitForKeyboard(kbTrig_keycode,DEVICE);
+            end
+        end
+        
+        %generate stimulus ID's first so can add them easily
+        for i = 1:length(stim.cond)
+            if SESSION == RECALL_PRACTICE
+                pos = find(strcmp(cues{STIMULI}{LEARN}{1},stim.stim{i}));
+                stim.id(i) = pos;
+            else
+                pos = find(strcmp(preparedCues,stim.stim{i}));
+                stim.id(i) = pos;
+            end
+        end
+        
+        % display instructions
+        DrawFormattedText(mainWindow,' ','center','center',COLORS.MAINFONTCOLOR,WRAPCHARS);
+        displayText(mainWindow,stim.instruct1,minimumDisplay,'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
+        waitForKeyboard(kbTrig_keycode,DEVICE);
+        displayText(mainWindow,stim.instruct2,minimumDisplay,'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
+        
+        waitForKeyboard(kbTrig_keycode,DEVICE);
+        keymap_image = imread(KEY_MAPPING);
+        keymap_prompt = Screen('MakeTexture', mainWindow, keymap_image);
+        Screen('DrawTexture',mainWindow,keymap_prompt,[],[],[]); %[0 0 keymap_dims],[topLeft topLeft+keymap_dims]);
+        Screen('Flip',mainWindow);
+        stim.subjStartTime = waitForKeyboard(kbTrig_keycode,DEVICE);
+        %displayText(mainWindow,stim.instruct3,minimumDisplay,'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
+        %stim.subjStartTime = waitForKeyboard(kbTrig_keycode,DEVICE);
+        
+        %last instructions
+        if SESSION == RECALL_PRACTICE
+            displayText(mainWindow,['To help you get used to the feel of this task, we will ' ...
+                'now give you three practice words.\n\n' ...
+                '-- Press ' PROGRESS_TEXT ' to begin once you understand these instructions --'], ...
+                minimumDisplay,'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
+            stim.subjStartTime = waitForKeyboard(kbTrig_keycode,DEVICE);
+        end
+        
+        if CURRENTLY_ONLINE && SESSION > TOCRITERION3
+            DrawFormattedText(mainWindow,'Waiting for scanner start, hold tight!','center','center',COLORS.MAINFONTCOLOR,WRAPCHARS);
+            Screen('Flip', mainWindow);
+        end
+        
+        subjectiveEK = initEasyKeys([exp_string_long '_SUB'], SUBJ_NAME,ppt_dir, ...
+            'default_respmap', subj_scale, ...
+            'stimmap', stimmap, ...
+            'condmap', condmap, ...
+            'trigger_next', subj_triggerNext, ...
+            'prompt_dur', subj_promptDur, ...
+            'listen_dur', subj_listenDur, ...
+            'exp_onset', stim.subjStartTime, ...
+            'console', false, ...
+            'device', DEVICE);
+        
+        digits_scale = makeMap({'even','odd'},[0 1],keyCell([1 5]));
+        condmap = makeMap({'even','odd'});
+        digitsEK = initEasyKeys('odd_even', SUBJ_NAME, ppt_dir,...
+            'default_respmap', digits_scale, ...
+            'condmap', condmap, ...
+            'trigger_next', digits_triggerNext, ...
+            'prompt_dur', digits_promptDur, ...
+            'device', DEVICE);
+        
+        [subjectiveEK] = startSession(subjectiveEK);
+        
+        % fixation period for 20 s
+        if CURRENTLY_ONLINE && SESSION > TOCRITERION3
+            [timing.trig.wait timing.trig.waitSuccess] = WaitTRPulse(TRIGGER_keycode,DEVICE);
+            runStart = timing.trig.wait;
+            displayText(mainWindow,STILLREMINDER,STILLDURATION,'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
+            DrawFormattedText(mainWindow,'+','center','center',COLORS.MAINFONTCOLOR,WRAPCHARS);
+            Screen('Flip', mainWindow)
+            config.wait = stim.fixBlock; % stim.fixation - 20 s? so 10 TRs
+        else
+            runStart = GetSecs;
+            config.wait = 0;
+        end
+        
+        
+        % want: cued word then window to type description
+        % then math, ISI
+        % for all stimuli
+        config.TR = stim.TRlength;
+        config.nTRs.ISI = stim.isiDuration/stim.TRlength;
+        config.nTRs.prompt = stim.promptDur/stim.TRlength;
+        config.nTRs.vis = subj_promptDur/stim.TRlength;
+        config.nTRs.math = (num_digit_qs*(digits_promptDur + digits_isi))/stim.TRlength;
+        config.nTrials = length(stim.stim);
+        config.nTRs.perTrial = (config.nTRs.ISI + config.nTRs.prompt + config.nTRs.vis + config.nTRs.math);
+        config.nTRs.perBlock = config.wait/config.TR + (config.nTRs.perTrial)*config.nTrials+ config.nTRs.ISI; %includes the last ISI
+        
+        % calculate all future onsets
+        timing.plannedOnsets.preITI(1:config.nTrials) = runStart + config.wait + ((0:config.nTrials-1)*config.nTRs.perTrial)*config.TR;
+        timing.plannedOnsets.prompt(1:config.nTrials) = timing.plannedOnsets.preITI + config.nTRs.ISI*config.TR;
+        timing.plannedOnsets.vis(1:config.nTrials) = timing.plannedOnsets.prompt + config.nTRs.prompt*config.TR;
+        timing.plannedOnsets.math(1:config.nTrials) = timing.plannedOnsets.vis + config.nTRs.vis*config.TR;
+        timing.plannedOnsets.lastITI = timing.plannedOnsets.math(end) + config.nTRs.math*config.TR;%%make sure it pauses for this one
+        
+        cresp = keyCell(3:5);
+        cresp_map = sum(keys.map(3:5,:));
+        
+        stimID = stim.id;
+        stimCond = stim.cond;
+        sessionInfoFile = fullfile(ppt_dir, ['SessionInfo' '_' num2str(SESSION)]);
+        save(sessionInfoFile, 'stimCond','stimID', 'timing', 'config'); 
+        
+        for n = 1:length(stim.stim)
+            % initialize trial and show cue
+            stim.trial = n;
+            fprintf(['Trial number: ' num2str(n) '\n']);
+            
+            %show pre ITI
+            if CURRENTLY_ONLINE && SESSION > TOCRITERION3
+                [timing.trig.preITI(n), timing.trig.preITI_Success(n)] = WaitTRPulse(TRIGGER_keycode,DEVICE,timing.plannedOnsets.preITI(n));
+            end
+            timespec = timing.plannedOnsets.preITI(n) - SLACK;
+            timing.actualOnsets.preITI(n) = isi_specific(mainWindow,COLORS.MAINFONTCOLOR,timespec);
+            fprintf('Flip time error = %.4f\n', timing.actualOnsets.preITI(n) - timing.plannedOnsets.preITI(n));
+            
+            %display word
+            if CURRENTLY_ONLINE && SESSION > TOCRITERION3
+                [timing.trig.prompt(n), timing.trig.prompt_Success(n)] = WaitTRPulse(TRIGGER_keycode,DEVICE,timing.plannedOnsets.prompt(n));
+            end
+            timespec = timing.plannedOnsets.prompt(n)-SLACK;
+            timing.actualOnsets.prompt(n) = displayText_specific(mainWindow,stim.stim{stim.trial},'center',COLORS.MAINFONTCOLOR,WRAPCHARS,timespec);
+            fprintf('Flip time error = %.4f\n', timing.actualOnsets.prompt(n) - timing.plannedOnsets.prompt(n));
+            
+            %display visualization score
+            keymap_prompt = Screen('MakeTexture', mainWindow, keymap_image);
+            Screen('DrawTexture',mainWindow,keymap_prompt,[],[],[]); %[0 0 keymap_dims],[topLeft topLeft+keymap_dims]);
+            if CURRENTLY_ONLINE && SESSION > TOCRITERION3
+                [timing.trig.vis(n), timing.trig.vis_Success(n)] = WaitTRPulse(TRIGGER_keycode,DEVICE,timing.plannedOnsets.vis(n));
+            end
+            timespec = timing.plannedOnsets.vis(n) - SLACK;
+            timing.actualOnsets.vis(n) = Screen('Flip',mainWindow,timespec);
+            fprintf('Flip time error = %.4f\n', timing.actualOnsets.vis(n)-timing.plannedOnsets.vis(n));
+            subjectiveEK = easyKeys(subjectiveEK, ...
+                'onset', timing.actualOnsets.vis(n), ...
+                'stim', stim.stim{stim.trial}, ...
+                'cond', stim.cond(stim.trial), ...
+                'cresp', cresp, 'cresp_map', cresp_map, 'valid_map', subj_map);
+            
+           
+            %endrecord = GetSecs;
+            %display even/odd
+            if CURRENTLY_ONLINE && SESSION > TOCRITERION3
+                [timing.trig.math(n), timing.trig.math_Success(n)] = WaitTRPulse(TRIGGER_keycode,DEVICE,timing.plannedOnsets.math(n));
+            end
+            timespec = timing.plannedOnsets.math(n) - SLACK;
+            [stim.digitAcc(stim.trial) stim.digitRT(stim.trial) timing.actualOnsets.math(n)] = odd_even(digitsEK,num_digit_qs,digits_promptDur,digits_isi,minimal_format,mainWindow,keyCell([1 5]),COLORS,DEVICE,SUBJ_NAME,[SESSION stim.trial],SLACK,timespec, keys);
+            fprintf('Flip time error = %.4f\n', timing.actualOnsets.math(n)-timing.plannedOnsets.math(n));
+            
+            save(MATLAB_SAVE_FILE,'stim', 'timing', 'config');
+        end
+        
+        %present last ITI
+        if CURRENTLY_ONLINE && SESSION > TOCRITERION3
+            [timing.trig.lastITI, timing.trig.lastITI_Success] = WaitTRPulse(TRIGGER_keycode,DEVICE,timing.plannedOnsets.lastITI);
+        end
+        timespec = timing.plannedOnsets.lastITI - SLACK;
+        timing.actualOnsets.lastITI = isi_specific(mainWindow,COLORS.MAINFONTCOLOR,timespec);
+        fprintf('Flip time error = %.4f\n', timing.actualOnsets.lastITI-timing.plannedOnsets.lastITI);
+        
         if GetSecs - timing.actualOnsets.lastITI < 2
             WaitSecs(2 - (GetSecs - timing.actualOnsets.lastITI));
         end
@@ -1477,7 +1697,7 @@ switch SESSION
             %             while timeout
             try
                 %will need to add this file to the folder to get it to work
-                fileCandidates = dir([ppt_dir 'mot_realtime02_' num2str(SUBJECT) '_' num2str(MOT_PREP)  '*.mat']);
+                fileCandidates = dir([ppt_dir 'mot_realtime04_' num2str(SUBJECT) '_' num2str(MOT_PREP)  '*.mat']);
                 dates = [fileCandidates.datenum];
                 names = {fileCandidates.name};
                 [~,newest] = max(dates);
@@ -1620,7 +1840,7 @@ switch SESSION
             stim.instruct_nextMOT = ['You will now continue with the same multitasking task.' final_instruct_continue];
             displayText(mainWindow,stim.instruct_nextMOT,minimumDisplay,'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
             %also load in last session information here
-            allLast = findNewestFile(ppt_dir,[ppt_dir 'mot_realtime02_' num2str(SUBJECT) '_' num2str(SESSION-1) '*']);
+            allLast = findNewestFile(ppt_dir,[ppt_dir 'mot_realtime04_' num2str(SUBJECT) '_' num2str(SESSION-1) '*']);
             last = load(allLast);
             lastSpeed = last.stim.lastSpeed; %matrix of motRun (1-3), stimID
             lastDecoding = last.stim.lastRTDecoding;
@@ -2155,7 +2375,7 @@ switch SESSION
             %displayText(mainWindow,CONGRATS,CONGRATSDURATION,'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
             endSession(dotEK, subjectiveEK,CONGRATS);
             if SESSION < MOT_LOCALIZER
-                mot_realtime02(SUBJECT,SESSION+1,SET_SPEED,scanNum,scanNow);
+                mot_realtime04(SUBJECT,SESSION+1,SET_SPEED,scanNum,scanNow);
             end
         end
         sca;
@@ -2346,7 +2566,7 @@ switch SESSION
             sca
         else
             endSession(fruitHarvestEK, CONGRATS);
-            mot_realtime02(SUBJECT,SESSION+1,SET_SPEED,scanNum,scanNow);
+            mot_realtime04(SUBJECT,SESSION+1,SET_SPEED,scanNum,scanNow);
         end
         
         %% SCAN PREP
@@ -2380,7 +2600,7 @@ switch SESSION
         save(MATLAB_SAVE_FILE,'timing');
         WaitSecs(2) %wait a little before closing
         sca
-        %mot_realtime02(SUBJECT,SESSION+1,SET_SPEED,scanNum,scanNow);
+        %mot_realtime04(SUBJECT,SESSION+1,SET_SPEED,scanNum,scanNow);
         
         % session switch
 end

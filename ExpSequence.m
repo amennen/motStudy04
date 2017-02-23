@@ -14,7 +14,7 @@ addpath(genpath(SPTB_PATH));
 % else
 %     allScanNums = [7 11:2:21];
 % end
-NUM_TASK_RUNS = 3;
+NUM_TASK_RUNS = 4;
 % orientation session
 SETUP = 1; % stimulus assignment 1
 FAMILIARIZE = SETUP + 1; % rsvp study learn associates 2
@@ -120,6 +120,14 @@ scanNum = 19;
 featureSelect = 1;
 blockNum = 3;
 RealTimeMemoryFileProcess(SUBJECT,featureSelect,prev,scanNow,scanNum,MOT{3},blockNum,runNum);
+%% MOT RUN 4 DISPLAY
+scanNum = 21;
+mot_realtime02(SUBJECT,MOT{4},[],scanNum,scanNow);
+%% MOT RUN 3 FILE PROCESS
+scanNum = 21;
+featureSelect = 1;
+blockNum = 4;
+RealTimeMemoryFileProcess(SUBJECT,featureSelect,prev,scanNow,scanNum,MOT{4},blockNum,runNum);
 
 %% RECALL 2
 scanNum = 21;

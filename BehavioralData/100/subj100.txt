@@ -1,0 +1,8 @@
+
+SESSION 2 initiated 23-Feb-2017 14:15:14 for SUBJECT number 100
+
+session	trial	pair	onset	dur	cue         	associate   
+
+
+SESSION 20 ended 23-Feb-2017 14:30:33 for SUBJECT number 100
+
