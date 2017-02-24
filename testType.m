@@ -1,11 +1,18 @@
 % Example 1 - shows key-response times from visual onset 
 % written for Psychtoolbox 3  by Aaron Seitz 1/2012
+Screen('Preference', 'SkipSyncTests', 1);
 DEBUG_MONITOR_SIZE = [700 500];
 windowSize.pixels = DEBUG_MONITOR_SIZE;
 windowSize.degrees = [35 30];
 windowSize.degrees_per_pixel = windowSize.degrees ./ windowSize.pixels;
-
-[mainWindow, null] = Screen('OpenWindow',0,[0 0 0],[0 0 windowSize.pixels]);
+debug = 0;
+if debug
+    [mainWindow, null] = Screen('OpenWindow',0,[0 0 0],[0 0 windowSize.pixels]);
+else
+    resolution = Screen('Resolution',0);
+    windowSize.pixels = [resolution.width resolution.height];
+    [mainWindow, null] = Screen('OpenWindow',0,[0 0 0],[0 0 windowSize.pixels]);
+end
 textColor = [255 255 255];
 bgColor = [0 0 0];
 KbName('UnifyKeyNames'); %used for cross-platform compatibility of keynaming
@@ -20,13 +27,13 @@ periodKey=55;
 quoteKey=52;
 %shifts=[225 229];
 instructions = 'Please describe the image. Press ENTER to finish typing.';
+CENTER = windowSize.pixels/2;
 
 Screen('TextSize',mainWindow,20); %sets textsize for instructions
-[nxi,nyi,textbox_i] = DrawFormattedText(mainWindow,instructions, 'center', [], textColor);
+[nxi,nyi,textbox_i] = DrawFormattedText(mainWindow,instructions, 'center', CENTER(2) - CENTER(2)/2, textColor);
 colors.GREY = [50 50 50];
 square_col = colors.GREY;
 bumper_size = 0;
-CENTER = windowSize.pixels/2;
 stim.square_dims = round([20 20] ./ mean(windowSize.degrees_per_pixel)); % 
 square_bounds = [CENTER-(stim.square_dims/2) CENTER+(stim.square_dims/2)-1];
 new = textbox_i;
@@ -41,7 +48,7 @@ ListenChar(2)
 %HideCursor();
 enterpressed=0; %initializes loop flag
 AsteriskBuffer=[]; %initializes buffer
-WRAPCHARS = 70;
+WRAPCHARS = 55;
 % special cases: periods don't put the ">" and the shift key (numbers come
 % up with symbols too hmm
 % also want it so that when reach the end of the window it moves to the
@@ -71,7 +78,7 @@ while ( enterpressed==0 )
         %Screen('FrameRect', mainWindow, [100 100 100], textbounds)
         %Screen('FillRect', mainWindow, [100 100 100], textbounds)
         Screen('TextSize',mainWindow,20); %sets textsize for instructions
-        [nxi,nyi] = DrawFormattedText(mainWindow,instructions, 'center', [], textColor);
+        [nxi,nyi] = DrawFormattedText(mainWindow,instructions, 'center', CENTER(2) - CENTER(2)/2, textColor);
         Screen('FillRect', mainWindow, square_col, new)
         Screen('TextSize',mainWindow,20); 
         [nx,ny,textbounds] = DrawFormattedText(mainWindow, AsteriskBuffer, new(1),new(2),textColor,WRAPCHARS); %it's going where x ends and y starts
