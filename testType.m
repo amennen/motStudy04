@@ -19,17 +19,22 @@ spaceKey=44;
 periodKey=55;
 quoteKey=52;
 %shifts=[225 229];
-instructions = 'Type some text. Press ENTER to finish typing.';
+instructions = 'Please describe the image. Press ENTER to finish typing.';
 
 Screen('TextSize',mainWindow,20); %sets textsize for instructions
-[nx,nyi] = DrawFormattedText(mainWindow,instructions, 'center', [], textColor);
-colors.GREY = [150 150 150];
+[nxi,nyi,textbox_i] = DrawFormattedText(mainWindow,instructions, 'center', [], textColor);
+colors.GREY = [50 50 50];
 square_col = colors.GREY;
 bumper_size = 0;
 CENTER = windowSize.pixels/2;
 stim.square_dims = round([20 20] ./ mean(windowSize.degrees_per_pixel)); % 
 square_bounds = [CENTER-(stim.square_dims/2) CENTER+(stim.square_dims/2)-1];
-Screen('FillRect', mainWindow, square_col, square_bounds)
+new = textbox_i;
+movedown = 40;
+new(2) = new(2) + movedown;
+boxsize = 80;
+new(4) = new(4)+ boxsize + movedown;
+Screen('FillRect', mainWindow, square_col, new);
 Screen('Flip',mainWindow);
 
 ListenChar(2)
@@ -66,13 +71,14 @@ while ( enterpressed==0 )
         %Screen('FrameRect', mainWindow, [100 100 100], textbounds)
         %Screen('FillRect', mainWindow, [100 100 100], textbounds)
         Screen('TextSize',mainWindow,20); %sets textsize for instructions
-        [nx,nyi] = DrawFormattedText(mainWindow,instructions, 'center', [], textColor);
-        Screen('FillRect', mainWindow, square_col, square_bounds)
-        Screen('TextSize',mainWindow,10); 
-        [nx,ny,textbounds] = DrawFormattedText(mainWindow, AsteriskBuffer, 'left',nyi+20,textColor,WRAPCHARS);
+        [nxi,nyi] = DrawFormattedText(mainWindow,instructions, 'center', [], textColor);
+        Screen('FillRect', mainWindow, square_col, new)
+        Screen('TextSize',mainWindow,20); 
+        [nx,ny,textbounds] = DrawFormattedText(mainWindow, AsteriskBuffer, new(1),new(2),textColor,WRAPCHARS); %it's going where x ends and y starts
+        %have it so it goes to the next line when they type the next line
         Screen('Flip',mainWindow);
     end;
-    WaitSecs(.01); % put in small interval to allow other system events
+WaitSecs(.01); % put in small interval to allow other system events
 end
 ListenChar(0); %makes it so characters typed do show up in the command window
 ShowCursor(); %shows the cursor
