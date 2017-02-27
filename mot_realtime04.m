@@ -63,8 +63,8 @@ for i=1:NUM_TASK_RUNS
     counter = counter + 1;
 end
 RECALL2 = MOT{end} + 1; % post-scan rsvp memory test
-DESCRIPTION = RECALL2 + 1; %25
-ASSOCIATES = DESCRIPTION + 1;
+DESCRIPTION = RECALL2 + 1; %26
+ASSOCIATES = DESCRIPTION + 1; %27
 %ANATOMICAL_PREP = ASSOCIATES + 1;
 % name strings
 SESSIONSTRINGS{SETUP} = 'GENERATE PAIRINGS'; % set up rsvp study learn associates
@@ -97,8 +97,6 @@ SESSIONSTRINGS{RECALL1} = 'RECALL1'; % baseline recollection, used to train reco
 SESSIONSTRINGS{RECALL2} = 'RECALL2'; % post-test recollection, used to measure effectiveness of manipulation
 SESSIONSTRINGS{DESCRIPTION} = 'TYPING IMAGE DESCRIPTIONS'; 
 SESSIONSTRINGS{ASSOCIATES} = 'ASSOCIATES TASK'; % face-scene classification
-SESSIONSTRINGS{RATESIMILAR} = 'RATE IMAGE SIMILARITY';
-%SESSIONSTRINGS{ANATOMICAL_PREP} = 'ANATOMICAL PREP'; %prepping for first scan
 % SETUP: prepare experiment
 if ~exist('SUBJECT','var'), SUBJECT = -1; end
 if ~exist('SESSION','var'),
@@ -1134,6 +1132,7 @@ switch SESSION
         stim.prepDur = 2*SPEED;
         stim.isiDuration = 4*SPEED; %
         stim.fixBlock = 20*SPEED;
+        stim.typeDur = 20*SPEED;
         num_digit_qs = 3;
         digits_promptDur = 1.9*SPEED;
         digits_isi = 0.1*SPEED;
@@ -1141,15 +1140,20 @@ switch SESSION
         minimal_format = true;
         stim.TRlength = 2;
         subj_triggerNext = false;
-        keymap_image = imread(KEY_MAPPING);
         subj_promptDur = 4 * SPEED;
         subj_listenDur = 0 * SPEED;
         % stimulus data fields
         stim.triggerCounter = 1;
         stim.missedTriggers = 0;
+        stim.description = {};
         PROGRESS_TEXT = 'INDEX';
         
-        
+        returnKey=40; %define return key (used to end)
+        deleteKey=42; %define delete key (used to delete)
+        spaceKey=44;
+        periodKey=55;
+        quoteKey=52;
+        commaKey=54;
         % all the instructions
         stim.instruct1 = ['MENTAL PICTURES TASK\n\nThis is a memory test, though it is not multiple choice anymore. When a word appears, picture the scene it names as vividly as if you were looking ' ...
             'at it now. Picture its objects, features, and anything else you can imagine. HOLD the image, letting it continue to mature ' ...
@@ -1165,88 +1169,35 @@ switch SESSION
         
         % let's have the first three trials be practice ones
         % prepare counterbalanced trial sequence (at most 2 in a row)
-        [stim.cond stim.condString stim.describe] = counterbalance_items({cues{STIMULI}{REALTIME}{1}, cues{STIMULI}{OMIT}{1}},CONDSTRINGS);
-        stim.describe = [recogLures(1:3) stim.describe];
+        [stim.cond stim.condString stim.stim] = counterbalance_items({cues{STIMULI}{REALTIME}{1}, cues{STIMULI}{OMIT}{1}},CONDSTRINGS);
+        practiceWords = {'cane', 'drought', 'stairs'}; %think about where to get these practice words from
+        stim.stim = [practiceWords stim.stim];
         stim.cond = [PRACTICE PRACTICE PRACTICE stim.cond];
         stim.condString = [CONDSTRINGS{PRACTICE} CONDSTRINGS{PRACTICE} CONDSTRINGS{PRACTICE} stim.condString];
         % initialize stimulus order with initial warmup item
-        if SESSION == RECALL_PRACTICE
-            stim.stim = cues{STIMULI}{LEARN}{1}(1:3);
-            stim.cond = [PRACTICE, PRACTICE, PRACTICE];
-            condmap = makeMap({'PRACTICE'});
-            stim.condString = {CONDSTRINGS{PRACTICE}, CONDSTRINGS{PRACTICE}, CONDSTRINGS{PRACTICE}};
-            displayText(mainWindow,['MENTAL PICTURES TASK - PRACTICE\n\nThis is a memory test with some differences ' ...
+        
+        displayText(mainWindow,['MENTAL PICTURES TASK - PRACTICE\n\nThis is a memory test with some differences ' ...
                 'from earlier: you will get only one try per item, there is no feedback, and you will verbally recall the scenes instead of choosing the correct option.' ...
                 'Please carefully review today''s instructions, since many things have ' ...
                 'changed and it is important you follow them exactly.\n\n' ...
                 '-- Please press ' PROGRESS_TEXT ' to briefly review the instructions --'],minimumDisplay,'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
-            waitForKeyboard(kbTrig_keycode,DEVICE);
-        else
-            [stim.cond stim.condString stim.stim] = counterbalance_items({cues{STIMULI}{REALTIME}{1}, cues{STIMULI}{OMIT}{1}},CONDSTRINGS);
-            condmap = makeMap({'realtime','omit'});
-            if SESSION ==RECALL1
-                displayText(mainWindow,['The experiment will now ONLY involve the stimuli that you studied yesterday, both ' ...
-                    'for this next task and the rest of the experiment.\n\n' ...
-                    '-- Please press ' PROGRESS_TEXT ' to read the instructions for your next task --'],minimumDisplay,'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
-                waitForKeyboard(kbTrig_keycode,DEVICE);
-            end
-            if SESSION == RECALL2
-                displayText(mainWindow,['MENTAL PICTURES TASK\n\nThe format of this task is the same as earlier in today''s session.\n\n' ...
-                    '-- Please press ' PROGRESS_TEXT ' to briefly review the instructions again --'],minimumDisplay,'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
-                waitForKeyboard(kbTrig_keycode,DEVICE);
-            end
-        end
+        waitForKeyboard(kbTrig_keycode,DEVICE);
         
-        %generate stimulus ID's first so can add them easily
-        for i = 1:length(stim.cond)
-            if SESSION == RECALL_PRACTICE
-                pos = find(strcmp(cues{STIMULI}{LEARN}{1},stim.stim{i}));
-                stim.id(i) = pos;
-            else
-                pos = find(strcmp(preparedCues,stim.stim{i}));
-                stim.id(i) = pos;
-            end
-        end
-        
+
         % display instructions
         DrawFormattedText(mainWindow,' ','center','center',COLORS.MAINFONTCOLOR,WRAPCHARS);
         displayText(mainWindow,stim.instruct1,minimumDisplay,'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
         waitForKeyboard(kbTrig_keycode,DEVICE);
-        displayText(mainWindow,stim.instruct2,minimumDisplay,'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
-        
+        displayText(mainWindow,stim.instruct2,minimumDisplay,'center',COLORS.MAINFONTCOLOR,WRAPCHARS);   
         waitForKeyboard(kbTrig_keycode,DEVICE);
-        keymap_image = imread(KEY_MAPPING);
-        keymap_prompt = Screen('MakeTexture', mainWindow, keymap_image);
-        Screen('DrawTexture',mainWindow,keymap_prompt,[],[],[]); %[0 0 keymap_dims],[topLeft topLeft+keymap_dims]);
-        Screen('Flip',mainWindow);
-        stim.subjStartTime = waitForKeyboard(kbTrig_keycode,DEVICE);
-        %displayText(mainWindow,stim.instruct3,minimumDisplay,'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
-        %stim.subjStartTime = waitForKeyboard(kbTrig_keycode,DEVICE);
-        
+
         %last instructions
-        if SESSION == RECALL_PRACTICE
             displayText(mainWindow,['To help you get used to the feel of this task, we will ' ...
                 'now give you three practice words.\n\n' ...
                 '-- Press ' PROGRESS_TEXT ' to begin once you understand these instructions --'], ...
                 minimumDisplay,'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
             stim.subjStartTime = waitForKeyboard(kbTrig_keycode,DEVICE);
-        end
         
-        if CURRENTLY_ONLINE && SESSION > TOCRITERION3
-            DrawFormattedText(mainWindow,'Waiting for scanner start, hold tight!','center','center',COLORS.MAINFONTCOLOR,WRAPCHARS);
-            Screen('Flip', mainWindow);
-        end
-        
-        subjectiveEK = initEasyKeys([exp_string_long '_SUB'], SUBJ_NAME,ppt_dir, ...
-            'default_respmap', subj_scale, ...
-            'stimmap', stimmap, ...
-            'condmap', condmap, ...
-            'trigger_next', subj_triggerNext, ...
-            'prompt_dur', subj_promptDur, ...
-            'listen_dur', subj_listenDur, ...
-            'exp_onset', stim.subjStartTime, ...
-            'console', false, ...
-            'device', DEVICE);
         
         digits_scale = makeMap({'even','odd'},[0 1],keyCell([1 5]));
         condmap = makeMap({'even','odd'});
@@ -1256,9 +1207,7 @@ switch SESSION
             'trigger_next', digits_triggerNext, ...
             'prompt_dur', digits_promptDur, ...
             'device', DEVICE);
-        
-        [subjectiveEK] = startSession(subjectiveEK);
-        
+                
         % fixation period for 20 s
         if CURRENTLY_ONLINE && SESSION > TOCRITERION3
             [timing.trig.wait timing.trig.waitSuccess] = WaitTRPulse(TRIGGER_keycode,DEVICE);
@@ -1279,69 +1228,106 @@ switch SESSION
         config.TR = stim.TRlength;
         config.nTRs.ISI = stim.isiDuration/stim.TRlength;
         config.nTRs.prompt = stim.promptDur/stim.TRlength;
-        config.nTRs.vis = subj_promptDur/stim.TRlength;
+        config.nTRs.type = stim.typeDur/stim.TRlength;
         config.nTRs.math = (num_digit_qs*(digits_promptDur + digits_isi))/stim.TRlength;
         config.nTrials = length(stim.stim);
-        config.nTRs.perTrial = (config.nTRs.ISI + config.nTRs.prompt + config.nTRs.vis + config.nTRs.math);
+        config.nTRs.perTrial = (config.nTRs.ISI + config.nTRs.prompt + config.nTRs.type + config.nTRs.math);
         config.nTRs.perBlock = config.wait/config.TR + (config.nTRs.perTrial)*config.nTrials+ config.nTRs.ISI; %includes the last ISI
         
         % calculate all future onsets
         timing.plannedOnsets.preITI(1:config.nTrials) = runStart + config.wait + ((0:config.nTrials-1)*config.nTRs.perTrial)*config.TR;
         timing.plannedOnsets.prompt(1:config.nTrials) = timing.plannedOnsets.preITI + config.nTRs.ISI*config.TR;
-        timing.plannedOnsets.vis(1:config.nTrials) = timing.plannedOnsets.prompt + config.nTRs.prompt*config.TR;
-        timing.plannedOnsets.math(1:config.nTrials) = timing.plannedOnsets.vis + config.nTRs.vis*config.TR;
+        timing.plannedOnsets.type(1:config.nTrials) = timing.plannedOnsets.prompt + config.nTRs.prompt*config.TR;
+        timing.plannedOnsets.math(1:config.nTrials) = timing.plannedOnsets.type + config.nTRs.type*config.TR;
         timing.plannedOnsets.lastITI = timing.plannedOnsets.math(end) + config.nTRs.math*config.TR;%%make sure it pauses for this one
         
-        cresp = keyCell(3:5);
-        cresp_map = sum(keys.map(3:5,:));
-        
-        stimID = stim.id;
+     
         stimCond = stim.cond;
+        % initialize trial
+        %generate stimulus ID's first so can add them easily
+        for i = 1:length(stim.cond)
+            pos = find(strcmp(preparedCues,stim.stim{i}));
+            if ~isempty(pos)
+                stim.id(i) = pos;
+            else
+                stim.id(i) = -1; %so this should never go during MOT
+            end
+        end
+        stimID = stim.id;
         sessionInfoFile = fullfile(ppt_dir, ['SessionInfo' '_' num2str(SESSION)]);
         save(sessionInfoFile, 'stimCond','stimID', 'timing', 'config'); 
         
+
         for n = 1:length(stim.stim)
             % initialize trial and show cue
             stim.trial = n;
             fprintf(['Trial number: ' num2str(n) '\n']);
             
             %show pre ITI
-            if CURRENTLY_ONLINE && SESSION > TOCRITERION3
-                [timing.trig.preITI(n), timing.trig.preITI_Success(n)] = WaitTRPulse(TRIGGER_keycode,DEVICE,timing.plannedOnsets.preITI(n));
-            end
             timespec = timing.plannedOnsets.preITI(n) - SLACK;
             timing.actualOnsets.preITI(n) = isi_specific(mainWindow,COLORS.MAINFONTCOLOR,timespec);
             fprintf('Flip time error = %.4f\n', timing.actualOnsets.preITI(n) - timing.plannedOnsets.preITI(n));
             
             %display word
-            if CURRENTLY_ONLINE && SESSION > TOCRITERION3
-                [timing.trig.prompt(n), timing.trig.prompt_Success(n)] = WaitTRPulse(TRIGGER_keycode,DEVICE,timing.plannedOnsets.prompt(n));
-            end
             timespec = timing.plannedOnsets.prompt(n)-SLACK;
             timing.actualOnsets.prompt(n) = displayText_specific(mainWindow,stim.stim{stim.trial},'center',COLORS.MAINFONTCOLOR,WRAPCHARS,timespec);
             fprintf('Flip time error = %.4f\n', timing.actualOnsets.prompt(n) - timing.plannedOnsets.prompt(n));
             
-            %display visualization score
-            keymap_prompt = Screen('MakeTexture', mainWindow, keymap_image);
-            Screen('DrawTexture',mainWindow,keymap_prompt,[],[],[]); %[0 0 keymap_dims],[topLeft topLeft+keymap_dims]);
-            if CURRENTLY_ONLINE && SESSION > TOCRITERION3
-                [timing.trig.vis(n), timing.trig.vis_Success(n)] = WaitTRPulse(TRIGGER_keycode,DEVICE,timing.plannedOnsets.vis(n));
-            end
-            timespec = timing.plannedOnsets.vis(n) - SLACK;
-            timing.actualOnsets.vis(n) = Screen('Flip',mainWindow,timespec);
-            fprintf('Flip time error = %.4f\n', timing.actualOnsets.vis(n)-timing.plannedOnsets.vis(n));
-            subjectiveEK = easyKeys(subjectiveEK, ...
-                'onset', timing.actualOnsets.vis(n), ...
-                'stim', stim.stim{stim.trial}, ...
-                'cond', stim.cond(stim.trial), ...
-                'cresp', cresp, 'cresp_map', cresp_map, 'valid_map', subj_map);
-            
+            % have them type and then get the rating
+            timespec = timing.plannedOnsets.type(n) - SLACK;
+            instructions = 'Please describe the image.';
+            Screen('TextSize',mainWindow,20); %sets textsize for instructions
+            [nxi,nyi,textbox_i] = DrawFormattedText(mainWindow,instructions, 'center', CENTER(2) - CENTER(2)/3, COLORS.MAINFONTCOLOR);
+            new = textbox_i;
+            movedown = 80;
+            moveaway = 80;
+            new(1) = new(1) - moveaway;
+            new(2) = new(2) + movedown;
+            boxsize = 120;
+            new(4) = new(4)+ boxsize + movedown;
+            new(3) = new(3) + moveaway; %making the textbox a bit wider
+            Screen('FillRect', mainWindow, COLORS.GREY, new);
+            timing.actualOnsets.type(n) = Screen('Flip',mainWindow, timespec);
+            fprintf('Flip time error = %.4f\n', timing.actualOnsets.type(n) - timing.plannedOnsets.type(n));
            
+            KbQueueCreate;
+            KbQueueStart;
+            AsteriskBuffer=[]; %initializes buffer
+            WRAPCHARS = 70;
+            while abs(GetSecs- (timing.plannedOnsets.math(n))) > SLACK % keep checking for more typing until you can't anymore
+                [ pressed, firstPress]=KbQueueCheck; %checks for keys
+                enterpressed=firstPress(returnKey);%press return key to terminate each response
+                if (pressed && ~enterpressed) %keeps track of key-presses and draws text
+                    if firstPress(deleteKey) %if delete key then erase last key-press
+                        AsteriskBuffer=AsteriskBuffer(1:end-1); %erase last key-press
+                    elseif firstPress(spaceKey)
+                        % we want to add a space instead of writing space lol
+                        AsteriskBuffer=[AsteriskBuffer ' '];
+                    elseif firstPress(periodKey)
+                        AsteriskBuffer=[AsteriskBuffer '.'];
+                    elseif firstPress(quoteKey)
+                        AsteriskBuffer=[AsteriskBuffer  '"' ];
+                    elseif firstPress(commaKey)
+                        AsteriskBuffer=[AsteriskBuffer  ',' ];
+                    else %otherwise add to buffer
+                        firstPress(find(firstPress==0))=NaN; %little trick to get rid of 0s
+                        [endtime Index]=min(firstPress); % gets the RT of the first key-press and its ID
+                        AsteriskBuffer=[AsteriskBuffer KbName(Index)]; %adds key to buffer
+                    end
+                    Screen('TextSize',mainWindow,20); %sets textsize for instructions
+                    [nxi,nyi] = DrawFormattedText(mainWindow,instructions, 'center', CENTER(2) - CENTER(2)/3, COLORS.MAINFONTCOLOR);
+                    Screen('FillRect', mainWindow, COLORS.GREY, new)
+                    Screen('TextSize',mainWindow,20);
+                    [nx,ny,textbounds] = DrawFormattedText(mainWindow, AsteriskBuffer, new(1),new(2),COLORS.MAINFONTCOLOR,WRAPCHARS); %it's going where x ends and y starts
+                    %have it so it goes to the next line when they type the next line
+                    Screen('Flip',mainWindow);
+                end;
+                WaitSecs(.01); % put in small interval to allow other system events
+            end
+            stim.description{n} = AsteriskBuffer;
             %endrecord = GetSecs;
             %display even/odd
-            if CURRENTLY_ONLINE && SESSION > TOCRITERION3
-                [timing.trig.math(n), timing.trig.math_Success(n)] = WaitTRPulse(TRIGGER_keycode,DEVICE,timing.plannedOnsets.math(n));
-            end
+            KbQueueRelease;
             timespec = timing.plannedOnsets.math(n) - SLACK;
             [stim.digitAcc(stim.trial) stim.digitRT(stim.trial) timing.actualOnsets.math(n)] = odd_even(digitsEK,num_digit_qs,digits_promptDur,digits_isi,minimal_format,mainWindow,keyCell([1 5]),COLORS,DEVICE,SUBJ_NAME,[SESSION stim.trial],SLACK,timespec, keys);
             fprintf('Flip time error = %.4f\n', timing.actualOnsets.math(n)-timing.plannedOnsets.math(n));
@@ -1370,13 +1356,12 @@ switch SESSION
         
         printlog(LOG_NAME,['\n\nSESSION ' int2str(SESSION) ' ended ' datestr(now) ' for SUBJECT number ' int2str(SUBJECT) '\n\n']);
         
-        if SESSION == RECALL2
-            endSession(subjectiveEK,'Congratulations, you have completed the scan! All that is left is a short test outside the scanner. We will come and get you out in just a moment.');
-        elseif SESSION == RECALL_PRACTICE
-            endSession(subjectiveEK, 'Congratulations, you have completed the practice tasks!');
-        else
-            endSession(subjectiveEK, CONGRATS)
-        end
+        DrawFormattedText(mainWindow, CONGRATS, 'center', 'center')
+        Screen('Flip',min(windows));
+        WaitSecs(4);
+        
+        % clean up stuff loaded in memory, and restore user input
+        KbQueueRelease();
         sca
         
         %% POST PICTURES TASK

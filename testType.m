@@ -30,17 +30,20 @@ instructions = 'Please describe the image. Press ENTER to finish typing.';
 CENTER = windowSize.pixels/2;
 
 Screen('TextSize',mainWindow,20); %sets textsize for instructions
-[nxi,nyi,textbox_i] = DrawFormattedText(mainWindow,instructions, 'center', CENTER(2) - CENTER(2)/2, textColor);
+[nxi,nyi,textbox_i] = DrawFormattedText(mainWindow,instructions, 'center', CENTER(2) - CENTER(2)/3, textColor);
 colors.GREY = [50 50 50];
 square_col = colors.GREY;
 bumper_size = 0;
 stim.square_dims = round([20 20] ./ mean(windowSize.degrees_per_pixel)); % 
 square_bounds = [CENTER-(stim.square_dims/2) CENTER+(stim.square_dims/2)-1];
 new = textbox_i;
-movedown = 40;
+movedown = 80;
+moveaway = 40;
+new(1) = new(1) - moveaway;
 new(2) = new(2) + movedown;
-boxsize = 80;
+boxsize = 120;
 new(4) = new(4)+ boxsize + movedown;
+new(3) = new(3) + moveaway; %making the textbox a bit wider
 Screen('FillRect', mainWindow, square_col, new);
 Screen('Flip',mainWindow);
 
@@ -48,7 +51,7 @@ ListenChar(2)
 %HideCursor();
 enterpressed=0; %initializes loop flag
 AsteriskBuffer=[]; %initializes buffer
-WRAPCHARS = 55;
+WRAPCHARS = 70;
 % special cases: periods don't put the ">" and the shift key (numbers come
 % up with symbols too hmm
 % also want it so that when reach the end of the window it moves to the
@@ -78,7 +81,7 @@ while ( enterpressed==0 )
         %Screen('FrameRect', mainWindow, [100 100 100], textbounds)
         %Screen('FillRect', mainWindow, [100 100 100], textbounds)
         Screen('TextSize',mainWindow,20); %sets textsize for instructions
-        [nxi,nyi] = DrawFormattedText(mainWindow,instructions, 'center', CENTER(2) - CENTER(2)/2, textColor);
+        [nxi,nyi] = DrawFormattedText(mainWindow,instructions, 'center', CENTER(2) - CENTER(2)/3, textColor);
         Screen('FillRect', mainWindow, square_col, new)
         Screen('TextSize',mainWindow,20); 
         [nx,ny,textbounds] = DrawFormattedText(mainWindow, AsteriskBuffer, new(1),new(2),textColor,WRAPCHARS); %it's going where x ends and y starts
