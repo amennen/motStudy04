@@ -296,6 +296,7 @@ CUETARGETFILE = [base_path 'stimuli/text/ed_plants.txt'];
 
 PICLISTFILE = [base_path 'stimuli/SCREENNAMES.txt'];
 PICFOLDER = [base_path 'stimuli/STIM/ALLIMAGES' filesep];
+FAKEPICFOLDER = [base_path 'stimuli/STIM/ALLSIMILARIMAGES' filesep];
 TRAININGPICFOLDER = [base_path 'stimuli/STIM/training' filesep];
 TRAININGLISTFILE = [base_path 'stimuli/TRAININGSCREEN.txt'];
 % present mapping without keylabels if ppt. is in the scanner
@@ -1375,6 +1376,9 @@ switch SESSION
         PROGRESS = INDEXFINGER;
         PROGRESS_TEXT = 'INDEX';
         condmap = makeMap({'realtime','omit','lure'});
+        % change it to be index for left, middle for right choice
+        
+        
         stim.instruct1 = ['NAME MEMORY\n\nYou''re almost done! This is the final task.\n\nWe will show you pictures of various scenes and ask you ' ...
             'whether they are new in this experiment ("' recog_scale.inputs{1} '" key) or ones you have seen earlier ("' recog_scale.inputs{2} '" key). Try to respond ' ...
             'as quickly and accurately as possible.\n So press ' recog_scale.inputs{1} ' = NEW IMAGE and ' recog_scale.inputs{2} ' = OLD IMAGE.\n\n-- Press ' PROGRESS_TEXT ' once you understand these instructions --'];
@@ -1384,10 +1388,49 @@ switch SESSION
         stim.missedTriggers = 0;
         
         % prepare counterbalanced trial sequence (at most 2 in a row)
-        [stim.cond stim.condString stim.associate] = counterbalance_items({cues{STIMULI}{REALTIME}{1}, cues{STIMULI}{OMIT}{1}, recogLures(4:end)},CONDSTRINGS);
-        stim.associate = [recogLures(1:3) stim.associate];
-        stim.cond = [PRACTICE PRACTICE PRACTICE stim.cond];
-        stim.condString = [CONDSTRINGS{PRACTICE} CONDSTRINGS{PRACTICE} CONDSTRINGS{PRACTICE} stim.condString];
+%         [stim.cond stim.condString stim.associate] = counterbalance_items({cues{STIMULI}{REALTIME}{1}, cues{STIMULI}{OMIT}{1}, recogLures(4:end)},CONDSTRINGS);
+%         stim.associate = [recogLures(1:3) stim.associate];
+%         stim.cond = [PRACTICE PRACTICE PRACTICE stim.cond];
+%         stim.condString = [CONDSTRINGS{PRACTICE} CONDSTRINGS{PRACTICE} CONDSTRINGS{PRACTICE} stim.condString];
+        
+        % prepare stimuli: first actual ones that were seen
+        [stim.cond stim.condString stim.associate] = counterbalance_items({cues{STIMULI}{REALTIME}{1}, cues{STIMULI}{OMIT}{1}},CONDSTRINGS);
+        inside = zeros(1,length(stim.cond));
+        outside = zeros(1,length(stim.cond));
+        % get the correct picture
+        for n = 1:length(stim.cond)
+            cueSearch = strcmp(preparedCues,stim.associate{n});
+            stim.pos(n) = find(cueSearch);
+            stim.stim{n} = pics{stim.pos(n)};
+            inside(n) = isempty(strfind(stim.stim{n}, 'o')); %if this is true, then the trial's image is an indoor image
+            outside(n) = ~inside(n);
+        end
+        insideI = find(inside);
+        usedInside = insideI;
+        outsideI = find(outside);
+        usedOutside = outsideI;
+        % now make the matches
+        for n = 1:length(stim.cond)
+            if inside(n)
+                matchI = randperm(length(usedOutside),1);
+                chosen = usedOutside(matchI);
+                usedOutside(matchI) = []; %remove so not repeated
+            else % if an outside pic, use inside
+                matchI =randperm(length(usedInside),1);
+                chosen = usedInside(matchI);
+                usedInside(matchI) = [];
+            end
+            stim.matchStim{n} = stim.stim{chosen};
+        end
+        
+        
+        % randomly permuate the names to pair with but just make sure no
+        % real & fake go together
+        % maybe make it so opposite indoor/outdoor go together so they're
+        % never comparing the images to each other
+        
+        %find indoor and outdoor pics separately
+        
         
         % display instructions
         DrawFormattedText(mainWindow,' ','center','center',COLORS.MAINFONTCOLOR,WRAPCHARS);
