@@ -233,7 +233,7 @@ kbTrig_keycode= keys.code(2,:);
 if fmri
     TRIGGER_keycode = keys.code(6,:);
 end
-
+recog_map = sum(keys.map([2 3],:));
 mc_scale= makeMap({'farL','midL','midR','farR'}, 1:4, mc_keys);
 subj_scale = makeMap({'no image', 'generic', '1 detail', '2+ details', 'full'}, 1:5, subj_keys);
 target_scale = makeMap({'non-target', 'target'}, [0 1], target_keys);
@@ -295,6 +295,7 @@ TRAININGCUELIST = [base_path 'stimuli/text/wordpool_targets_training.txt'];
 CUETARGETFILE = [base_path 'stimuli/text/ed_plants.txt'];
 
 PICLISTFILE = [base_path 'stimuli/SCREENNAMES.txt'];
+STIMPATH = [base_path 'stimuli/STIM/'];
 PICFOLDER = [base_path 'stimuli/STIM/ALLIMAGES' filesep];
 FAKEPICFOLDER = [base_path 'stimuli/STIM/ALLSIMILARIMAGES' filesep];
 TRAININGPICFOLDER = [base_path 'stimuli/STIM/training' filesep];
@@ -1140,9 +1141,6 @@ switch SESSION
         digits_triggerNext = false;
         minimal_format = true;
         stim.TRlength = 2;
-        subj_triggerNext = false;
-        subj_promptDur = 4 * SPEED;
-        subj_listenDur = 0 * SPEED;
         % stimulus data fields
         stim.triggerCounter = 1;
         stim.missedTriggers = 0;
@@ -1287,7 +1285,7 @@ switch SESSION
             boxsize = 120;
             new(4) = new(4)+ boxsize + movedown;
             new(3) = new(3) + moveaway; %making the textbox a bit wider
-            Screen('FillRect', mainWindow, COLORS.GREY, new);
+            Screen('FillRect', mainWindow, COLORS.GREY/5, new);
             timing.actualOnsets.type(n) = Screen('Flip',mainWindow, timespec);
             fprintf('Flip time error = %.4f\n', timing.actualOnsets.type(n) - timing.plannedOnsets.type(n));
            
@@ -1317,7 +1315,7 @@ switch SESSION
                     end
                     Screen('TextSize',mainWindow,20); %sets textsize for instructions
                     [nxi,nyi] = DrawFormattedText(mainWindow,instructions, 'center', CENTER(2) - CENTER(2)/3, COLORS.MAINFONTCOLOR);
-                    Screen('FillRect', mainWindow, COLORS.GREY, new)
+                    Screen('FillRect', mainWindow, COLORS.GREY/5, new)
                     Screen('TextSize',mainWindow,20);
                     [nx,ny,textbounds] = DrawFormattedText(mainWindow, AsteriskBuffer, new(1),new(2),COLORS.MAINFONTCOLOR,WRAPCHARS); %it's going where x ends and y starts
                     %have it so it goes to the next line when they type the next line
@@ -1382,10 +1380,12 @@ switch SESSION
         % change it to be index for left, middle for right choice
         
         
-        stim.instruct1 = ['NAME MEMORY\n\nYou''re almost done! This is the final task.\n\nWe will show you pictures of various scenes and ask you ' ...
-            'whether they are new in this experiment ("' recog_scale.inputs{1} '" key) or ones you have seen earlier ("' recog_scale.inputs{2} '" key). Try to respond ' ...
-            'as quickly and accurately as possible.\n So press ' recog_scale.inputs{1} ' = NEW IMAGE and ' recog_scale.inputs{2} ' = OLD IMAGE.\n\n-- Press ' PROGRESS_TEXT ' once you understand these instructions --'];
-        
+        stim.instruct1 = ['SCENE MEMORY\n\nYou''re almost done! This is the final task.\n\nWe will show you pictures of various scenes and ask you ' ...
+            'which of the two images displayed you''ve seen before. Press the "' recog_scale.inputs{1} '" key if you''ve seen the image on the left before OR press '...
+            'the "' recog_scale.inputs{2} '" key if the image on the right is the image that you''ve seen before. Try to respond as accurately and quickly as possible. '...
+            '\n\n-- Press ' PROGRESS_TEXT ' once you understand these instructions --'];
+        stim.instruct2 = ['To get you started, we''re going to give you three practice trials. Each time, just choose the happy emoji! After this, we will move on to the task '...
+            'where you will be choosing LEFT or RIGHT based on which scene you''ve seen before. \n\n-- Press ' PROGRESS_TEXT ' once you understand these instructions --'];
         % stimulus data fields
         stim.triggerCounter = 1;
         stim.missedTriggers = 0;
@@ -1438,6 +1438,8 @@ switch SESSION
         % display instructions
         DrawFormattedText(mainWindow,' ','center','center',COLORS.MAINFONTCOLOR,WRAPCHARS);
         displayText(mainWindow,stim.instruct1,minimumDisplay,'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
+        waitForKeyboard(kbTrig_keycode,DEVICE);
+        displayText(mainWindow,stim.instruct2,minimumDisplay,'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
         stim.subjStartTime = waitForKeyboard(kbTrig_keycode,DEVICE);
         
         % initialize question
@@ -1474,24 +1476,31 @@ switch SESSION
             timing.actualOnsets.preITI(n) = isi_specific(mainWindow,COLORS.MAINFONTCOLOR,timespec);
             fprintf('Flip time error = %.4f\n', timing.actualOnsets.preITI(n) - timing.plannedOnsets.preITI(n));
             
-            left = randi(CHOICES); %choose if correct image is on the left or not
+            pos = randi(CHOICES); %choose if correct image is on the left or not
             
-            if left
+            if pos==1
                 recog.cresp_str{n} = 'left';
                 cresp = recog_scale.inputs(1);
                 cresp_map = keys.map(2,:);
+                cor = 1;
+                incor = 2;
             else
                 recog.cresp_str{n} = 'right';
                 cresp = recog_scale.inputs(2);
                 cresp_map = keys.map(3,:);
+                cor = 2;
+                incor = 1;
             end
             
             
             % now present the target and lure and choose where to put them!
-            picIndex(1) = prepImage(strcat(PICFOLDER, stim.stim{n}),mainWindow);
-            picIndex(2) = prepImage(strcat(FAKEPICFOLDER, stim.matchStim{n}),mainWindow);
-            
-           
+            if n <= 3 % then use example photos!
+                picIndex(cor) = prepImage(strcat(STIMPATH,'smiley.jpg'),mainWindow);
+                picIndex(incor) = prepImage(strcat(STIMPATH, 'frowny.jpg'),mainWindow);
+            else
+                picIndex(cor) = prepImage(strcat(PICFOLDER, stim.stim{n}),mainWindow);
+                picIndex(incor) = prepImage(strcat(FAKEPICFOLDER, stim.matchStim{n}),mainWindow);
+            end
 
             %destDims = min(PICDIMS*RESCALE_FACTOR,PICDIMS .* (stim.choiceWidth ./ PICDIMS(HORIZONTAL)));
             RESCALE_NEW = destDims(2)/PICDIMS(2);
@@ -1514,19 +1523,16 @@ switch SESSION
                 'stim', stim.stim{n}, ...
                 'cond', stim.cond(n), ...
                 'cresp', cresp, ...
-                'next_window', mainWindow, 'cresp_map', cresp_map, 'valid_map', target_map );
+                'next_window', mainWindow, 'cresp_map', cresp_map, 'valid_map', recog_map );
             
-            % feedback if needed AH the timing is all screwed up if have
-            % this in
             
             if n <= 3
                 % WaitSecs(1);
                 OnFB = GetSecs;
                 if isnan(recogEK.trials.resp(end))
                     displayText(mainWindow,['Oops, you either did not respond in time, or did not ' ...
-                        'press an appropriate key. Remember to indicate whether the picture is new in ' ...
-                        'this experiment ("' recog_scale.inputs{1} '" key) or one you have seen earlier ("' ...
-                        recog_scale.inputs{2} '" key). Try to respond as quickly and accurately as ' ...
+                        'press an appropriate key. Remember to choose which image you''ve seen before by pressing the "' recog_scale.inputs{1} '" key for LEFT  or the "' recog_scale.inputs{2} '" ' ...
+                        'key for RIGHT. Try to respond as quickly and accurately as ' ...
                         'possible.\n\n-- Press ' PROGRESS_TEXT ' to continue --'],minimumDisplay,...
                         'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
                     waitForKeyboard(kbTrig_keycode,DEVICE);
@@ -1534,6 +1540,13 @@ switch SESSION
                     displayText(mainWindow,['Good work! Your response was detected.\n\n-- Press ' ...
                         PROGRESS_TEXT ' to continue --'],minimumDisplay,'center',COLORS.MAINFONTCOLOR, ...
                         WRAPCHARS);
+                    waitForKeyboard(kbTrig_keycode,DEVICE);
+                end
+                if n==3
+                    displayText(mainWindow,['We will now move into the real experiment. Remember to choose which image you''ve seen before by pressing the "' recog_scale.inputs{1} '" key for LEFT  or the "' recog_scale.inputs{2} '" ' ...
+                        'key for RIGHT. Try to respond as quickly and accurately as ' ...
+                        'possible.\n\n-- Press ' PROGRESS_TEXT ' to continue --'],minimumDisplay,...
+                        'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
                     waitForKeyboard(kbTrig_keycode,DEVICE);
                 end
                 OffFB = GetSecs;
