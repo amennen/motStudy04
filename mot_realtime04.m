@@ -237,7 +237,7 @@ end
 mc_scale= makeMap({'farL','midL','midR','farR'}, 1:4, mc_keys);
 subj_scale = makeMap({'no image', 'generic', '1 detail', '2+ details', 'full'}, 1:5, subj_keys);
 target_scale = makeMap({'non-target', 'target'}, [0 1], target_keys);
-recog_scale = makeMap({'new','old'}, [0 1], target_keys);
+recog_scale = makeMap({'left','right'}, [1 2], mc_keys(1:2));
 rsvp_scale = makeMap({'target'}, 1, fruit_key);
 
 % stimulus categories
@@ -1370,12 +1370,15 @@ switch SESSION
     case ASSOCIATES
         
         % declarations
-        stim.promptDur = 0.6*SPEED;
-        stim.listenDur = 0.4*SPEED;
+        stim.promptDur = 2.5*SPEED;
+        stim.listenDur = 0.5*SPEED;
         stim.isiDuration = 2*SPEED;
         PROGRESS = INDEXFINGER;
         PROGRESS_TEXT = 'INDEX';
         condmap = makeMap({'realtime','omit','lure'});
+        destDims = [200 200];
+        stim.gapWidth = 40;
+        stim.picRow = WINDOWSIZE.pixels(2) *(5/9);
         % change it to be index for left, middle for right choice
         
         
@@ -1464,37 +1467,41 @@ switch SESSION
         timing.plannedOnsets.lastITI = timing.plannedOnsets.cue(end) + config.nTRs.cue*config.TR;
         % repeat
         lureProgress = 0;
+        CHOICES = length(recog_scale.inputs);
         for n = 1:length(stim.cond)
             
             timespec = timing.plannedOnsets.preITI(n) - SLACK;
             timing.actualOnsets.preITI(n) = isi_specific(mainWindow,COLORS.MAINFONTCOLOR,timespec);
             fprintf('Flip time error = %.4f\n', timing.actualOnsets.preITI(n) - timing.plannedOnsets.preITI(n));
             
-            % initialize trial
-            if (stim.cond(n) == LUREWORD) || (stim.cond(n) == PRACTICE)
-                stim.pos(n) = lureCounter;
-                lureCounter = lureCounter + 1;
-                lureProgress = lureProgress + 1;
-                stim.id(n) = length(pics)+lureProgress;
-                stim.stim{n} = recogLures{lureProgress};
+            left = randi(CHOICES); %choose if correct image is on the left or not
+            
+            if left
+                recog.cresp_str{n} = 'left';
                 cresp = recog_scale.inputs(1);
-                cresp_map = keys.map(1,:);
-                recog.cresp_string{n} = 'new';
+                cresp_map = keys.map(2,:);
             else
-                cueSearch = strcmp(preparedCues,stim.associate{n});
-                stim.pos(n) = find(cueSearch);
-                stim.stim{n} = pics{stim.pos(n)};
-                stim.id(n) = stimmap.values(strcmp(stimmap.descriptors,stim.stim{n}));
+                recog.cresp_str{n} = 'right';
                 cresp = recog_scale.inputs(2);
-                cresp_map = keys.map(5,:);
-                recog.cresp_string{n} = 'old';
+                cresp_map = keys.map(3,:);
             end
             
-            % now present the target
-            picIndex = prepImage(strcat(PICFOLDER, stim.stim{n}),mainWindow);
-            topLeft(HORIZONTAL) = CENTER(HORIZONTAL) - (PICDIMS(HORIZONTAL)*RESCALE_FACTOR/2);
-            topLeft(VERTICAL) = CENTER(VERTICAL) - (PICDIMS(VERTICAL)*RESCALE_FACTOR/2);
-            Screen('DrawTexture', mainWindow, picIndex, [0 0 PICDIMS],[topLeft topLeft+PICDIMS*RESCALE_FACTOR]);
+            
+            % now present the target and lure and choose where to put them!
+            picIndex(1) = prepImage(strcat(PICFOLDER, stim.stim{n}),mainWindow);
+            picIndex(2) = prepImage(strcat(FAKEPICFOLDER, stim.matchStim{n}),mainWindow);
+            
+           
+
+            %destDims = min(PICDIMS*RESCALE_FACTOR,PICDIMS .* (stim.choiceWidth ./ PICDIMS(HORIZONTAL)));
+            RESCALE_NEW = destDims(2)/PICDIMS(2);
+            topLeft(HORIZONTAL) = CENTER(HORIZONTAL) - (destDims(HORIZONTAL)*CHOICES/2) - (stim.gapWidth*CHOICES/2);
+            topLeft(VERTICAL) = stim.picRow - (PICDIMS(VERTICAL)*RESCALE_NEW)/2;
+            Screen('FillRect', mainWindow, COLORS.BGCOLOR);
+            for i=1:CHOICES
+                Screen('DrawTexture', mainWindow, picIndex(i), [0 0 PICDIMS],[topLeft topLeft+destDims]);
+                topLeft(HORIZONTAL) = topLeft(HORIZONTAL) + destDims(HORIZONTAL) + stim.gapWidth;
+            end
             timespec = timing.plannedOnsets.cue(n) - SLACK; %first one will be .4 off but it's because it's not expecting there to be an etra .4 seconds
             timing.actualOnsets.cue(n) = Screen('Flip',mainWindow,timespec);
             fprintf('Flip time error = %.4f\n', timing.actualOnsets.cue(n) - timing.plannedOnsets.cue(n));
