@@ -1,0 +1,10 @@
+trial	ons(s)	stim_id	stim      	cond    	dur 	rt  	acc 	resp    	cresp   
+1   	3.4   	17  	pico11.jpg 	omit    	2.468	0.924	1   	left    	left    
+2   	8.9   	1   	pico23.jpg 	realtime	2.475	0.594	1   	left    	left    
+3   	14.4  	14  	pici28.jpg 	omit    	2.471	0.702	0   	right   	left    
+4   	20.4  	3   	pico16.jpg 	realtime	2.471	1.506	0   	right   	left    
+5   	25.4  	20  	pici30.jpg 	omit    	2.468	1.333	1   	right   	right   
+6   	30.4  	6   	pici24.jpg 	realtime	2.469	1.073	1   	right   	right   
+7   	35.4  	4   	pici10.jpg 	realtime	2.471	1.352	1   	left    	left    
+8   	40.4  	15  	pico26.jpg 	omit    	2.476	0.929	1   	left    	left    
+9   	45.4  	5   	pico09.jpg 	realtime	2.498	1.159	1   	left    	left    

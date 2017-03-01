@@ -1280,11 +1280,13 @@ switch SESSION
             new = textbox_i;
             movedown = 80;
             moveaway = 80;
-            new(1) = new(1) - moveaway;
+            %new(1) = new(1) - moveaway;
             new(2) = new(2) + movedown;
             boxsize = 120;
             new(4) = new(4)+ boxsize + movedown;
-            new(3) = new(3) + moveaway; %making the textbox a bit wider
+            %new(3) = new(3) + moveaway; %making the textbox a bit wider
+            new(1) = CENTER(1) - CENTER(1)/1.5;
+            new(3) = CENTER(1) + CENTER(1)/1.5;
             Screen('FillRect', mainWindow, COLORS.GREY/5, new);
             timing.actualOnsets.type(n) = Screen('Flip',mainWindow, timespec);
             fprintf('Flip time error = %.4f\n', timing.actualOnsets.type(n) - timing.plannedOnsets.type(n));
@@ -1313,10 +1315,13 @@ switch SESSION
                         [endtime Index]=min(firstPress); % gets the RT of the first key-press and its ID
                         AsteriskBuffer=[AsteriskBuffer KbName(Index)]; %adds key to buffer
                     end
-                    Screen('TextSize',mainWindow,20); %sets textsize for instructions
+                    Screen('TextSize',mainWindow,20);  %sets textsize for instructions
                     [nxi,nyi] = DrawFormattedText(mainWindow,instructions, 'center', CENTER(2) - CENTER(2)/3, COLORS.MAINFONTCOLOR);
                     Screen('FillRect', mainWindow, COLORS.GREY/5, new)
                     Screen('TextSize',mainWindow,20);
+                    if isempty(AsteriskBuffer)
+                        AsteriskBuffer = ' ';
+                    end
                     [nx,ny,textbounds] = DrawFormattedText(mainWindow, AsteriskBuffer, new(1),new(2),COLORS.MAINFONTCOLOR,WRAPCHARS); %it's going where x ends and y starts
                     %have it so it goes to the next line when they type the next line
                     Screen('Flip',mainWindow);
