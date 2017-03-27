@@ -1619,7 +1619,7 @@ switch SESSION
 %             promptTRs = 3:2:9;
 %         else
         stim.trialDur = 30*SPEED; %chaning length from 20 to 30 s or 15 TRs
-        promptTRs = 6:6:25; %which TR's to make the prompt active- %TO BE CHANGED-used to be 3:3:13; with 15 2 s TRs--now will have 30 TR's
+        promptTRs = 3:3:13; %which TR's to make the prompt active- %TO BE CHANGED-used to be 3:3:13; with 15 2 s TRs--now will have 30 TR's
   %      end
         stim.inter_prompt_interval = 4*SPEED;
         stim.maxspeed = 30;

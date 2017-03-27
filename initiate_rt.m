@@ -70,7 +70,7 @@ function [mainWindow windowSize colors device trigger workingDir logName matlabS
 %                             device = PniKbGetDeviceNamed('Xkeys');
 %                             %                         device = PniKbStartEverything;
 %                         end
-                       % addpath(genpath('../SPTBanne'))
+                        addpath(genpath('/Data1/code/SPTBanne'))
                         trigger = SCAN_TRIGGER;
                         [keyboardIndices, productNames, allInfos] = GetKeyboardIndices;
                         z = strfind(productNames, 'Xkeys');

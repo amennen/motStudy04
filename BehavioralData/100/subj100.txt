@@ -6,3 +6,7 @@ session	trial	pair	onset	dur	cue         	associate
 
 SESSION 20 ended 23-Feb-2017 14:30:33 for SUBJECT number 100
 
+
+SESSION 2 initiated 27-Mar-2017 10:20:59 for SUBJECT number 100
+
+session	trial	pair	onset	dur	cue         	associate   
