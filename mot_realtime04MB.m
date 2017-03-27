@@ -171,7 +171,7 @@ stim.num_learn = 8;
 stim.num_localizer = 16;
 stim.num_total = stim.num_realtime + stim.num_omit + stim.num_localizer; %don't include learning stimuli in count!
 stim.runSpeed = SPEED;
-stim.TRlength = 2*SPEED;
+stim.TRlength = 1*SPEED; %this is the speed
 stim.fontSize = 24;
 NUM_MOTLURES = 0; %changed here from 5 6/23
 NUM_RECALL_LURES = stim.num_realtime + stim.num_omit;
@@ -1619,13 +1619,13 @@ switch SESSION
 %             promptTRs = 3:2:9;
 %         else
         stim.trialDur = 30*SPEED; %chaning length from 20 to 30 s or 15 TRs
-        promptTRs = 3:3:13; %which TR's to make the prompt active
+        promptTRs = 3:3:13; %which TR's to make the prompt active- %TO BE CHANGED-used to be 3:3:13; with 15 2 s TRs--now will have 30 TR's
   %      end
         stim.inter_prompt_interval = 4*SPEED;
         stim.maxspeed = 30;
         stim.minspeed = -30; %0.3; %changed to -30 to go into function--now will allow negative speeds and result in them being faded to black
         stim.targ_dur = 2*SPEED;
-        stim.fixBlock = 20; %time in the beginnning they're staring
+        stim.fixBlock = 20; %time in the beginnning they're staring--20s, 10 TRs 
         %stim.betweenPrompt = 2;
         %stim.beforePrompt = 4;
         vis_promptDur = 2*SPEED;
@@ -1641,8 +1641,8 @@ switch SESSION
         dot_map = keys.map([1 5],:);
         
         %rt parameters 
-        OptimalForget = 0.1;
-        maxIncrement = 1.25;
+        OptimalForget = 0.15;
+        maxIncrement = 1.25; %will also have to check this
         Kp = 5;
         Ki = .0; %changed after RT worksop from 0.01
         Kd = .5;
@@ -1990,8 +1990,8 @@ switch SESSION
         addTR = 0;
         %showFiles = 1;
         if ~CURRENTLY_ONLINE %we have to add the 10 TR into back to go with prev data
-            allMotionTRs = allMotionTRs + 10;
-            addTR = 10;
+            allMotionTRs = allMotionTRs + stim.fixBlock/stim.TRlength;
+            addTR = stim.fixBlock/stim.TRlength;
         end
         rtData.classOutputFileLoad = nan(1,config.nTRs.perBlock + addTR);
         rtData.classOutputFile = cell(1,config.nTRs.perBlock + addTR);
@@ -2116,50 +2116,9 @@ switch SESSION
                
                 stim.frame_counter(stim.trial) = stim.frame_counter(stim.trial) + 1;
                 % here we go!
-                % first look for file
-                if realtime %just saying it's one of the MOT sessions
-                    if TRcounter >= 4 %the first time we're looking is during TR 4
-                        thisTR = allMotionTRs(TRcounter,n); %this is the TR we're actually on KEEP THIS WAY--starts on 4, ends on 10
-                        fileTR = thisTR - 1; %this is what should be shown in the long arrays--for ex TR 3 found in TR 4 corresponding to TR 1 will be indexed at 3
-                        initFile = allMotionTRs(4,n) - 1; % this is the first file we are going to process (tr 3 in each trial)
-                        %thisTR = thisTR; %look forward 2 TR's
-                        if scanNum %if we should be looking for a file 
-                            if ~mod(stim.frame_counter(n),3) && (rtData.classOutputFileLoad(fileTR) ~= 1) % look every 3 frames
-                                timing.plannedOnsets.tClassOutputFileTimeout(fileTR) = timing.plannedOnsets.motion(TRcounter,n) + config.TR-.25; %so this is in seconds
-                                if (GetSecs < timing.plannedOnsets.tClassOutputFileTimeout(fileTR)) %don't need a min time because we're waiting for TRcounter to be 4
-                                    rtData.fileList{thisTR} = ls(classOutputDir);
-                                    allFn = dir([classOutputDir 'vol' '*']);
-                                    dates = [allFn.datenum];
-                                    names = {allFn.name};
-                                    [~,newestIndex] = max(dates);
-                                    rtData.newestFile{thisTR} = names{newestIndex};
-
-                                    [rtData.classOutputFileLoad(fileTR), rtData.classOutputFile{fileTR}] = GetSpecificClassOutputFile(classOutputDir,fileTR);
-                                    if rtData.classOutputFileLoad(fileTR)
-                                        tempStruct = load(fullfile(classOutputDir, rtData.classOutputFile{fileTR}));
-                                        rtData.rtDecoding(fileTR) = tempStruct.classOutput;
-                                        rtData.rtDecodingFunction(fileTR) = PID(rtData.rtDecoding(initFile:fileTR),Kp,Ki,Kd,OptimalForget,maxIncrement);                                    
-                                    end
-                                else %if timeout, put same conditions of smoothing, this TR is nan
-                                    goodPrevious = find(~isnan(rtData.rtDecoding(initFile:fileTR-1))); %hopefully there will be a string of okay values here
-                                    if ~isempty(goodPrevious)
-                                        rtData.rtDecodingFunction(fileTR) = PID(rtData.rtDecoding(goodPrevious),Kp,Ki,Kd,OptimalForget,maxIncrement);
-                                    else
-                                        rtData.rtDecodingFunction(fileTR) = 0; %don't change at all if timed out AND there's no other good info from this trial
-                                    end
-%                                    
-                                end
-                            end
-                        else %if we're using random data instead of neural data
-                            %this won't give errors but it won't be a
-                            %smoothed mean at first
-                            rtData.rtDecoding(fileTR) = rand(1)*2-1;
-                            rtData.rtDecodingFunction(fileTR) = PID(rtData.rtDecoding(fileTR),Kp,Ki,Kd,OptimalForget,maxIncrement);
-                           
-                        end
-                    end
-                end
                 
+                % this whole thing will happen ONLY at the start of every
+                % TR
                 nextTRPos = find(remainingTR,1,'first');
                 if ~isempty(nextTRPos)
                     nextTRTime = timing.plannedOnsets.motion(nextTRPos,stim.trial);
@@ -2167,6 +2126,8 @@ switch SESSION
                         %look for speed update here
                         
                         TRcounter = TRcounter + 1; %update TR count (initialized at 0): so it's the TR that we're currently ON
+                        thisTR = allMotionTRs(TRcounter,n);
+                        RTVEC = [];
                         waitForPulse = true;
                         if ismember(TRcounter,promptTRs)
                             prompt_active = 1;
@@ -2195,28 +2156,71 @@ switch SESSION
                             fprintf('The response for prompt %i was %i\n', prompt_counter, train.resp{prompt_counter})
                             prompt_active = false;
                         end
-                        if realtime %only change speeds with MOT
-                            if TRcounter > 4 && ~isnan(rtData.rtDecodingFunction(allMotionTRs(TRcounter-2,n))) %we look starting in 4, but we update starting at TR 5 AND make sure that it's not nan--if it is don't change speed
-                                current_speed = current_speed + rtData.rtDecodingFunction(allMotionTRs(TRcounter-2,n)); % apply in THIS TR what was from 2 TR's ago (indexed by what file it is) so file 3 will be applied at TR5!
-                                stim.changeSpeed(TRcounter,n) = rtData.rtDecodingFunction(allMotionTRs(TRcounter-2,n)); %speed changed ON that TR
-                            else
-                                stim.changeSpeed(TRcounter,n) = 0;
+                        % the realtime part could help because you know it
+                        % only goes into that loop once
+                        remainingTR(nextTRPos) = 0;
+                        stim.motionSpeed(TRcounter,n) = current_speed;
+                    end
+                end
+                
+              
+   
+                waitFrames = 15; % looking at half second rate--start to begin
+                % but we don't want this to look for the same file more
+                % than once or go through the same loop
+                if realtime
+                    if TRcounter >=6
+                        thisTR = allMotionTRs(TRcounter,n); %this is the TR we're actually on KEEP THIS WAY--starts on 4, ends on 10
+                        fileTR = thisTR - 1; 
+                        if scanNum
+                            if ~mod(stim.frame_counter(n),waitFrames) %check only evert so often to spare memory
+                                % first check if there's a new file
+                                rtData.fileList{thisTR} = ls(classOutputDir);
+                                allFn = dir([classOutputDir 'vol' '*']);
+                                dates = [allFn.datenum];
+                                names = {allFn.name};
+                                [~,newestIndex] = max(dates);
+                                rtData.newestFile{thisTR} = names{newestIndex};
+                                % figure out the NUMBER file that it came from
+                                filename = rtData.newestFile{thisTR};
+                                startI = 5;
+                                fileNumber = str2double(filename(startI:(length(filename)-4)));
+                                % have it load the newest file
+                                % check that we haven't found it before
+                                % change all these indices!! fileTR
+                                if ~strcmp(rtData.newestFile{thisTR},rtData.newestFile{thisTR-1}) %this wasn't opened before so open it! if first file would be nan and would come as 1 then!
+                                    [rtData.classOutputFileLoad(fileNumber), rtData.classOutputFile{fileNumber}] = GetSpecificClassOutputFile(classOutputDir,fileNumber);
+                                    % make a vector of all the data that's been
+                                    % used for the whole trial
+                                    tempStruct = load(fullfile(classOutputDir, rtData.classOutputFile{fileNumber}));
+                                    rtData.rtDecoding(fileNumber) = tempStruct.classOutput;
+                                    RTVEC(end) = rtData.rtDecoding(fileNumber);
+                                    rtData.rtDecodingFunction(fileNumber) = PID(RTVEC,Kp,Ki,Kd,OptimalForget,maxIncrement);
+                                    
+                                    % update speed here
+                                    current_speed = current_speed + rtData.rtDecodingFunction(fileNumber); % apply in THIS TR what was from 2 TR's ago (indexed by what file it is) so file 3 will be applied at TR5!
+                                    stim.changeSpeed(TRcounter,n) = rtData.rtDecodingFunction(fileNumber); %speed changed ON that TR
+                                    
+                                    % make sure speed is between [stim.minspeed
+                                    % stim.maxspeed] (0,30) right now
+                                    current_speed = min([stim.maxspeed current_speed]);
+                                    current_speed = max([stim.minspeed current_speed]);
+                                    
+                                end
                             end
+                            
+                        else
+                            rtData.rtDecoding(fileTR) = rand(1)*2-1;
+                            rtData.rtDecodingFunction(fileTR) = PID(rtData.rtDecoding(fileTR),Kp,Ki,Kd,OptimalForget,maxIncrement);
+                            % update speed here
+                            current_speed = current_speed + rtData.rtDecodingFunction(fileNumber); % apply in THIS TR what was from 2 TR's ago (indexed by what file it is) so file 3 will be applied at TR5!
+                            stim.changeSpeed(TRcounter,n) = rtData.rtDecodingFunction(fileNumber); %speed changed ON that TR
+                            
                             % make sure speed is between [stim.minspeed
                             % stim.maxspeed] (0,30) right now
                             current_speed = min([stim.maxspeed current_speed]);
                             current_speed = max([stim.minspeed current_speed]);
-                           % stim.motionSpeed(TRcounter,n) = current_speed; %speed ON that TR
-                            %we want to save the last speed for future
-                            %runs--save by id, don't save if not lure trial
-                            if TRcounter == config.nTRs.motion %on last TR
-                                stim.lastSpeed(stim.id(stim.trial)) = current_speed; %going to save it in a matrix of run,stimID
-                                stim.lastRTDecoding(stim.id(stim.trial)) = rtData.rtDecoding(allMotionTRs(TRcounter-2,n)); %file 9 that's applied now
-                                stim.lastRTDecodingFunction(stim.id(stim.trial)) = rtData.rtDecodingFunction(allMotionTRs(TRcounter-2,n));
-                            end
                         end
-                        remainingTR(nextTRPos) = 0;
-                        stim.motionSpeed(TRcounter,n) = current_speed;
                     end
                 end
                 
@@ -2246,8 +2250,11 @@ switch SESSION
                 end
 
                 
-            end  %20 s trial ends here THEN probe
-            
+            end  %30 s trial ends here THEN probe
+            % update parameters at the end of the trial
+            stim.lastSpeed(stim.id(stim.trial)) = current_speed; %going to save it in a matrix of run,stimID
+            stim.lastRTDecoding(stim.id(stim.trial)) = rtData.rtDecoding(fileNumber); %file 9 that's applied now
+            stim.lastRTDecodingFunction(stim.id(stim.trial)) = rtData.rtDecodingFunction(fileNumber);
             % present targetness probe
             KbQueueRelease;
             if CURRENTLY_ONLINE && SESSION > TOCRITERION3
