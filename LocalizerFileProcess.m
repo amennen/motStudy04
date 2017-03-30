@@ -3,7 +3,7 @@ function LocalizerFileProcess(subjectNum,crossval,featureSelect,prev,scanNow,sca
 if IsLinux
     biac_dir = '/Data1/packages/BIAC_Matlab_R2014a/';
     bxhpath='/opt/BXH/1.11.1/bin/';
-    fslpath='/opt/fsl/5.0.8/bin/';
+    fslpath='/opt/fsl/5.0.9/bin/';
 end
 
 %add necessary package
@@ -18,7 +18,7 @@ end
 % if prev
 %     projectName = 'motStudy01';
 % else
-projectName = 'motStudy03';
+projectName = 'motStudy04';
 % end
 setenv('FSLOUTPUTTYPE','NIFTI_GZ');
 save_dir = ['/Data1/code/' projectName '/data/' num2str(subjectNum) '/']; 

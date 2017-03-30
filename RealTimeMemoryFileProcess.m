@@ -44,7 +44,7 @@ function [patterns, t] = RealTimeMemoryFileProcess(subjectNum,featureSelect,prev
 
 
 %% initialize path prefix for different replyDrive
-projectName = 'motStudy03';
+projectName = 'motStudy04';
 setenv('FSLOUTPUTTYPE','NIFTI_GZ');
 save_dir = ['/Data1/code/' projectName '/data/' num2str(subjectNum) '/']; %this is where she sets the save directory!
 process_dir = ['/Data1/code/' projectName '/data/' num2str(subjectNum) '/' 'reg' '/'];

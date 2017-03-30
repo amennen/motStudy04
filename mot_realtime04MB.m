@@ -329,7 +329,7 @@ final_instruct_continue = ['\n\n-- Press ' PROGRESS_TEXT ' to begin once you und
 
 % timing constants
 STABILIZATIONTIME = 2 * stim.TRlength;
-STILLDURATION = 3 * stim.TRlength * SPEED;
+STILLDURATION = 3 * 2*stim.TRlength * SPEED;
 CONGRATSDURATION = 3*SPEED;
 INSTANT = 0.001;
 
@@ -2189,12 +2189,15 @@ switch SESSION
                                 % check that we haven't found it before
                                 % change all these indices!! fileTR
                                 if ~strcmp(rtData.newestFile{thisTR},rtData.newestFile{thisTR-1}) %this wasn't opened before so open it! if first file would be nan and would come as 1 then!
-                                    [rtData.classOutputFileLoad(fileNumber), rtData.classOutputFile{fileNumber}] = GetSpecificClassOutputFile(classOutputDir,fileNumber);
+                                    %[rtData.classOutputFileLoad(fileNumber), rtData.classOutputFile{fileNumber}] = GetSpecificClassOutputFile(classOutputDir,fileNumber);
                                     % make a vector of all the data that's been
                                     % used for the whole trial
-                                    tempStruct = load(fullfile(classOutputDir, rtData.classOutputFile{fileNumber}));
+                                    % don't need that call anymore because
+                                    % we're getting the number
+                                    rtData.classOutputFileLoad(fileNumber) = 1;
+                                    tempStruct = load(fullfile(classOutputDir,filename));
                                     rtData.rtDecoding(fileNumber) = tempStruct.classOutput;
-                                    RTVEC(end) = rtData.rtDecoding(fileNumber);
+                                    RTVEC(end+1) = rtData.rtDecoding(fileNumber);
                                     rtData.rtDecodingFunction(fileNumber) = PID(RTVEC,Kp,Ki,Kd,OptimalForget,maxIncrement);
                                     
                                     % update speed here
@@ -2211,7 +2214,8 @@ switch SESSION
                             
                         else
                             rtData.rtDecoding(fileTR) = rand(1)*2-1;
-                            rtData.rtDecodingFunction(fileTR) = PID(rtData.rtDecoding(fileTR),Kp,Ki,Kd,OptimalForget,maxIncrement);
+                            RTVEC(end+1) = rtData.rtDecoding(fileTR);
+                            rtData.rtDecodingFunction(fileTR) = PID(RTVEC,Kp,Ki,Kd,OptimalForget,maxIncrement);
                             % update speed here
                             current_speed = current_speed + rtData.rtDecodingFunction(fileNumber); % apply in THIS TR what was from 2 TR's ago (indexed by what file it is) so file 3 will be applied at TR5!
                             stim.changeSpeed(TRcounter,n) = rtData.rtDecodingFunction(fileNumber); %speed changed ON that TR
