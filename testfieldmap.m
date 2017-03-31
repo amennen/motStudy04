@@ -6,6 +6,16 @@ subjectName = [datestr(now,5) datestr(now,7) datestr(now,11) num2str(runNum) '_'
 dicom_dir = ['/Data1/subjects/' datestr(now,10) datestr(now,5) datestr(now,7) '.' subjectName '.' subjectName '/'];
 % now the scout outputs one series of files
 scanNum = 2; % for T1
+t1fn = 'highres';
+t1re = 'highres_re';
+highresfiles_genstr = sprintf('%s001_0000%s_0*',dicom_dir,num2str(scanNum)); %general string for ALL mprage files**
+unix(sprintf('%sdicom2bxh %s001_0000%s_0* %s.bxh',bxhpath,imgDir,highresfiles_genstr,t1fn));
+%reorient bxh wrapper
+unix(sprintf('%sbxhreorient --orientation=LAS %s.bxh %s.bxh',bxhpath,t1fn,t1re));
+%convert the reoriented bxh wrapper to a nifti file
+unix(sprintf('%sbxh2analyze --overwrite --analyzetypes --niigz --niftihdr -s %s.bxh %s',bxhpath,t1fn,t1re))
+unix(sprintf('%sbet %s.nii.gz %s_brain.nii.gz -R',fslpath,t1re,t1re))
+
 % ran script below to reoient
 % collect field map images
 % now new images are file numbers 3 and 4
@@ -53,6 +63,9 @@ unix(sprintf('%sbet magnitude magnitude_brain',fslpath)) %really weird this runs
 unix(sprintf('%sfslmaths topup_fout.nii.gz -mul 6.28 fieldmap_rads',fslpath))
 
 % now after collecting epi can then run epi_reg
+exfunc2highres_mat='example_func2highres';
+
+sprintf('%sepi_reg -epi=%s.nii.gz --t1=%s.nii.gz --t1brain=%s_brain.nii.gz --out=% --fmap=fieldmap_rads --fmapmap=magnitude --fmapmagbrain=magnitude_brain --echospacing=0.000345 --pedir=y'
 %%
 projectName = 'motStudy03';
 allDates{1} = '1-14-17';
