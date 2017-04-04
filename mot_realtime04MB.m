@@ -2135,7 +2135,7 @@ switch SESSION
                             prompt_counter = prompt_counter + 1;
                             train.onset(prompt_counter) = GetSecs;
                             check(prompt_counter) = 1;
-                        elseif ismember(TRcounter-1,promptTRs) && check(prompt_counter)
+                        elseif ismember(TRcounter-2,promptTRs) && check(prompt_counter)
                              [train.acc(prompt_counter), train.resp{prompt_counter}, ~, train.rt(prompt_counter), ~, train.resp_str{prompt_counter}] = ...
                             multiChoice(queueCheck, embedded_keys, embedded_scale, embedded_cresp, GetSecs, DEVICE, [],sum(keys.map(3:5,:)),subj_map);
                         
@@ -2256,9 +2256,11 @@ switch SESSION
                 
             end  %30 s trial ends here THEN probe
             % update parameters at the end of the trial
-            stim.lastSpeed(stim.id(stim.trial)) = current_speed; %going to save it in a matrix of run,stimID
-            stim.lastRTDecoding(stim.id(stim.trial)) = rtData.rtDecoding(fileNumber); %file 9 that's applied now
-            stim.lastRTDecodingFunction(stim.id(stim.trial)) = rtData.rtDecodingFunction(fileNumber);
+            if realtime
+                stim.lastSpeed(stim.id(stim.trial)) = current_speed; %going to save it in a matrix of run,stimID
+                stim.lastRTDecoding(stim.id(stim.trial)) = rtData.rtDecoding(fileNumber); %file 9 that's applied now
+                stim.lastRTDecodingFunction(stim.id(stim.trial)) = rtData.rtDecodingFunction(fileNumber);
+            end
             % present targetness probe
             KbQueueRelease;
             if CURRENTLY_ONLINE && SESSION > TOCRITERION3
