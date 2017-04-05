@@ -2,10 +2,10 @@
 %%fmri session
 %first these are all the session numbers
 
-SUBJECT = 100; %experimental subject number
+SUBJECT = 1; %experimental subject number
 prev = 0; %if today's date (0) or previous date (1)
 scanNow = 1; %if using triggers (1)
-runNum = 2; %what number subject they are today
+runNum = 1; %what number subject they are today
 
 SPTB_PATH = ['/Data1/code/SPTBanne'];
 addpath(genpath(SPTB_PATH));
@@ -63,75 +63,75 @@ ASSOCIATES = RECALL2 + 1;
 %% RUN MP_RAGE FIRST
 %% RUN VARIOUS BEHAVIORAL TASKS
 %first MOT_PRACTICE and RECALL PRACTICE
-mot_realtime02(SUBJECT,MOT_PRACTICE2, [],0,scanNow); %will move automatically into RECALL_PRACTICE
+mot_realtime04MB(SUBJECT,MOT_PRACTICE2, [],0,scanNow); %will move automatically into RECALL_PRACTICE
 %then start RSVP task5
 %% SCAN_PREP: instructions and also 8 seconds
 scanNum = 7;
-mot_realtime02(SUBJECT,SCAN_PREP,[],scanNum,scanNow)
+mot_realtime04MB(SUBJECT,SCAN_PREP,[],scanNum,scanNow)
 
 %% SCAN_PREP FILE PROCESS
 scanNum = 7; %change 
 processNew = 1;
-ProcessMask(SUBJECT,processNew,prev,scanNum,runNum) %have it so it waits until it finds the file
+ProcessNiftiMask(SUBJECT,processNew,prev,scanNum,runNum) %have it so it waits until it finds the file
 
 %% NOW RUN FIELD MAPS WHILE NEXT BEHAVIORAL TASKS (RSVP2,FAMILIARIZE3,TOCRITERION3)
 %changed from RSVP2 change back!!
-mot_realtime02(SUBJECT,RSVP2,[],0,scanNow) %will continue until TOCRITERION3
+mot_realtime04MB(SUBJECT,RSVP2,[],0,scanNow) %will continue until TOCRITERION3
 %look for mask and test it
 
 %% LOCALIZER DISPLAY
-scanNum = 11;
-mot_realtime02(SUBJECT,MOT_LOCALIZER,[],scanNum,scanNow);
+scanNum = 7;
+mot_realtime04MB(SUBJECT,MOT_LOCALIZER,[],scanNum,scanNow);
 
 %% LOCALIZER FILE PROCESS
-scanNum = 11;
+scanNum = 6;
 crossval = 0;
 %crossval = 1;=
 featureSelect = 1;
-LocalizerFileProcess(SUBJECT,crossval,featureSelect,prev,scanNow,scanNum,MOT_LOCALIZER,runNum)
+LocalizerNiftiFileProcess(SUBJECT,crossval,featureSelect,prev,scanNow,scanNum,MOT_LOCALIZER,runNum)
 
 %% RECALL 1
 scanNum = 13;
-mot_realtime02(SUBJECT,RECALL1,[],scanNum,scanNow);
+mot_realtime04MB(SUBJECT,RECALL1,[],scanNum,scanNow);
 
 %% MOT RUN 1 DISPLAY
 scanNum = 15; %new would be 15
-mot_realtime02(SUBJECT,MOT{1},[],scanNum,scanNow);
+mot_realtime04MB(SUBJECT,MOT{1},[],scanNum,scanNow);
 %% MOT RUN 1 FILE PROCESS
 scanNum = 15;%normally 15;
 blockNum = 1;
 featureSelect = 1;
-RealTimeMemoryFileProcess(SUBJECT,featureSelect,prev,scanNow,scanNum,MOT{1},blockNum,runNum);
+RealTimeNiftiFileProcess(SUBJECT,featureSelect,prev,scanNow,scanNum,MOT{1},blockNum,runNum);
 
 %% MOT RUN 2 DISPLAY
 scanNum = 17;
-mot_realtime02(SUBJECT,MOT{2},[],scanNum,scanNow);
+mot_realtime04MB(SUBJECT,MOT{2},[],scanNum,scanNow);
 %% MOT RUN 2 FILE PROCESS
 scanNum = 17;
 featureSelect = 1;
 blockNum = 2;
-RealTimeMemoryFileProcess(SUBJECT,featureSelect,prev,scanNow,scanNum,MOT{2},blockNum,runNum);
+RealTimeNiftiFileProcess(SUBJECT,featureSelect,prev,scanNow,scanNum,MOT{2},blockNum,runNum);
 
 %% MOT RUN 3 DISPLAY
 scanNum = 19;
-mot_realtime02(SUBJECT,MOT{3},[],scanNum,scanNow);
+mot_realtime04MB(SUBJECT,MOT{3},[],scanNum,scanNow);
 %% MOT RUN 3 FILE PROCESS
 scanNum = 19;
 featureSelect = 1;
 blockNum = 3;
-RealTimeMemoryFileProcess(SUBJECT,featureSelect,prev,scanNow,scanNum,MOT{3},blockNum,runNum);
+RealTimeNiftiFileProcess(SUBJECT,featureSelect,prev,scanNow,scanNum,MOT{3},blockNum,runNum);
 %% MOT RUN 4 DISPLAY
 scanNum = 21;
-mot_realtime02(SUBJECT,MOT{4},[],scanNum,scanNow);
+mot_realtime04MB(SUBJECT,MOT{4},[],scanNum,scanNow);
 %% MOT RUN 3 FILE PROCESS
 scanNum = 21;
 featureSelect = 1;
 blockNum = 4;
-RealTimeMemoryFileProcess(SUBJECT,featureSelect,prev,scanNow,scanNum,MOT{4},blockNum,runNum);
+RealTimeNiftiFileProcess(SUBJECT,featureSelect,prev,scanNow,scanNum,MOT{4},blockNum,runNum);
 
 %% RECALL 2
 scanNum = 21;
-mot_realtime02(SUBJECT,RECALL2,[],scanNum,scanNow);
+mot_realtime04MB(SUBJECT,RECALL2,[],scanNum,scanNow);
 %% ANALYZE RECALL DATA
 % do for recall 1 and recall 2
 makeFile = 1;

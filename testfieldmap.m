@@ -1,28 +1,34 @@
 %% example dicom file: convert to nifti
 % new dicom files
 projectName = 'motStudy04';
-runNum = 2;
+runNum = 1;
+subjNum =101;
 subjectName = [datestr(now,5) datestr(now,7) datestr(now,11) num2str(runNum) '_' projectName];
 dicom_dir = ['/Data1/subjects/' datestr(now,10) datestr(now,5) datestr(now,7) '.' subjectName '.' subjectName '/'];
 imgDir = dicom_dir;
+save_dir = ['/Data1/code/' projectName '/data/' num2str(subjNum) '/']; %this is where she sets the save directory!
+process_dir = [save_dir 'reg' '/'];
+cd(process_dir)
+
 bxhpath='/opt/BXH/1.11.1/bin/';
 fslpath='/opt/fsl/5.0.9/bin/';
+fslbase = '/opt/fsl/5.0.9/'
 roi_dir = ['/Data1/code/' projectName '/data/'];
 
 % now the scout outputs one series of files
 scanNum = 2; % for T1
 t1fn = 'highres';
 t1re = 'highres_re';
-highresfiles_genstr = sprintf('%s001_00000%s_0*',dicom_dir,num2str(scanNum)); %general string for ALL mprage files**
+highresfiles_genstr = sprintf('%s001_0000%s_0*',dicom_dir,num2str(scanNum,'%2.2i')); %general string for ALL mprage files**
 unix(sprintf('%sdicom2bxh %s %s.bxh',bxhpath,highresfiles_genstr,t1fn));
 %reorient bxh wrapper
 unix(sprintf('%sbxhreorient --orientation=LAS %s.bxh %s.bxh',bxhpath,t1fn,t1re));
 %convert the reoriented bxh wrapper to a nifti file
 unix(sprintf('%sbxh2analyze --overwrite --analyzetypes --niigz --niftihdr -s %s.bxh %s',bxhpath,t1re,t1re))
-unix(sprintf('%sbet %s.nii.gz %s_brain.nii.gz -R',fslpath,t1re,t1re)) %really weird this runs on 
+unix(sprintf('%sbet %s.nii.gz %s_brain.nii.gz -R',fslpath,t1re,t1re)) %really weird this runs on the terminal but not matlab
 
 %register standard to high res
-unix(sprintf('%sflirt -in %s_brain.nii.gz -ref $FSLDIR/data/standard/MNI152_T1_2mm_brain.nii.gz -out highres2standard -omat highres2standard.mat -cost corratio -dof 12 -searchrx -30 30 -searchry -30 30 -searchrz -30 30 -interp trilinear',fslpath,t1re));
+unix(sprintf('%sflirt -in %s_brain.nii.gz -ref %sdata/standard/MNI152_T1_2mm_brain.nii.gz -out highres2standard -omat highres2standard.mat -cost corratio -dof 12 -searchrx -30 30 -searchry -30 30 -searchrz -30 30 -interp trilinear',fslpath,t1re,fslbase));
 unix(sprintf('%sfnirt --iout=highres2standard_head --in=%s.nii.gz --aff=highres2standard.mat --cout=highres2standard_warp --iout=highres2standard --jout=highres2highres_jac --config=T1_2_MNI152_2mm --ref=$FSLDIR/data/standard/MNI152_T1_2mm.nii.gz --refmask=$FSLDIR/data/standard/MNI152_T1_2mm_brain_mask_dil --warpres=10,10,10', fslpath,t1re));
 unix(sprintf('%sapplywarp -i %s_brain.nii.gz -r $FSLDIR/data/standard/MNI152_T1_2mm_brain.nii.gz -o highres2standard -w highres2standard_warp',fslpath,t1re));
 %compute inverse transform (standard to highres)
@@ -35,6 +41,7 @@ unix(sprintf('%sinvwarp -w highres2standard_warp -o standard2highres_warp -r %s_
 % convert to dicom first?
 %test
 % first convert to nifti
+
 %AP SCAN FIRST = 3
 scanNum = 3;
 APname = 'SE_AP';
@@ -71,7 +78,7 @@ unix(sprintf('%stopup --imain=%s.nii.gz --datain=%s%s --config=%s%s --out=topup_
 % create magnitude image from topup
 unix(sprintf('%sfslmaths topup_iout -Tmean magnitude',fslpath))
 % create brain-extracted magnitude image
-unix('module load fsl/5.0.9') 
+%unix('module load fsl/5.0.9') 
 unix(sprintf('%sbet magnitude magnitude_brain',fslpath)) %really weird this runs on 
 unix(sprintf('%sfslmaths topup_fout.nii.gz -mul 6.28 fieldmap_rads',fslpath))
 time2 = GetSecs;
@@ -79,12 +86,13 @@ time2 = GetSecs;
 % look at difference between 2: 
 fieldt = time2-time1; % took 519 seconds with all 3 scans (8.5 minutes)
 % try for 1 and 3 files
+
 % now after collecting epi can then run epi_reg
 scanNum = 5; % not using pace right now
 exffn = 'exfunc';
 exfre = 'exfunc_re';
-exfunc_genstr = sprintf('%s001_00000%s_0*',dicom_dir,num2str(scanNum)); %general string for ALL mprage files**
-unix(sprintf('%sdicom2bxh %s %s.bxh',bxhpath,exfunc_genstr,exffn));
+exfunc_str = sprintf('%s001_0000%s_000010.dcm',dicom_dir,num2str(scanNum,'%2.2i')); %general string for ALL mprage files**
+unix(sprintf('%sdicom2bxh %s %s.bxh',bxhpath,exfunc_str,exffn));
 %reorient bxh wrapper
 unix(sprintf('%sbxhreorient --orientation=LAS %s.bxh %s.bxh',bxhpath,exffn,exfre));
 %convert the reoriented bxh wrapper to a nifti file
@@ -94,6 +102,8 @@ unix(sprintf('%sbxh2analyze --overwrite --analyzetypes --niigz --niftihdr -s %s.
 t1 = GetSecs;
 exfunc2highres_mat='example_func2highres';
 highres2exfunc_mat='highres2example_func';
+unix(sprintf('%sepi_reg --epi=%s --t1=%s --t1brain=%s_brain --out=%s',fslpath,exfre,t1re,t1re,exfunc2highres_mat))
+
 unix(sprintf('%sepi_reg --epi=%s.nii.gz --t1=%s.nii.gz --t1brain=%s_brain.nii.gz --out=%s --fmap=fieldmap_rads --fmapmag=magnitude --fmapmagbrain=magnitude_brain --echospacing=0.000345 --pedir=y',fslpath,exfre,t1re,t1re,exfunc2highres_mat))
 timefunc2highres = GetSecs-t1;
 unix(sprintf('%sconvert_xfm -inverse -omat %s.mat %s.mat',fslpath,highres2exfunc_mat,exfunc2highres_mat));
@@ -106,3 +116,13 @@ unix(sprintf('%sapplywarp -i %s%s.nii.gz -r %s.nii.gz -o %s_exfunc.nii.gz -w sta
 if exist(sprintf('%s_exfunc.nii.gz',roi_name),'file')
     unix(sprintf('gunzip %s_exfunc.nii.gz',roi_name));
 end
+
+
+%% now for another run of X dicom files, apply mcflirt and then mask? or mask and then mcflirt?
+% you have an example dicom file, and registered mask. so first 
+% 1. convert dicom to nifti file
+% 2. motion correct w/ mcflirt
+% 3. mask data using retrieval mask
+% 4. apply classifier output data to it--make sure this is in the same
+% space
+% motion correction THEN mask data using the nifti mask

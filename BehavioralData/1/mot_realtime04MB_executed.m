@@ -897,6 +897,7 @@ switch SESSION
         digits_isi = 0.1*SPEED;
         digits_triggerNext = false;
         minimal_format = true;
+        stim.TRlength = 2;
         subj_triggerNext = false;
         keymap_image = imread(KEY_MAPPING);
         subj_promptDur = 4 * SPEED;
@@ -1139,6 +1140,7 @@ switch SESSION
         digits_isi = 0.1*SPEED;
         digits_triggerNext = false;
         minimal_format = true;
+        stim.TRlength = 2;
         % stimulus data fields
         stim.triggerCounter = 1;
         stim.missedTriggers = 0;

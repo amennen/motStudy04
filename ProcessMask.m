@@ -16,7 +16,7 @@ createMaskFileForRTDicoms = 1;
 if IsLinux
     biac_dir = '/Data1/packages/BIAC_Matlab_R2014a/';
     bxhpath='/opt/BXH/1.11.1/bin/';
-    fslpath='/opt/fsl/5.0.8/bin/';
+    fslpath='/opt/fsl/5.0.9/bin/';
 end
 
 %add necessary package

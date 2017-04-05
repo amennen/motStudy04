@@ -1,0 +1,45 @@
+trial	ons(s)	stim_id	stim      	cond    	dur 	rt  	acc 	resp    	cresp   
+1   	49.4  	30  	COAL      	targ_easy	2.059	NR  	0   	NR      	1 detail, 2+ details, full
+2   	55.4  	30  	COAL (repeat 1)	targ_easy	2.011	NR  	0   	NR      	1 detail, 2+ details, full
+3   	61.4  	30  	COAL (repeat 2)	targ_easy	2.01	NR  	0   	NR      	1 detail, 2+ details, full
+4   	67.4  	30  	COAL (repeat 3)	targ_easy	2.011	NR  	0   	NR      	1 detail, 2+ details, full
+5   	91.4  	34  	MAGNET    	targ_hard	2.006	NR  	0   	NR      	1 detail, 2+ details, full
+6   	97.4  	34  	MAGNET (repeat 1)	targ_hard	2.006	NR  	0   	NR      	1 detail, 2+ details, full
+7   	103.4 	34  	MAGNET (repeat 2)	targ_hard	2.006	NR  	0   	NR      	1 detail, 2+ details, full
+8   	109.4 	34  	MAGNET (repeat 3)	targ_hard	2.005	NR  	0   	NR      	1 detail, 2+ details, full
+9   	133.4 	37  	PAGE      	lure_hard	2.018	NR  	0   	NR      	1 detail, 2+ details, full
+10  	139.4 	37  	PAGE (repeat 1)	lure_hard	2.01	NR  	0   	NR      	1 detail, 2+ details, full
+11  	145.4 	37  	PAGE (repeat 2)	lure_hard	2.01	NR  	0   	NR      	1 detail, 2+ details, full
+12  	151.4 	37  	PAGE (repeat 3)	lure_hard	2.006	NR  	0   	NR      	1 detail, 2+ details, full
+13  	175.4 	38  	CANDLE    	lure_easy	2.015	NR  	0   	NR      	1 detail, 2+ details, full
+14  	181.4 	38  	CANDLE (repeat 1)	lure_easy	2.011	NR  	0   	NR      	1 detail, 2+ details, full
+15  	187.4 	38  	CANDLE (repeat 2)	lure_easy	2.009	NR  	0   	NR      	1 detail, 2+ details, full
+16  	193.4 	38  	CANDLE (repeat 3)	lure_easy	2.01	NR  	0   	NR      	1 detail, 2+ details, full
+17  	217.4 	39  	BROOM     	lure_hard	2.028	NR  	0   	NR      	1 detail, 2+ details, full
+18  	223.4 	39  	BROOM (repeat 1)	lure_hard	2.009	NR  	0   	NR      	1 detail, 2+ details, full
+19  	229.4 	39  	BROOM (repeat 2)	lure_hard	2.009	NR  	0   	NR      	1 detail, 2+ details, full
+20  	235.4 	39  	BROOM (repeat 3)	lure_hard	2.006	NR  	0   	NR      	1 detail, 2+ details, full
+21  	259.4 	36  	MARBLE    	targ_easy	2.011	NR  	0   	NR      	1 detail, 2+ details, full
+22  	265.4 	36  	MARBLE (repeat 1)	targ_easy	2.005	NR  	0   	NR      	1 detail, 2+ details, full
+23  	271.4 	36  	MARBLE (repeat 2)	targ_easy	2.009	NR  	0   	NR      	1 detail, 2+ details, full
+24  	277.4 	36  	MARBLE (repeat 3)	targ_easy	2.009	NR  	0   	NR      	1 detail, 2+ details, full
+25  	301.4 	29  	HOOK      	targ_hard	2.005	NR  	0   	NR      	1 detail, 2+ details, full
+26  	307.4 	29  	HOOK (repeat 1)	targ_hard	2.006	NR  	0   	NR      	1 detail, 2+ details, full
+27  	313.4 	29  	HOOK (repeat 2)	targ_hard	2.005	NR  	0   	NR      	1 detail, 2+ details, full
+28  	319.4 	29  	HOOK (repeat 3)	targ_hard	2.005	NR  	0   	NR      	1 detail, 2+ details, full
+29  	343.4 	40  	PADDLE    	lure_easy	2.02	NR  	0   	NR      	1 detail, 2+ details, full
+30  	349.4 	40  	PADDLE (repeat 1)	lure_easy	2.009	NR  	0   	NR      	1 detail, 2+ details, full
+31  	355.4 	40  	PADDLE (repeat 2)	lure_easy	2.007	NR  	0   	NR      	1 detail, 2+ details, full
+32  	361.4 	40  	PADDLE (repeat 3)	lure_easy	2.01	NR  	0   	NR      	1 detail, 2+ details, full
+33  	385.4 	41  	BRUSH     	lure_hard	2.018	NR  	0   	NR      	1 detail, 2+ details, full
+34  	391.4 	41  	BRUSH (repeat 1)	lure_hard	2.006	NR  	0   	NR      	1 detail, 2+ details, full
+35  	397.4 	41  	BRUSH (repeat 2)	lure_hard	2.007	NR  	0   	NR      	1 detail, 2+ details, full
+36  	403.4 	41  	BRUSH (repeat 3)	lure_hard	2.005	NR  	0   	NR      	1 detail, 2+ details, full
+37  	427.4 	27  	STAPLE    	targ_easy	2.006	NR  	0   	NR      	1 detail, 2+ details, full
+38  	433.4 	27  	STAPLE (repeat 1)	targ_easy	2.009	NR  	0   	NR      	1 detail, 2+ details, full
+39  	439.4 	27  	STAPLE (repeat 2)	targ_easy	2.008	NR  	0   	NR      	1 detail, 2+ details, full
+40  	445.4 	27  	STAPLE (repeat 3)	targ_easy	2.008	NR  	0   	NR      	1 detail, 2+ details, full
+41  	469.4 	42  	SHOVEL    	lure_easy	2.024	NR  	0   	NR      	1 detail, 2+ details, full
+42  	475.4 	42  	SHOVEL (repeat 1)	lure_easy	2.023	2.02	0   	generic 	1 detail, 2+ details, full
+43  	481.4 	42  	SHOVEL (repeat 2)	lure_easy	2.005	NR  	0   	NR      	1 detail, 2+ details, full
+44  	487.4 	42  	SHOVEL (repeat 3)	lure_easy	2.005	NR  	0   	NR      	1 detail, 2+ details, full
