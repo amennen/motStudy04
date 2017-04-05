@@ -293,7 +293,9 @@ MATLAB_STIM_FILE = [ppt_dir 'mot_realtime04MB_subj_' num2str(SUBJECT) '_stimAssi
 CUELISTFILE_TARGETS = [base_path 'stimuli/text/wordpool_ONLYTARGETS.txt']; %changed for subject 15 just to be sure that the words for practice aren't going to be assigned to more people!
 TRAININGCUELIST = [base_path 'stimuli/text/wordpool_targets_training.txt'];
 CUETARGETFILE = [base_path 'stimuli/text/ed_plants.txt'];
-
+% it reads the text file-but just get the names from going through the
+% entire file! (see Megan's script)
+% change for all the correct paths here
 PICLISTFILE = [base_path 'stimuli/SCREENNAMES.txt'];
 STIMPATH = [base_path 'stimuli/STIM/'];
 PICFOLDER = [base_path 'stimuli/STIM/ALLIMAGES' filesep];
