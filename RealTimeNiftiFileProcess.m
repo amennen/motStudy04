@@ -202,10 +202,10 @@ printlog(dataFile,'*********************************************\n\n');
 % prepare for trial sequence
 printlog(dataFile,'Block\tTR\tFileAvail\tOutputClass\tCategSep\n'); 
 %% acquiring files
-
+remove = 20/TR;
 zscoreNew = 1;
 useHistory = 1;
-firstBlockTRs = 64; %total number of TRs to take for standard deviation of last run
+firstBlockTRs = 128/TR; %total number of TRs to take for standard deviation of last run
 for iTrial = 1:patterns.nTRs % the first 10 TRs have been taken out to detrend
     
     tstart(iTrial) = tic;
@@ -215,7 +215,7 @@ for iTrial = 1:patterns.nTRs % the first 10 TRs have been taken out to detrend
     zscoreConst1 = 1.0/zscoreLen1;
     % increase count of TRs
     %increase the count of TR pulses
-    thisTR = iTrial + 10; %account for taking out TRs
+    thisTR = iTrial + remove; %account for taking out TRs
     while ~patterns.fileAvail(iTrial)
         [patterns.fileAvail(iTrial) patterns.newFile{iTrial}] = GetSpecificFMRIFile(dicom_dir,scanNum,thisTR);
         timing.fileAppear(iTrial) = toc(tstart(iTrial));
@@ -239,7 +239,7 @@ for iTrial = 1:patterns.nTRs % the first 10 TRs have been taken out to detrend
         unix(sprintf('%smcflirt -in %s.nii -reffile %sexfunc_re.nii',fslpath,niftiname,process_dir))
         t2 = GetSecs;
         moco = t2-t1;
-        niftiname = sprintf('nifti%3.3i_re_mcf.nii.gz', thisTR);
+        niftiname = sprintf('nifti%3.3i_mcf.nii.gz', thisTR);
         niftidata = readnifti(niftiname);
         newVol = niftidata(roi);
         patterns.raw(iTrial,:) = newVol;  % keep patterns for later training

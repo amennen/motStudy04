@@ -287,8 +287,8 @@ printlog(dataFile,'beginning model training...\n');
 
 %parameters
 penalty = 100;
-shiftTR = 2;
-keepTR = 15; %changed on 1/20 for subject 6 onwards to train the localizer task on all 15 TR's instead of just the first one
+shiftTR = 4/TR;
+keepTR = 30; %changed on 1/20 for subject 6 onwards to train the localizer task on all 15 TR's instead of just the first one
 trainStart = tic;
 
 %first get session information

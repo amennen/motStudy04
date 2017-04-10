@@ -11,11 +11,11 @@ function [patterns trials stimOrder ] = GetSessionInfoRT(subjNum,SESSION,behav_d
 
 
 LOC = 19;
-MOT = [19 21:23]; %(can change the way the files are named in the future)
-RECALL = [20 24];
+MOT = [19 21:24]; %(can change the way the files are named in the future)
+RECALL = [20 25];
 MOT_PREP = 5;
 TR = 1;
-
+remove = 20/TR; %to account for 20 s in the beginning where nothing happens
 if SESSION == LOC
     crossval = 1;
 else
@@ -39,7 +39,7 @@ else
     N_TRS_LOC = 30/TR; %set to all if don't specify
 end
 NCOND = 4;
-nTRs = config.nTRs.perBlock + 10/TR; %includes 5 seconds at the end
+nTRs = config.nTRs.perBlock + 10/TR; %includes 10 seconds at the end
 
 % get hard dot speed
 fileSpeed = dir(fullfile(behav_dir, ['mot_realtime04_' num2str(subjNum) '_' num2str(MOT_PREP)  '*.mat']));
@@ -107,11 +107,11 @@ end
 
 targets = sum(VARIATIONS_MAT(1:2,:));
 lures = sum(VARIATIONS_MAT(3:4,:));
-patterns.regressor.allCond = VARIATIONS_MAT(:,11:end); %changed 11/9 because don't need this
+patterns.regressor.allCond = VARIATIONS_MAT(:,remove+1:end); %changed 11/9 because don't need this
 REGRESSORS = [targets;lures];
-patterns.regressor.twoCond = REGRESSORS(:,11:end); %get rid of first 10 TRs
+patterns.regressor.twoCond = REGRESSORS(:,remove+1:end); %get rid of first 10 TRs
 
-patterns.selector.xval = SELECTOR_XVAL(11:end);
+patterns.selector.xval = SELECTOR_XVAL(remove+1:end);
 % make the separate selectors
 if crossval
     nIterations = length(iTR.TH); %how many of each condition (8)

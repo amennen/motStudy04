@@ -329,7 +329,7 @@ final_instruct_continue = ['\n\n-- Press ' PROGRESS_TEXT ' to begin once you und
 
 % timing constants
 STABILIZATIONTIME = 2 * stim.TRlength;
-STILLDURATION = 3 * 2*stim.TRlength * SPEED;
+STILLDURATION = 6 * SPEED;
 CONGRATSDURATION = 3*SPEED;
 INSTANT = 0.001;
 
@@ -2086,7 +2086,8 @@ switch SESSION
         sessionInfoFile = fullfile(ppt_dir, ['SessionInfo' '_' num2str(SESSION) '.mat']);
         save(sessionInfoFile, 'stimCond','stimID', 'timing', 'config'); 
                 
-        
+        foundFn = [];
+
         for n=1:length(stim.cond)
             stim.trial = n;
             train = [];
@@ -2184,6 +2185,7 @@ switch SESSION
             waitForPulse = false;
             printlog(LOG_NAME,'trial\tTR\tprompt active\tspeed\tds\tflip error\tfound file\tFileTR\tCategSep\tLastFile\n');
             check = [];
+            RTVEC = [];
             while abs(GetSecs - timing.plannedOnsets.probe(n)) > 0.050;%SLACK*2 %so this is just constatnly running, stops when it's within a flip
                
                 stim.frame_counter(stim.trial) = stim.frame_counter(stim.trial) + 1;
@@ -2198,7 +2200,6 @@ switch SESSION
                         %look for speed update here
                         TRcounter = TRcounter + 1; %update TR count (initialized at 0): so it's the TR that we're currently ON
                         thisTR = allMotionTRs(TRcounter,n);
-                        RTVEC = [];
                         waitForPulse = true;
                         if ismember(TRcounter,promptTRs)
                             prompt_active = 1;
@@ -2256,10 +2257,13 @@ switch SESSION
                                 filename = rtData.newestFile{thisTR};
                                 startI = 5;
                                 fileNumber = str2double(filename(startI:(length(filename)-4)));
+                                % let's see if we've loaded this before
+                                if ~ismember(fileNumber,foundFn)
+                                    % now add this to the found file
+                                    foundFn(end+1) = fileNumber;
                                 % have it load the newest file
                                 % check that we haven't found it before
                                 % change all these indices!! fileTR
-                                if ~strcmp(rtData.newestFile{thisTR},rtData.newestFile{thisTR-1}) %this wasn't opened before so open it! if first file would be nan and would come as 1 then!
                                     %[rtData.classOutputFileLoad(fileNumber), rtData.classOutputFile{fileNumber}] = GetSpecificClassOutputFile(classOutputDir,fileNumber);
                                     % make a vector of all the data that's been
                                     % used for the whole trial
@@ -2274,12 +2278,19 @@ switch SESSION
                                     % update speed here
                                     current_speed = current_speed + rtData.rtDecodingFunction(fileNumber); % apply in THIS TR what was from 2 TR's ago (indexed by what file it is) so file 3 will be applied at TR5!
                                     stim.changeSpeed(TRcounter,n) = rtData.rtDecodingFunction(fileNumber); %speed changed ON that TR
+                                    % so this will update every time a new
+                                    % file comes through!
+                                    % you can check rtData.rtDecoding to
+                                    % see which files are caught here
+                                    
                                     
                                     % make sure speed is between [stim.minspeed
                                     % stim.maxspeed] (0,30) right now
                                     current_speed = min([stim.maxspeed current_speed]);
                                     current_speed = max([stim.minspeed current_speed]);
-                                    
+                                    % need something to make sure if it
+                                    % comes back in the same TR it doesn't
+                                    % count the same data again
                                 end
                             end
                             
@@ -2682,9 +2693,7 @@ switch SESSION
             if mod(stim.trial,10)==0 || (stim.enterLoop >= (stim.scanLength-(STABILIZATIONTIME)))
                 stim.expDuration = (GetSecs - stim.enterLoop) / 60; % experiment time in mins
                 save(MATLAB_SAVE_FILE,'stim','timing');
-                
-            end
-            
+            end 
         end
         isi(mainWindow,stim.isiDuration,COLORS.MAINFONTCOLOR); %cange this to be actual ISI
         
@@ -2726,8 +2735,8 @@ switch SESSION
             runStart = GetSecs;
         end
        % runStart = timing.trig.wait;
-        config.wait = 16; % we want this to be up for 8 seconds to collect sample TR's
-        config.TR = 2;
+        config.wait = 10; % we want this to be up for 8 seconds to collect sample TR's
+        config.TR = 1;
         timing.plannedOnsets.offEx = runStart + config.wait;
         DrawFormattedText(mainWindow,'Done!','center','center',COLORS.MAINFONTCOLOR,WRAPCHARS);
         timespec = timing.plannedOnsets.offEx-SLACK;
@@ -2737,9 +2746,7 @@ switch SESSION
         save(MATLAB_SAVE_FILE,'timing');
         WaitSecs(2) %wait a little before closing
         sca
-        %mot_realtime04MB(SUBJECT,SESSION+1,SET_SPEED,scanNum,scanNow);
         
-        % session switch
 end
 return
 

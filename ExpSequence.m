@@ -84,6 +84,7 @@ scanNum = 7;
 mot_realtime04MB(SUBJECT,MOT_LOCALIZER,[],scanNum,scanNow);
 
 %% LOCALIZER FILE PROCESS
+% number of TR's total: 1376 (should be 688 originally)
 scanNum = 6;
 crossval = 0;
 %crossval = 1;=
@@ -91,10 +92,12 @@ featureSelect = 1;
 LocalizerNiftiFileProcess(SUBJECT,crossval,featureSelect,prev,scanNow,scanNum,MOT_LOCALIZER,runNum)
 
 %% RECALL 1
+% number of TR's total: 474
 scanNum = 13;
 mot_realtime04MB(SUBJECT,RECALL1,[],scanNum,scanNow);
 
 %% MOT RUN 1 DISPLAY
+% number of TR's total 452 (should be 226 originally)
 scanNum = 15; %new would be 15
 mot_realtime04MB(SUBJECT,MOT{1},[],scanNum,scanNow);
 %% MOT RUN 1 FILE PROCESS
