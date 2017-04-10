@@ -14,7 +14,7 @@ LOC = 19;
 MOT = [19 21:23]; %(can change the way the files are named in the future)
 RECALL = [20 24];
 MOT_PREP = 5;
-
+TR = 1;
 
 if SESSION == LOC
     crossval = 1;
@@ -36,13 +36,13 @@ load(fullfile(behav_dir, ['SessionInfo' '_' num2str(SESSION)]));
 if ~isempty(varargin)
     N_TRS_LOC = cell2mat(varargin);
 else
-    N_TRS_LOC = 15; %set to all if don't specify
+    N_TRS_LOC = 30/TR; %set to all if don't specify
 end
 NCOND = 4;
-nTRs = config.nTRs.perBlock + 5; %includes 5 seconds at the end
+nTRs = config.nTRs.perBlock + 10/TR; %includes 5 seconds at the end
 
 % get hard dot speed
-fileSpeed = dir(fullfile(behav_dir, ['mot_realtime02_' num2str(subjNum) '_' num2str(MOT_PREP)  '*.mat']));
+fileSpeed = dir(fullfile(behav_dir, ['mot_realtime04_' num2str(subjNum) '_' num2str(MOT_PREP)  '*.mat']));
 if ~isempty(fileSpeed)
     matlabOpenFile = [behav_dir '/' fileSpeed(end).name];
     lastRun = load(matlabOpenFile);
@@ -77,7 +77,7 @@ else
     %trialDur = timing.plannedOnsets.math(1) - timing.plannedOnsets.prompt(1) + 4; %for entire recall period = 15 TR's total, then go two past
 end
 trialDurTR = (trialDur/config.TR) - 1; %20s/2 = 10 - 1 = 9 TRs
-if SESSION == LOC && N_TRS_LOC > 0 && N_TRS_LOC < 15 %shift over a little bit more
+if SESSION == LOC && N_TRS_LOC > 0 && N_TRS_LOC < 30/TR %shift over a little bit more
     trialDurTR = N_TRS_LOC - 1;
 end
 

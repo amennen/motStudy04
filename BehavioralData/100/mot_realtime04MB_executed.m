@@ -153,7 +153,7 @@ end
 if ~exist(data_dir,'dir'), mkdir(data_dir); end
 ppt_dir = [data_dir filesep SUBJ_NAME filesep];
 if ~exist(ppt_dir,'dir'), mkdir(ppt_dir); end
-base_path = [fileparts(which('mot_realtime04.m')) filesep];
+base_path = [fileparts(which('mot_realtime04MB.m')) filesep];
 MATLAB_SAVE_FILE = [ppt_dir MATLAB_SAVE_FILE];
 LOG_NAME = [ppt_dir LOG_NAME];
 
@@ -165,11 +165,10 @@ stim.session = SESSION;
 stim.subject = SUBJECT;
 stim.sessionName = SESSIONSTRINGS{SESSION};
 stim.num_realtime = 10;
-%stim.num_long = 10; %just delete this here?
 stim.num_omit = 10;
 stim.num_learn = 8;
 stim.num_localizer = 16;
-stim.num_total = stim.num_realtime + stim.num_omit + stim.num_localizer; %don't include learning stimuli in count!
+stim.num_total = stim.num_learn + stim.num_realtime + stim.num_omit + stim.num_localizer; 
 stim.runSpeed = SPEED;
 stim.TRlength = 1*SPEED; %this is the speed
 stim.fontSize = 24;
@@ -289,17 +288,23 @@ LEARN = 6;
 LOC = 7;
 
 % stimulus filepaths
-MATLAB_STIM_FILE = [ppt_dir 'mot_realtime04MB_subj_' num2str(SUBJECT) '_stimAssignment.mat'];
-CUELISTFILE_TARGETS = [base_path 'stimuli/text/wordpool_ONLYTARGETS.txt']; %changed for subject 15 just to be sure that the words for practice aren't going to be assigned to more people!
-TRAININGCUELIST = [base_path 'stimuli/text/wordpool_targets_training.txt'];
+MATLAB_STIM_FILE = [ppt_dir 'mot_realtime04_subj_' num2str(SUBJECT) '_stimAssignment.mat'];
+%CUELISTFILE_TARGETS = [base_path 'stimuli/text/wordpool_ONLYTARGETS.txt']; %changed for subject 15 just to be sure that the words for practice aren't going to be assigned to more people!
+TRAININGCUELIST = [base_path 'stimuli/text/trainingCues.txt'];
+MOTCUELIST = [base_path 'stimuli/text/motCues.txt'];
+LOCALIZERCUELIST = [base_path 'stimuli/text/localizerCues.txt'];
+LOCALIZERLURELIST = [base_path 'stimuli/text/localizerLures.txt'];
 CUETARGETFILE = [base_path 'stimuli/text/ed_plants.txt'];
 
-PICLISTFILE = [base_path 'stimuli/SCREENNAMES.txt'];
-STIMPATH = [base_path 'stimuli/STIM/'];
-PICFOLDER = [base_path 'stimuli/STIM/ALLIMAGES' filesep];
-FAKEPICFOLDER = [base_path 'stimuli/STIM/ALLSIMILARIMAGES' filesep];
-TRAININGPICFOLDER = [base_path 'stimuli/STIM/training' filesep];
-TRAININGLISTFILE = [base_path 'stimuli/TRAININGSCREEN.txt'];
+% it reads the text file-but just get the names from going through the
+% entire file! (see Megan's script)
+% change for all the correct paths here
+MOTFOLDER = [base_path 'stimuli/STIM/middlepairs/'];
+MOTLURESFOLDER = [base_path 'stimuli/STIM/middlepairs_lures/'];
+TRAININGFOLDER = [base_path 'stimuli/STIM/training/'];
+TRAININGLURESFOLDER = [base_path 'stimuli/STIM/training_lures/'];
+LOCALIZERFOLDER = [base_path 'stimuli/STIM/localizer/'];
+
 % present mapping without keylabels if ppt. is in the scanner
 if CURRENTLY_ONLINE && SESSION > TOCRITERION3
     KEY_MAPPING = [base_path 'stimuli/bwvividness.jpg'];
@@ -315,21 +320,16 @@ NOTIFY = 'Great work! You finished the task.\n\nPlease notify your experimenter.
 CONGRATS = 'Great work! You finished the task.\n\nPlease wait for further instructions.';
 
 % modify instructions if ppt. is in the scanner
-% if CURRENTLY_ONLINE && SESSION > TOCRITERION3
-    STILLEXPLAIN = ['Please remember that moving your head even a little during scanning blurs our picture of your brain.'];
-    STILLREMINDER = ['The scan is now starting.\n\nMoving your head even a little blurs the image, so '...
-        'please try to keep your head totally still until the scanning noise stops.\n\n Do it for science!'];
-% else
-%     STILLEXPLAIN = [];
-%     STILLREMINDER = [];
-% end
+STILLEXPLAIN = ['Please remember that moving your head even a little during scanning blurs our picture of your brain.'];
+STILLREMINDER = ['The scan is now starting.\n\nMoving your head even a little blurs the image, so '...
+    'please try to keep your head totally still until the scanning noise stops.\n\n Do it for science!'];
 PROGRESS_TEXT = 'INDEX';
 final_instruct_continue = ['\n\n-- Press ' PROGRESS_TEXT ' to begin once you understand these instructions --'];
 %end
 
 % timing constants
 STABILIZATIONTIME = 2 * stim.TRlength;
-STILLDURATION = 3 * stim.TRlength * SPEED;
+STILLDURATION = 3 * 2*stim.TRlength * SPEED;
 CONGRATSDURATION = 3*SPEED;
 INSTANT = 0.001;
 
@@ -355,79 +355,127 @@ switch SESSION
         
         %check to see if this was a previous yoked subject!!!!
         previousYC = ~isempty(dir(fullfile(ppt_dir, ['EK5_DOT' '*.mat'])));
-        %if this is true, then they've already done this
+        %if this is true, then they've already done this--if they've
+        %already been a yoked control subject and have done the training
+        % then don't set anything up--but if now using as own data?
         
-        
-        %this is where we get the actual stimuli start with cue pairs--
-        preparedCues = readStimulusFile(CUELISTFILE_TARGETS,stim.num_total);
-        pics = readStimulusFile_evenIO(PICLISTFILE,stim.num_total); %now it alternates starting O, I, O, I, ...
+        % goal: create all stimuli for subject
+        % ordered training pics and training word pairs
+        % ordered localizer pics and word pairs
+        % ordered mot pics and word pairs
+        % extra words for localizer and recall practice?
+        % reading in name and just saving as cells
+        picList = {};
+        pics = {};
+        picsCond = {};
+        pictureCount = 1;
+        for cond = [LEARN LOC REALTIME]
+            tempCell = {};
+            if cond == LEARN
+                fn = TRAININGFOLDER;
+                nstim = stim.num_learn;
+                dirList = dir(fn);
+                dirList = dirList(3:end);
+                orderStim = randperm(nstim);
+                for s = 1:nstim
+                    tempCell{s} = dirList(orderStim(s)).name; % for that category
+                    pics{pictureCount} = dirList(orderStim(s)).name;
+                    pictureCount = pictureCount + 1;
+                end
+                picsCond{cond} = tempCell;
+                trainPics = tempCell;
+            elseif cond == LOC
+                fn = LOCALIZERFOLDER;
+                nstim = stim.num_localizer;
+                dirList = dir(fn);
+                dirList = dirList(3:end);
+                orderStim = randperm(nstim);
+                for s = 1:nstim
+                    tempCell{s} = dirList(orderStim(s)).name; % for that category
+                    pics{pictureCount} = dirList(orderStim(s)).name;
+                    pictureCount = pictureCount + 1;
+                end
+                picsCond{cond} = tempCell;
+            elseif cond == REALTIME
+                % get stimuli for both
+                fn = MOTFOLDER;
+                nstim = stim.num_realtime;
+                dirList = dir(fn);
+                dirList = dirList(3:end);
+                orderStim = randperm(nstim);
+                
+                allOptions = 1:nstim;
+                indoorRT = randperm(nstim,nstim/2);
+                indoorOM = allOptions(~ismember(allOptions,indoorRT));
+                outdoorRT = randperm(nstim,nstim/2);
+                outdoorOM = allOptions(~ismember(allOptions,outdoorRT));
+                outdoorRT = outdoorRT + nstim;
+                outdoorOM = outdoorOM + nstim;
+                RTIND = shuffle([indoorRT outdoorRT]);
+                OMIND = shuffle([indoorOM outdoorOM]);
+                for cond2 = [REALTIME OMIT]
+                    if cond2 == REALTIME
+                        takefrom = RTIND;
+                    else
+                        takefrom = OMIND;
+                    end
+                    for s = 1:nstim
+                        tempCell{s} = dirList(takefrom(s)).name;
+                        pics{pictureCount} = dirList(takefrom(s)).name;
+                        pictureCount = pictureCount + 1;
+                    end
+                    picsCond{cond2} = tempCell;
+                end
+            end
+        end
+
+        % now choose all the words
+        preapredCues = {};
+        wordCount = 1;
+        for cond=[LEARN LOC REALTIME]
+            if cond==LEARN
+                trainWords = readStimulusFile(TRAININGCUELIST,stim.num_learn);
+                cues{STIMULI}{LEARN} = trainWords;
+                for s = 1:stim.num_learn
+                    preparedCues{wordCount} = trainWords{s};
+                    wordCount = wordCount + 1;
+                end
+            elseif cond==LOC
+                locCueWords = readStimulusFile(LOCALIZERCUELIST,stim.num_localizer);
+                cues{STIMULI}{LOC} = locCueWords;
+                for s = 1:stim.num_localizer
+                    preparedCues{wordCount} = locCueWords{s};
+                    wordCount = wordCount + 1;
+                end
+            elseif cond==REALTIME
+                motCueWords = readStimulusFile(MOTCUELIST,stim.num_realtime + stim.num_omit);
+                RTWORDS = motCueWords(1:stim.num_realtime);
+                OMITWORDS = motCueWords(stim.num_omit+1:end);
+                for cond2 = [REALTIME OMIT]
+                    if cond2 == REALTIME
+                        takefrom = RTWORDS;
+                        cues{STIMULI}{REALTIME} = RTWORDS;
+                    else
+                        takefrom = OMITWORDS;
+                        cues{STIMULI}{OMIT} = OMITWORDS;
+                    end
+                    for s = 1:stim.num_realtime
+                        preparedCues{wordCount} = takefrom{s};
+                        wordCount = wordCount + 1;
+                    end
+                end
+            end
+        end
         
         pairIndex = 1:stim.num_total;
         
         NUMLURES = 23; %hardcoded
-        
-        % save training words and pictures
-        trainWords = readStimulusFile(TRAININGCUELIST,stim.num_learn);
-        trainPics = readStimulusFile_evenIO(TRAININGLISTFILE,stim.num_learn);
-        cues{STIMULI}{LEARN}{1} = trainWords;
-        % chop up targets into conditions
-        sortIndex = 1;
-        exposIndex = 1;
-        for cond = [REALTIME OMIT LOC]
-            condIndex = 1;
-            switch cond % temp
-                case REALTIME
-                    numInCondition = stim.num_realtime;
-                case OMIT
-                    numInCondition = stim.num_omit;
-                case LOC
-                    numInCondition = stim.num_localizer;
-            end
-
-            for item = 1:numInCondition
-                
-                currCues{condIndex} = preparedCues{exposIndex};
-                currPics{condIndex} = pics{exposIndex};
-                
-                currPicCat{condIndex} = SCENE;
-                currPairs{condIndex} = pairIndex(exposIndex);
-                null_init{condIndex} = 0;
-                sortIndex = sortIndex+1;
-                condIndex = condIndex+1;
-                exposIndex = exposIndex+1;
-                %cues{LAT_MVT}{cond}{1}(item) = logical(randi(2)-1);
-            end
-            sort2 = randperm(length(currCues));
-            currCues = currCues(sort2);
-            currPairs = currPairs(sort2);
-            for exposureNum = 1:NUM_TASK_RUNS
-                cues{STIMULI}{cond}{exposureNum} = currCues;
-                cues{ID}{cond}{exposureNum} = currPairs;
-                cues{ACT_READOUT}{cond}{exposureNum} = null_init;
-                cues{EXPOS_DELTA}{cond}{exposureNum} = null_init;
-                %cues{LAT_MVT}{cond}{exposureNum} = cues{LAT_MVT}{cond}{1};
-            end
-            clear currCues currPics currPairs null_init
-        end
-        
-        % now let's add some lure words / RSVP practice pool words
-        lureCandidates = Shuffle(setdiff(readStimulusFile(CUELISTFILE_TARGETS,[]),preparedCues)); %find words we haven't assigned
-        lureWords = lureCandidates(1:NUMLURES); %take the number of lure words we need, set at 23
-        %motLures = lureCandidates(NUMLURES+1:NUMLURES+NUM_MOTLURES*NUM_TASK_RUNS);
-        
-        % and lures for the recognition test
-        candidates = readStimulusFile_evenIO(PICLISTFILE,ALLMATERIALS);
-        candidates = transpose(candidates);
-        unused = setdiff(candidates,pics); %find all pictures we didn't use before
-        %         unused = setdiff(setdiff(candidates,pics),localizerStim{SCENE});
-        for i = 1:stim.num_realtime+stim.num_omit+3 %add 3 here to make sure for preparation!!
-            recogLures{i} = unused{i}; %%think about this for later!!
-        end
+        lureWords = readStimulusFile(LOCALIZERLURELIST,NUMLURES);
         stimmap = makeMap(preparedCues);
         
         % clean up
         system(['cp ' base_path 'mot_realtime04MB.m ' ppt_dir 'mot_realtime04MB_executed.m']);
-        save(MATLAB_STIM_FILE, 'cues','preparedCues','pics','pairIndex','lureWords','recogLures','stimmap', 'trainWords', 'trainPics');
+        save(MATLAB_STIM_FILE, 'cues','preparedCues','pics','pairIndex','lureWords','stimmap', 'trainWords', 'trainPics');
         
         if previousYC
             mot_realtime04MB(SUBJECT,FAMILIARIZE2,SET_SPEED,scanNum,scanNow);
@@ -456,24 +504,25 @@ switch SESSION
         PROGRESS = INDEXFINGER;
         PROGRESS_TEXT = 'INDEX';
         
-        PF = PICFOLDER;
+        PF = MOTFOLDER;
         % initialization
         trial = 0;
         printlog(LOG_NAME,'session\ttrial\tpair\tonset\tdur\tcue         \tassociate   \n');
 
         if SESSION == FAMILIARIZE
-            [stim.cond stim.condString stimList] = counterbalance_items({cues{STIMULI}{LEARN}{1}},{CONDSTRINGS{LEARN}}); %this just gets the cue words
-            picList = lutSort(stimList, cues{STIMULI}{LEARN}{1}, trainPics);
-            IDlist = lutSort(stimList, cues{STIMULI}{LEARN}{1}, 1:stim.num_learn);
-            PF = TRAININGPICFOLDER;
+            [stim.cond stim.condString stimList] = counterbalance_items({cues{STIMULI}{LEARN}},{CONDSTRINGS{LEARN}}); %this just gets the cue words
+            picList = lutSort(stimList, preparedCues, pics);
+            IDlist = lutSort(stimList, preparedCues, pairIndex);
+            PF = TRAININGFOLDER;
         elseif SESSION == FAMILIARIZE2 || SESSION == STIM_REFRESH
-            [stim.cond stim.condString stimList] = counterbalance_items({cues{STIMULI}{REALTIME}{1}, cues{STIMULI}{OMIT}{1}},CONDSTRINGS);
+            [stim.cond stim.condString stimList] = counterbalance_items({cues{STIMULI}{REALTIME}, cues{STIMULI}{OMIT}},CONDSTRINGS);
             picList = lutSort(stimList, preparedCues, pics);
             IDlist = lutSort(stimList, preparedCues, pairIndex);
         elseif SESSION == FAMILIARIZE3
-            [stim.cond stim.condString stimList] = counterbalance_items({cues{STIMULI}{LOC}{1}},{CONDSTRINGS{LOC}});
+            [stim.cond stim.condString stimList] = counterbalance_items({cues{STIMULI}{LOC}},{CONDSTRINGS{LOC}});
             picList = lutSort(stimList, preparedCues, pics);
             IDlist = lutSort(stimList, preparedCues, pairIndex);
+            PF = LOCALIZERFOLDER;
         end
         
         
@@ -596,24 +645,25 @@ switch SESSION
         stim.triggerCounter = 1;
         stim.missedTriggers = 0;
         stim.loopNumber = 1;
-        PF = PICFOLDER;
         % sequence preparation
         if SESSION == TOCRITERION1
-            [cond strings stimList] = counterbalance_items({cues{STIMULI}{LEARN}{1}},{CONDSTRINGS{LEARN}});
+            [cond strings stimList] = counterbalance_items({cues{STIMULI}{LEARN}},{CONDSTRINGS{LEARN}});
             condmap = makeMap({'stair'});
-            pics = lutSort(stimList, cues{STIMULI}{LEARN}{1}, trainPics);
-            pairIndex = lutSort(stimList, cues{STIMULI}{LEARN}{1}, 1:stim.num_learn);
-            PF = TRAININGPICFOLDER;
+            pics = lutSort(stimList, preparedCues, pics);
+            pairIndex = lutSort(stimList, preparedCues, pairIndex);
+            PF = TRAININGFOLDER;
         elseif SESSION == TOCRITERION2 || SESSION == TOCRITERION2_REP
-            [cond strings stimList] = counterbalance_items({cues{STIMULI}{REALTIME}{1}, cues{STIMULI}{OMIT}{1}},CONDSTRINGS);
+            [cond strings stimList] = counterbalance_items({cues{STIMULI}{REALTIME}, cues{STIMULI}{OMIT}},CONDSTRINGS);
             condmap = makeMap({'realtime','omit'});
             pics = lutSort(stimList, preparedCues, pics);
             pairIndex = lutSort(stimList, preparedCues, pairIndex);
+            PF = MOTFOLDER;
         elseif SESSION == TOCRITERION3
-            [cond strings stimList] = counterbalance_items({cues{STIMULI}{LOC}{1}},{CONDSTRINGS{LOC}});
+            [cond strings stimList] = counterbalance_items({cues{STIMULI}{LOC}},{CONDSTRINGS{LOC}});
             condmap = makeMap({'localizer'});
             pics = lutSort(stimList, preparedCues, pics);
             pairIndex = lutSort(stimList, preparedCues, pairIndex);
+            PF = LOCALIZERFOLDER;
         end
         %first pics is all pics, preparedCues is all cues--pics is then the
         %stimuli that were used in the run
@@ -897,7 +947,6 @@ switch SESSION
         digits_isi = 0.1*SPEED;
         digits_triggerNext = false;
         minimal_format = true;
-        stim.TRlength = 2;
         subj_triggerNext = false;
         keymap_image = imread(KEY_MAPPING);
         subj_promptDur = 4 * SPEED;
@@ -924,7 +973,7 @@ switch SESSION
         
         % initialize stimulus order with initial warmup item
         if SESSION == RECALL_PRACTICE
-            stim.stim = cues{STIMULI}{LEARN}{1}(1:3);
+            stim.stim = cues{STIMULI}{LEARN}(1:3);
             stim.cond = [PRACTICE, PRACTICE, PRACTICE];
             condmap = makeMap({'PRACTICE'});
             stim.condString = {CONDSTRINGS{PRACTICE}, CONDSTRINGS{PRACTICE}, CONDSTRINGS{PRACTICE}};
@@ -935,7 +984,7 @@ switch SESSION
                 '-- Please press ' PROGRESS_TEXT ' to briefly review the instructions --'],minimumDisplay,'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
             waitForKeyboard(kbTrig_keycode,DEVICE);
         else
-            [stim.cond stim.condString stim.stim] = counterbalance_items({cues{STIMULI}{REALTIME}{1}, cues{STIMULI}{OMIT}{1}},CONDSTRINGS);
+            [stim.cond stim.condString stim.stim] = counterbalance_items({cues{STIMULI}{REALTIME}, cues{STIMULI}{OMIT}},CONDSTRINGS);
             condmap = makeMap({'realtime','omit'});
             if SESSION ==RECALL1
                 displayText(mainWindow,['The experiment will now ONLY involve the stimuli that you studied yesterday, both ' ...
@@ -953,7 +1002,7 @@ switch SESSION
         %generate stimulus ID's first so can add them easily
         for i = 1:length(stim.cond)
             if SESSION == RECALL_PRACTICE
-                pos = find(strcmp(cues{STIMULI}{LEARN}{1},stim.stim{i}));
+                pos = find(strcmp(cues{STIMULI}{LEARN},stim.stim{i}));
                 stim.id(i) = pos;
             else
                 pos = find(strcmp(preparedCues,stim.stim{i}));
@@ -1140,7 +1189,6 @@ switch SESSION
         digits_isi = 0.1*SPEED;
         digits_triggerNext = false;
         minimal_format = true;
-        stim.TRlength = 2;
         % stimulus data fields
         stim.triggerCounter = 1;
         stim.missedTriggers = 0;
@@ -1168,8 +1216,8 @@ switch SESSION
         
         % let's have the first three trials be practice ones
         % prepare counterbalanced trial sequence (at most 2 in a row)
-        [stim.cond stim.condString stim.stim] = counterbalance_items({cues{STIMULI}{REALTIME}{1}, cues{STIMULI}{OMIT}{1}},CONDSTRINGS);
-        practiceWords = {'cane', 'drought', 'stairs'}; %think about where to get these practice words from
+        [stim.cond stim.condString stim.stim] = counterbalance_items({cues{STIMULI}{REALTIME}, cues{STIMULI}{OMIT}},CONDSTRINGS);
+        practiceWords = cues{STIMULI}{LEARN}(1:3); % practice words from before is current state?
         stim.stim = [practiceWords stim.stim];
         stim.cond = [PRACTICE PRACTICE PRACTICE stim.cond];
         stim.condString = [CONDSTRINGS{PRACTICE} CONDSTRINGS{PRACTICE} CONDSTRINGS{PRACTICE} stim.condString];
@@ -1181,7 +1229,6 @@ switch SESSION
                 'changed and it is important you follow them exactly.\n\n' ...
                 '-- Please press ' PROGRESS_TEXT ' to briefly review the instructions --'],minimumDisplay,'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
         waitForKeyboard(kbTrig_keycode,DEVICE);
-        
 
         % display instructions
         DrawFormattedText(mainWindow,' ','center','center',COLORS.MAINFONTCOLOR,WRAPCHARS);
@@ -1383,7 +1430,7 @@ switch SESSION
         stim.gapWidth = 40;
         stim.picRow = WINDOWSIZE.pixels(2) *(5/9);
         % change it to be index for left, middle for right choice
-        
+        nPractice = 3; % number of practice trials
         
         stim.instruct1 = ['SCENE MEMORY\n\nYou''re almost done! This is the final task.\n\nWe will show you pictures of various scenes and ask you ' ...
             'which of the two images displayed you''ve seen before. Press the "' recog_scale.inputs{1} '" key if you''ve seen the image on the left before OR press '...
@@ -1395,49 +1442,76 @@ switch SESSION
         stim.triggerCounter = 1;
         stim.missedTriggers = 0;
         
-        % prepare counterbalanced trial sequence (at most 2 in a row)
-%         [stim.cond stim.condString stim.associate] = counterbalance_items({cues{STIMULI}{REALTIME}{1}, cues{STIMULI}{OMIT}{1}, recogLures(4:end)},CONDSTRINGS);
-%         stim.associate = [recogLures(1:3) stim.associate];
-%         stim.cond = [PRACTICE PRACTICE PRACTICE stim.cond];
-%         stim.condString = [CONDSTRINGS{PRACTICE} CONDSTRINGS{PRACTICE} CONDSTRINGS{PRACTICE} stim.condString];
-        
+  
         % prepare stimuli: first actual ones that were seen
-        [stim.cond stim.condString stim.associate] = counterbalance_items({cues{STIMULI}{REALTIME}{1}, cues{STIMULI}{OMIT}{1}},CONDSTRINGS);
+        [stim.cond stim.condString stim.associate] = counterbalance_items({cues{STIMULI}{REALTIME}, cues{STIMULI}{OMIT}},CONDSTRINGS);
+        % Get practice images--don't worry about balancing indoor/outdoor
+        % here
+        stim.stim(1:nPractice) = shuffle(pics(1:nPractice)); % practice words from before is current state?
+        stim.cond = [PRACTICE PRACTICE PRACTICE stim.cond];
+        stim.condString = [CONDSTRINGS{PRACTICE} CONDSTRINGS{PRACTICE} CONDSTRINGS{PRACTICE} stim.condString];
+        stim.associate = [CONDSTRINGS{PRACTICE} CONDSTRINGS{PRACTICE} CONDSTRINGS{PRACTICE} stim.associate];
+        % get practice indoor/outdoor
+        for n = 1:8 % go through all 8 practice items
+            if n <= nPractice
+                thisPic = stim.stim{n};
+            else
+                thisPic = pics{n};
+            end
+            insideP(n) = isempty(strfind(thisPic, 'o')); 
+            outsideP(n) = ~insideP(n);
+        end
+        insideI = find(insideP);
+        usedInside = insideI;
+        outsideI = find(outsideP);
+        usedOutside = outsideI;
+        for n = 1:nPractice
+            if insideP(n) % find an outdoor
+                matchI = randperm(length(usedOutside),1);
+                chosen = usedOutside(matchI);
+                usedOutside(matchI)= [];
+            else
+                matchI = randperm(length(usedInside),1);
+                chosen = usedInside(matchI);
+                usedInside(matchI) = [];
+            end
+            stim.matchStim{n} = pics{chosen};
+            stim.id(n) = find(strcmp(pics,stim.stim{n}));
+        end
+        % STOPPED HERE KEEP CHANGING IT AND ADDING ASSOCIATES!!!!!
         inside = zeros(1,length(stim.cond));
         outside = zeros(1,length(stim.cond));
         % get the correct picture
         for n = 1:length(stim.cond)
+            if stim.cond(n) ~=PRACTICE
             cueSearch = strcmp(preparedCues,stim.associate{n});
             stim.pos(n) = find(cueSearch);
             stim.stim{n} = pics{stim.pos(n)};
             inside(n) = isempty(strfind(stim.stim{n}, 'o')); %if this is true, then the trial's image is an indoor image
-            outside(n) = ~inside(n);
+            outside(n) = ~inside(n); %THE STIM ID WAS WRONG BEFORE MAKE SURE NOW IT'S OKAY!!
+            end
         end
+        
         insideI = find(inside);
         usedInside = insideI;
         outsideI = find(outside);
         usedOutside = outsideI;
-        % now make the matches
+        % now make the matches--CHECK ALL OF THIS
         for n = 1:length(stim.cond)
-            if inside(n)
-                matchI = randperm(length(usedOutside),1);
-                chosen = usedOutside(matchI);
-                usedOutside(matchI) = []; %remove so not repeated
-            else % if an outside pic, use inside
-                matchI =randperm(length(usedInside),1);
-                chosen = usedInside(matchI);
-                usedInside(matchI) = [];
+            if stim.cond(n) ~= PRACTICE
+                if inside(n)
+                    matchI = randperm(length(usedOutside),1);
+                    chosen = usedOutside(matchI);
+                    usedOutside(matchI) = []; %remove so not repeated
+                else % if an outside pic, use inside
+                    matchI =randperm(length(usedInside),1);
+                    chosen = usedInside(matchI);
+                    usedInside(matchI) = [];
+                end
+                stim.matchStim{n} = stim.stim{chosen}; %CHECK THAT THIS INDEX IS FOR STIM.STIM
+                stim.id(n) = find(strcmp(pics,stim.stim{n}));
             end
-            stim.matchStim{n} = stim.stim{chosen};
         end
-        
-        
-        % randomly permuate the names to pair with but just make sure no
-        % real & fake go together
-        % maybe make it so opposite indoor/outdoor go together so they're
-        % never comparing the images to each other
-        
-        %find indoor and outdoor pics separately
         
         
         % display instructions
@@ -1500,11 +1574,11 @@ switch SESSION
             
             % now present the target and lure and choose where to put them!
             if n <= 3 % then use example photos!
-                picIndex(cor) = prepImage(strcat(STIMPATH,'smiley.jpg'),mainWindow);
-                picIndex(incor) = prepImage(strcat(STIMPATH, 'frowny.jpg'),mainWindow);
+                picIndex(cor) = prepImage(strcat(TRAININGFOLDER,stim.stim{n}),mainWindow);
+                picIndex(incor) = prepImage(strcat(TRAININGLURESFOLDER, stim.matchStim{n}),mainWindow);
             else
-                picIndex(cor) = prepImage(strcat(PICFOLDER, stim.stim{n}),mainWindow);
-                picIndex(incor) = prepImage(strcat(FAKEPICFOLDER, stim.matchStim{n}),mainWindow);
+                picIndex(cor) = prepImage(strcat(MOTFOLDER, stim.stim{n}),mainWindow);
+                picIndex(incor) = prepImage(strcat(MOTLURESFOLDER, stim.matchStim{n}),mainWindow);
             end
 
             %destDims = min(PICDIMS*RESCALE_FACTOR,PICDIMS .* (stim.choiceWidth ./ PICDIMS(HORIZONTAL)));
@@ -1619,7 +1693,7 @@ switch SESSION
 %             promptTRs = 3:2:9;
 %         else
         stim.trialDur = 30*SPEED; %chaning length from 20 to 30 s or 15 TRs
-        promptTRs = 3:3:13; %which TR's to make the prompt active- %TO BE CHANGED-used to be 3:3:13; with 15 2 s TRs--now will have 30 TR's
+        promptTRs = 6:6:25; %which TR's to make the prompt active- %TO BE CHANGED-used to be 3:3:13; with 15 2 s TRs--now will have 30 TR's
   %      end
         stim.inter_prompt_interval = 4*SPEED;
         stim.maxspeed = 30;
@@ -1750,7 +1824,7 @@ switch SESSION
             %             while timeout
             try
                 %will need to add this file to the folder to get it to work
-                fileCandidates = dir([ppt_dir 'mot_realtime04MB_' num2str(SUBJECT) '_' num2str(MOT_PREP)  '*.mat']);
+                fileCandidates = dir([ppt_dir 'mot_realtime04_' num2str(SUBJECT) '_' num2str(MOT_PREP)  '*.mat']);
                 dates = [fileCandidates.datenum];
                 names = {fileCandidates.name};
                 [~,newest] = max(dates);
@@ -1776,28 +1850,26 @@ switch SESSION
         if ~day_2
             stim.lureWords = [];
             if SESSION == MOT_PRACTICE
-                [stim.cond stim.condString stim.stim] = counterbalance_items({cues{STIMULI}{LEARN}{1}},{MOTSTRINGS{LEARN}},0);
+                [stim.cond stim.condString stim.stim] = counterbalance_items({cues{STIMULI}{LEARN}},{MOTSTRINGS{LEARN}},0);
             else %MOT_PREP
-                [stim.cond stim.condString stim.stim] = counterbalance_items({[cues{STIMULI}{LEARN}{1} cues{STIMULI}{LEARN}{1} cues{STIMULI}{LEARN}{1} cues{STIMULI}{LEARN}{1} cues{STIMULI}{LEARN}{1} cues{STIMULI}{LEARN}{1}]},{MOTSTRINGS{LEARN}},0);
+                [stim.cond stim.condString stim.stim] = counterbalance_items({[cues{STIMULI}{LEARN} cues{STIMULI}{LEARN} cues{STIMULI}{LEARN} cues{STIMULI}{LEARN} cues{STIMULI}{LEARN} cues{STIMULI}{LEARN}]},{MOTSTRINGS{LEARN}},0);
             end
             condmap = makeMap({'target'});
         elseif SESSION==MOT_PRACTICE2
             stim.lureWords = lureWords(6:7);
-            numItems = length(cues{STIMULI}{LOC}{1});
-            [stim.cond stim.condString stim.stim] = counterbalance_items({cues{STIMULI}{LEARN}{1}(1) cues{STIMULI}{LEARN}{1}(2), stim.lureWords(1), stim.lureWords(2)},MOTSTRINGS,1);
+            [stim.cond stim.condString stim.stim] = counterbalance_items({cues{STIMULI}{LEARN}(1) cues{STIMULI}{LEARN}(2), stim.lureWords(1), stim.lureWords(2)},MOTSTRINGS,1);
             condmap = makeMap({'targ_hard','targ_easy','lure_hard','lure_easy'});
             square_bounds = [CENTER-(stim.square_dims/2) CENTER+(stim.square_dims/2)-1];
             stim.condString = condmap.descriptors(stim.cond);
         elseif SESSION == MOT_LOCALIZER
             stim.lureWords = lureWords(8:23);
-            numItems = length(cues{STIMULI}{LOC}{1});
-            [stim.cond stim.condString stim.stim] = counterbalance_items({cues{STIMULI}{LOC}{1}(1:8), cues{STIMULI}{LOC}{1}(9:16), stim.lureWords(1:8), stim.lureWords(9:16)},MOTSTRINGS,1); %looks like he wanted to separate easy/hard conditions
+            [stim.cond stim.condString stim.stim] = counterbalance_items({cues{STIMULI}{LOC}(1:8), cues{STIMULI}{LOC}(9:16), stim.lureWords(1:8), stim.lureWords(9:16)},MOTSTRINGS,1); %looks like he wanted to separate easy/hard conditions
             condmap = makeMap({'targ_hard','targ_easy','lure_hard','lure_easy'});
             square_bounds = [CENTER-(stim.square_dims/2) CENTER+(stim.square_dims/2)-1];
             stim.condString = condmap.descriptors(stim.cond);
         else
             %stim.lureWords = lureWords(1:5); %don't need these anymore but oh well
-            [stim.cond stim.condString stim.stim] = counterbalance_items({cues{STIMULI}{REALTIME}{1}}, MOT_RT_STRINGS,1);
+            [stim.cond stim.condString stim.stim] = counterbalance_items({cues{STIMULI}{REALTIME}}, MOT_RT_STRINGS,1);
             condmap = makeMap({'rt-targ'});
         end
         square_bounds = [CENTER-(stim.square_dims/2) CENTER+(stim.square_dims/2)-1];
@@ -1893,7 +1965,7 @@ switch SESSION
             stim.instruct_nextMOT = ['You will now continue with the same multitasking task.' final_instruct_continue];
             displayText(mainWindow,stim.instruct_nextMOT,minimumDisplay,'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
             %also load in last session information here
-            allLast = findNewestFile(ppt_dir,[ppt_dir 'mot_realtime04MB_' num2str(SUBJECT) '_' num2str(SESSION-1) '*']);
+            allLast = findNewestFile(ppt_dir,[ppt_dir 'mot_realtime04_' num2str(SUBJECT) '_' num2str(SESSION-1) '*']);
             last = load(allLast);
             lastSpeed = last.stim.lastSpeed; %matrix of motRun (1-3), stimID
             lastDecoding = last.stim.lastRTDecoding;
@@ -2124,7 +2196,6 @@ switch SESSION
                     nextTRTime = timing.plannedOnsets.motion(nextTRPos,stim.trial);
                     if abs(GetSecs - nextTRTime) <= 0.050
                         %look for speed update here
-                        
                         TRcounter = TRcounter + 1; %update TR count (initialized at 0): so it's the TR that we're currently ON
                         thisTR = allMotionTRs(TRcounter,n);
                         RTVEC = [];
@@ -2135,7 +2206,7 @@ switch SESSION
                             prompt_counter = prompt_counter + 1;
                             train.onset(prompt_counter) = GetSecs;
                             check(prompt_counter) = 1;
-                        elseif ismember(TRcounter-1,promptTRs) && check(prompt_counter)
+                        elseif ismember(TRcounter-2,promptTRs) && check(prompt_counter)
                              [train.acc(prompt_counter), train.resp{prompt_counter}, ~, train.rt(prompt_counter), ~, train.resp_str{prompt_counter}] = ...
                             multiChoice(queueCheck, embedded_keys, embedded_scale, embedded_cresp, GetSecs, DEVICE, [],sum(keys.map(3:5,:)),subj_map);
                         
@@ -2159,7 +2230,7 @@ switch SESSION
                         % the realtime part could help because you know it
                         % only goes into that loop once
                         remainingTR(nextTRPos) = 0;
-                        stim.motionSpeed(TRcounter,n) = current_speed;
+                        stim.motionSpeed(TRcounter,n) = current_speed; %this is the speed at the onset of the TR
                     end
                 end
                 
@@ -2189,12 +2260,15 @@ switch SESSION
                                 % check that we haven't found it before
                                 % change all these indices!! fileTR
                                 if ~strcmp(rtData.newestFile{thisTR},rtData.newestFile{thisTR-1}) %this wasn't opened before so open it! if first file would be nan and would come as 1 then!
-                                    [rtData.classOutputFileLoad(fileNumber), rtData.classOutputFile{fileNumber}] = GetSpecificClassOutputFile(classOutputDir,fileNumber);
+                                    %[rtData.classOutputFileLoad(fileNumber), rtData.classOutputFile{fileNumber}] = GetSpecificClassOutputFile(classOutputDir,fileNumber);
                                     % make a vector of all the data that's been
                                     % used for the whole trial
-                                    tempStruct = load(fullfile(classOutputDir, rtData.classOutputFile{fileNumber}));
+                                    % don't need that call anymore because
+                                    % we're getting the number
+                                    rtData.classOutputFileLoad(fileNumber) = 1;
+                                    tempStruct = load(fullfile(classOutputDir,filename));
                                     rtData.rtDecoding(fileNumber) = tempStruct.classOutput;
-                                    RTVEC(end) = rtData.rtDecoding(fileNumber);
+                                    RTVEC(end+1) = rtData.rtDecoding(fileNumber);
                                     rtData.rtDecodingFunction(fileNumber) = PID(RTVEC,Kp,Ki,Kd,OptimalForget,maxIncrement);
                                     
                                     % update speed here
@@ -2211,7 +2285,8 @@ switch SESSION
                             
                         else
                             rtData.rtDecoding(fileTR) = rand(1)*2-1;
-                            rtData.rtDecodingFunction(fileTR) = PID(rtData.rtDecoding(fileTR),Kp,Ki,Kd,OptimalForget,maxIncrement);
+                            RTVEC(end+1) = rtData.rtDecoding(fileTR);
+                            rtData.rtDecodingFunction(fileTR) = PID(RTVEC,Kp,Ki,Kd,OptimalForget,maxIncrement);
                             % update speed here
                             current_speed = current_speed + rtData.rtDecodingFunction(fileNumber); % apply in THIS TR what was from 2 TR's ago (indexed by what file it is) so file 3 will be applied at TR5!
                             stim.changeSpeed(TRcounter,n) = rtData.rtDecodingFunction(fileNumber); %speed changed ON that TR
@@ -2252,9 +2327,11 @@ switch SESSION
                 
             end  %30 s trial ends here THEN probe
             % update parameters at the end of the trial
-            stim.lastSpeed(stim.id(stim.trial)) = current_speed; %going to save it in a matrix of run,stimID
-            stim.lastRTDecoding(stim.id(stim.trial)) = rtData.rtDecoding(fileNumber); %file 9 that's applied now
-            stim.lastRTDecodingFunction(stim.id(stim.trial)) = rtData.rtDecodingFunction(fileNumber);
+            if realtime
+                stim.lastSpeed(stim.id(stim.trial)) = current_speed; %going to save it in a matrix of run,stimID
+                stim.lastRTDecoding(stim.id(stim.trial)) = rtData.rtDecoding(fileNumber); %file 9 that's applied now
+                stim.lastRTDecodingFunction(stim.id(stim.trial)) = rtData.rtDecodingFunction(fileNumber);
+            end
             % present targetness probe
             KbQueueRelease;
             if CURRENTLY_ONLINE && SESSION > TOCRITERION3

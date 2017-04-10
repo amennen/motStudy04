@@ -1,0 +1,2 @@
+trial	ons(s)	stim_id	stim      	cond    	dur 	rt  	acc 	resp    	cresp   
+1   	8.3   	11  	SHOVEL    	localizer	3.452	0.872	0   	generic 	1 detail

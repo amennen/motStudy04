@@ -288,7 +288,7 @@ LEARN = 6;
 LOC = 7;
 
 % stimulus filepaths
-MATLAB_STIM_FILE = [ppt_dir 'mot_realtime04MB_subj_' num2str(SUBJECT) '_stimAssignment.mat'];
+MATLAB_STIM_FILE = [ppt_dir 'mot_realtime04_subj_' num2str(SUBJECT) '_stimAssignment.mat'];
 %CUELISTFILE_TARGETS = [base_path 'stimuli/text/wordpool_ONLYTARGETS.txt']; %changed for subject 15 just to be sure that the words for practice aren't going to be assigned to more people!
 TRAININGCUELIST = [base_path 'stimuli/text/trainingCues.txt'];
 MOTCUELIST = [base_path 'stimuli/text/motCues.txt'];
@@ -513,7 +513,7 @@ switch SESSION
             [stim.cond stim.condString stimList] = counterbalance_items({cues{STIMULI}{LEARN}},{CONDSTRINGS{LEARN}}); %this just gets the cue words
             picList = lutSort(stimList, preparedCues, pics);
             IDlist = lutSort(stimList, preparedCues, pairIndex);
-            PF = TRAININGPICFOLDER;
+            PF = TRAININGFOLDER;
         elseif SESSION == FAMILIARIZE2 || SESSION == STIM_REFRESH
             [stim.cond stim.condString stimList] = counterbalance_items({cues{STIMULI}{REALTIME}, cues{STIMULI}{OMIT}},CONDSTRINGS);
             picList = lutSort(stimList, preparedCues, pics);
@@ -651,7 +651,7 @@ switch SESSION
             condmap = makeMap({'stair'});
             pics = lutSort(stimList, preparedCues, pics);
             pairIndex = lutSort(stimList, preparedCues, pairIndex);
-            PF = TRAININGPICFOLDER;
+            PF = TRAININGFOLDER;
         elseif SESSION == TOCRITERION2 || SESSION == TOCRITERION2_REP
             [cond strings stimList] = counterbalance_items({cues{STIMULI}{REALTIME}, cues{STIMULI}{OMIT}},CONDSTRINGS);
             condmap = makeMap({'realtime','omit'});
@@ -1002,7 +1002,7 @@ switch SESSION
         %generate stimulus ID's first so can add them easily
         for i = 1:length(stim.cond)
             if SESSION == RECALL_PRACTICE
-                pos = find(strcmp(cues{STIMULI}{LEARN}{1},stim.stim{i}));
+                pos = find(strcmp(cues{STIMULI}{LEARN},stim.stim{i}));
                 stim.id(i) = pos;
             else
                 pos = find(strcmp(preparedCues,stim.stim{i}));
@@ -1430,7 +1430,7 @@ switch SESSION
         stim.gapWidth = 40;
         stim.picRow = WINDOWSIZE.pixels(2) *(5/9);
         % change it to be index for left, middle for right choice
-        
+        nPractice = 3; % number of practice trials
         
         stim.instruct1 = ['SCENE MEMORY\n\nYou''re almost done! This is the final task.\n\nWe will show you pictures of various scenes and ask you ' ...
             'which of the two images displayed you''ve seen before. Press the "' recog_scale.inputs{1} '" key if you''ve seen the image on the left before OR press '...
@@ -1447,49 +1447,71 @@ switch SESSION
         [stim.cond stim.condString stim.associate] = counterbalance_items({cues{STIMULI}{REALTIME}, cues{STIMULI}{OMIT}},CONDSTRINGS);
         % Get practice images--don't worry about balancing indoor/outdoor
         % here
-        practicePics= shuffle(pics(1:3)); % practice words from before is current state?
-        practiceAssociates = shuffle(pics(4:6));
+        stim.stim(1:nPractice) = shuffle(pics(1:nPractice)); % practice words from before is current state?
         stim.cond = [PRACTICE PRACTICE PRACTICE stim.cond];
         stim.condString = [CONDSTRINGS{PRACTICE} CONDSTRINGS{PRACTICE} CONDSTRINGS{PRACTICE} stim.condString];
+        stim.associate = [CONDSTRINGS{PRACTICE} CONDSTRINGS{PRACTICE} CONDSTRINGS{PRACTICE} stim.associate];
+        % get practice indoor/outdoor
+        for n = 1:8 % go through all 8 practice items
+            if n <= nPractice
+                thisPic = stim.stim{n};
+            else
+                thisPic = pics{n};
+            end
+            insideP(n) = isempty(strfind(thisPic, 'o')); 
+            outsideP(n) = ~insideP(n);
+        end
+        insideI = find(insideP);
+        usedInside = insideI;
+        outsideI = find(outsideP);
+        usedOutside = outsideI;
+        for n = 1:nPractice
+            if insideP(n) % find an outdoor
+                matchI = randperm(length(usedOutside),1);
+                chosen = usedOutside(matchI);
+                usedOutside(matchI)= [];
+            else
+                matchI = randperm(length(usedInside),1);
+                chosen = usedInside(matchI);
+                usedInside(matchI) = [];
+            end
+            stim.matchStim{n} = pics{chosen};
+            stim.id(n) = find(strcmp(pics,stim.stim{n}));
+        end
         % STOPPED HERE KEEP CHANGING IT AND ADDING ASSOCIATES!!!!!
         inside = zeros(1,length(stim.cond));
         outside = zeros(1,length(stim.cond));
         % get the correct picture
         for n = 1:length(stim.cond)
-            if cond == LEARN
-            else
+            if stim.cond(n) ~=PRACTICE
             cueSearch = strcmp(preparedCues,stim.associate{n});
             stim.pos(n) = find(cueSearch);
             stim.stim{n} = pics{stim.pos(n)};
             inside(n) = isempty(strfind(stim.stim{n}, 'o')); %if this is true, then the trial's image is an indoor image
-            outside(n) = ~inside(n);
+            outside(n) = ~inside(n); %THE STIM ID WAS WRONG BEFORE MAKE SURE NOW IT'S OKAY!!
             end
         end
+        
         insideI = find(inside);
         usedInside = insideI;
         outsideI = find(outside);
         usedOutside = outsideI;
-        % now make the matches
+        % now make the matches--CHECK ALL OF THIS
         for n = 1:length(stim.cond)
-            if inside(n)
-                matchI = randperm(length(usedOutside),1);
-                chosen = usedOutside(matchI);
-                usedOutside(matchI) = []; %remove so not repeated
-            else % if an outside pic, use inside
-                matchI =randperm(length(usedInside),1);
-                chosen = usedInside(matchI);
-                usedInside(matchI) = [];
+            if stim.cond(n) ~= PRACTICE
+                if inside(n)
+                    matchI = randperm(length(usedOutside),1);
+                    chosen = usedOutside(matchI);
+                    usedOutside(matchI) = []; %remove so not repeated
+                else % if an outside pic, use inside
+                    matchI =randperm(length(usedInside),1);
+                    chosen = usedInside(matchI);
+                    usedInside(matchI) = [];
+                end
+                stim.matchStim{n} = stim.stim{chosen}; %CHECK THAT THIS INDEX IS FOR STIM.STIM
+                stim.id(n) = find(strcmp(pics,stim.stim{n}));
             end
-            stim.matchStim{n} = stim.stim{chosen};
         end
-        
-        
-        % randomly permuate the names to pair with but just make sure no
-        % real & fake go together
-        % maybe make it so opposite indoor/outdoor go together so they're
-        % never comparing the images to each other
-        
-        %find indoor and outdoor pics separately
         
         
         % display instructions
@@ -1552,8 +1574,8 @@ switch SESSION
             
             % now present the target and lure and choose where to put them!
             if n <= 3 % then use example photos!
-                picIndex(cor) = prepImage(strcat(STIMPATH,'smiley.jpg'),mainWindow);
-                picIndex(incor) = prepImage(strcat(STIMPATH, 'frowny.jpg'),mainWindow);
+                picIndex(cor) = prepImage(strcat(TRAININGFOLDER,stim.stim{n}),mainWindow);
+                picIndex(incor) = prepImage(strcat(TRAININGLURESFOLDER, stim.matchStim{n}),mainWindow);
             else
                 picIndex(cor) = prepImage(strcat(MOTFOLDER, stim.stim{n}),mainWindow);
                 picIndex(incor) = prepImage(strcat(MOTLURESFOLDER, stim.matchStim{n}),mainWindow);
@@ -1802,7 +1824,7 @@ switch SESSION
             %             while timeout
             try
                 %will need to add this file to the folder to get it to work
-                fileCandidates = dir([ppt_dir 'mot_realtime04MB_' num2str(SUBJECT) '_' num2str(MOT_PREP)  '*.mat']);
+                fileCandidates = dir([ppt_dir 'mot_realtime04_' num2str(SUBJECT) '_' num2str(MOT_PREP)  '*.mat']);
                 dates = [fileCandidates.datenum];
                 names = {fileCandidates.name};
                 [~,newest] = max(dates);
@@ -1828,28 +1850,26 @@ switch SESSION
         if ~day_2
             stim.lureWords = [];
             if SESSION == MOT_PRACTICE
-                [stim.cond stim.condString stim.stim] = counterbalance_items({cues{STIMULI}{LEARN}{1}},{MOTSTRINGS{LEARN}},0);
+                [stim.cond stim.condString stim.stim] = counterbalance_items({cues{STIMULI}{LEARN}},{MOTSTRINGS{LEARN}},0);
             else %MOT_PREP
-                [stim.cond stim.condString stim.stim] = counterbalance_items({[cues{STIMULI}{LEARN}{1} cues{STIMULI}{LEARN}{1} cues{STIMULI}{LEARN}{1} cues{STIMULI}{LEARN}{1} cues{STIMULI}{LEARN}{1} cues{STIMULI}{LEARN}{1}]},{MOTSTRINGS{LEARN}},0);
+                [stim.cond stim.condString stim.stim] = counterbalance_items({[cues{STIMULI}{LEARN} cues{STIMULI}{LEARN} cues{STIMULI}{LEARN} cues{STIMULI}{LEARN} cues{STIMULI}{LEARN} cues{STIMULI}{LEARN}]},{MOTSTRINGS{LEARN}},0);
             end
             condmap = makeMap({'target'});
         elseif SESSION==MOT_PRACTICE2
             stim.lureWords = lureWords(6:7);
-            numItems = length(cues{STIMULI}{LOC}{1});
-            [stim.cond stim.condString stim.stim] = counterbalance_items({cues{STIMULI}{LEARN}{1}(1) cues{STIMULI}{LEARN}{1}(2), stim.lureWords(1), stim.lureWords(2)},MOTSTRINGS,1);
+            [stim.cond stim.condString stim.stim] = counterbalance_items({cues{STIMULI}{LEARN}(1) cues{STIMULI}{LEARN}(2), stim.lureWords(1), stim.lureWords(2)},MOTSTRINGS,1);
             condmap = makeMap({'targ_hard','targ_easy','lure_hard','lure_easy'});
             square_bounds = [CENTER-(stim.square_dims/2) CENTER+(stim.square_dims/2)-1];
             stim.condString = condmap.descriptors(stim.cond);
         elseif SESSION == MOT_LOCALIZER
             stim.lureWords = lureWords(8:23);
-            numItems = length(cues{STIMULI}{LOC}{1});
-            [stim.cond stim.condString stim.stim] = counterbalance_items({cues{STIMULI}{LOC}{1}(1:8), cues{STIMULI}{LOC}{1}(9:16), stim.lureWords(1:8), stim.lureWords(9:16)},MOTSTRINGS,1); %looks like he wanted to separate easy/hard conditions
+            [stim.cond stim.condString stim.stim] = counterbalance_items({cues{STIMULI}{LOC}(1:8), cues{STIMULI}{LOC}(9:16), stim.lureWords(1:8), stim.lureWords(9:16)},MOTSTRINGS,1); %looks like he wanted to separate easy/hard conditions
             condmap = makeMap({'targ_hard','targ_easy','lure_hard','lure_easy'});
             square_bounds = [CENTER-(stim.square_dims/2) CENTER+(stim.square_dims/2)-1];
             stim.condString = condmap.descriptors(stim.cond);
         else
             %stim.lureWords = lureWords(1:5); %don't need these anymore but oh well
-            [stim.cond stim.condString stim.stim] = counterbalance_items({cues{STIMULI}{REALTIME}{1}}, MOT_RT_STRINGS,1);
+            [stim.cond stim.condString stim.stim] = counterbalance_items({cues{STIMULI}{REALTIME}}, MOT_RT_STRINGS,1);
             condmap = makeMap({'rt-targ'});
         end
         square_bounds = [CENTER-(stim.square_dims/2) CENTER+(stim.square_dims/2)-1];
@@ -1945,7 +1965,7 @@ switch SESSION
             stim.instruct_nextMOT = ['You will now continue with the same multitasking task.' final_instruct_continue];
             displayText(mainWindow,stim.instruct_nextMOT,minimumDisplay,'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
             %also load in last session information here
-            allLast = findNewestFile(ppt_dir,[ppt_dir 'mot_realtime04MB_' num2str(SUBJECT) '_' num2str(SESSION-1) '*']);
+            allLast = findNewestFile(ppt_dir,[ppt_dir 'mot_realtime04_' num2str(SUBJECT) '_' num2str(SESSION-1) '*']);
             last = load(allLast);
             lastSpeed = last.stim.lastSpeed; %matrix of motRun (1-3), stimID
             lastDecoding = last.stim.lastRTDecoding;
@@ -2176,7 +2196,6 @@ switch SESSION
                     nextTRTime = timing.plannedOnsets.motion(nextTRPos,stim.trial);
                     if abs(GetSecs - nextTRTime) <= 0.050
                         %look for speed update here
-                        
                         TRcounter = TRcounter + 1; %update TR count (initialized at 0): so it's the TR that we're currently ON
                         thisTR = allMotionTRs(TRcounter,n);
                         RTVEC = [];
@@ -2211,7 +2230,7 @@ switch SESSION
                         % the realtime part could help because you know it
                         % only goes into that loop once
                         remainingTR(nextTRPos) = 0;
-                        stim.motionSpeed(TRcounter,n) = current_speed;
+                        stim.motionSpeed(TRcounter,n) = current_speed; %this is the speed at the onset of the TR
                     end
                 end
                 
