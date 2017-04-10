@@ -49,6 +49,7 @@ projectName = 'motStudy04'; %CHANGE BACK!!
 biac_dir = '/Data1/packages/BIAC_Matlab_R2014a/';
 bxhpath='/opt/BXH/1.11.1/bin/';
 fslpath='/opt/fsl/5.0.9/bin/';
+dcm2path = '/opt/MRICROGL/2-2016/';
 %add necessary package
 if ~exist('readmr','file')
     addpath(genpath(biac_dir));
@@ -230,11 +231,12 @@ for iTrial = 1:patterns.nTRs % the first 10 TRs have been taken out to detrend
         %[newVol patterns.timeRead{iTrial}] = ReadFile([dicom_dir patterns.newFile{iTrial}],imgmat,roi); % NTB: only reads top file
         t0 = GetSecs;
         niftiname = sprintf('nifti%3.3i', thisTR);
-        unix(sprintf('%sdicom2bxh %s%s %s.bxh',bxhpath,dicom_dir,filename,niftiname));
-        unix(sprintf('%sbxhreorient --orientation=LAS %s.bxh %s_re.bxh',bxhpath,niftiname,niftiname));
-        unix(sprintf('%sbxh2analyze --overwrite --analyzetypes --niigz --niftihdr -s %s_re.bxh %s_re',bxhpath,niftiname,niftiname))
+        unix(sprintf('%sdcm2niix %s -f %s -o %s -s y %s%s',dcm2path,dicom_dir,niftiname,runHeader,dicom_dir,patterns.newFile{iTrial}))
+        %unix(sprintf('%sdicom2bxh %s%s %s.bxh',bxhpath,dicom_dir,filename,niftiname));
+        %unix(sprintf('%sbxhreorient --orientation=LAS %s.bxh %s_re.bxh',bxhpath,niftiname,niftiname));
+        %unix(sprintf('%sbxh2analyze --overwrite --analyzetypes --niigz --niftihdr -s %s_re.bxh %s_re',bxhpath,niftiname,niftiname))
         t1 = GetSecs;
-        unix(sprintf('%smcflirt -in %s_re.nii.gz -reffile %sexfunc_re.nii',fslpath,niftiname,process_dir))
+        unix(sprintf('%smcflirt -in %s.nii -reffile %sexfunc_re.nii',fslpath,niftiname,process_dir))
         t2 = GetSecs;
         moco = t2-t1;
         niftiname = sprintf('nifti%3.3i_re_mcf.nii.gz', thisTR);

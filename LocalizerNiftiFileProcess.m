@@ -4,6 +4,7 @@ if IsLinux
     biac_dir = '/Data1/packages/BIAC_Matlab_R2014a/';
     bxhpath='/opt/BXH/1.11.1/bin/';
     fslpath='/opt/fsl/5.0.9/bin/';
+    dcm2path = '/opt/MRICROGL/2-2016/';
 end
 
 %add necessary package
@@ -12,23 +13,7 @@ if ~exist('readmr','file')
     addpath([biac_dir '/mr/']);
     addpath([biac_dir '/general/'])
 end
-
-%runNum = 1;
-% set up paths
-% if prev
-%     projectName = 'motStudy01';
-% else
 projectName = 'motStudy04';
-% end
-biac_dir = '/Data1/packages/BIAC_Matlab_R2014a/';
-bxhpath='/opt/BXH/1.11.1/bin/';
-fslpath='/opt/fsl/5.0.9/bin/';
-%add necessary package
-if ~exist('readmr','file')
-    addpath(genpath(biac_dir));
-    addpath([biac_dir '/mr/']);
-    addpath([biac_dir '/general/'])
-end
 multipath = '/Data1/code/multibandutils/';
 addpath(genpath(multipath));
 setenv('FSLOUTPUTTYPE','NIFTI_GZ');
@@ -49,7 +34,7 @@ if ~prev %if getting data today
     dicom_dir = ['/Data1/subjects/' datestr(now,10) datestr(now,5) datestr(now,7) '.' subjectName '.' subjectName '/'];
 else
     %for subject 16 doing again
-    allDates = {'9-16-16'};
+    allDates = {'4-5-17'};
     %allDates = {'7-1-2016' '3-26-2016', '3-29-2016', '4-1-2016', '4-27-2016', '4-29-2016', '5-05-2016'};
     subjectName = [datestr(allDates{1},5) datestr(allDates{1},7) datestr(allDates{1},11) num2str(runNum) '_' projectName];
     dicom_dir = ['/Data1/subjects/' datestr(allDates{1},10) datestr(allDates{1},5) datestr(allDates{1},7) '.' subjectName '.' subjectName '/'];
@@ -132,14 +117,15 @@ for iTrial = 1:nTRs % the first 10 TRs have been taken out to detrend
         %[newVol patterns.timeRead{iTrial}] = ReadFile([dicom_dir patterns.newFile{iTrial}],imgmat,roi); % NTB: only reads top file
         t0 = GetSecs;
         niftiname = sprintf('nifti%3.3i', thisTR);
-        unix(sprintf('%sdicom2bxh %s%s %s.bxh',bxhpath,dicom_dir,patterns.newFile{iTrial},niftiname));
-        unix(sprintf('%sbxhreorient --orientation=LAS %s.bxh %s_re.bxh',bxhpath,niftiname,niftiname));
-        unix(sprintf('%sbxh2analyze --overwrite --analyzetypes --niigz --niftihdr -s %s_re.bxh %s_re',bxhpath,niftiname,niftiname))
+        unix(sprintf('%sdcm2niix %s -f %s -o %s -s y %s%s',dcm2path,dicom_dir,niftiname,patterns_dir,dicom_dir,patterns.newFile{iTrial}))
+        %unix(sprintf('%sdicom2bxh %s%s %s.bxh',bxhpath,dicom_dir,patterns.newFile{iTrial},niftiname));
+        %unix(sprintf('%sbxhreorient --orientation=LAS %s.bxh %s_re.bxh',bxhpath,niftiname,niftiname));
+        %unix(sprintf('%sbxh2analyze --overwrite --analyzetypes --niigz --niftihdr -s %s_re.bxh %s_re',bxhpath,niftiname,niftiname))
         t1 = GetSecs;
-        unix(sprintf('%smcflirt -in %s_re.nii.gz -reffile %sexfunc_re.nii',fslpath,niftiname,process_dir))
+        unix(sprintf('%smcflirt -in %s.nii -reffile %sexfunc_re.nii',fslpath,niftiname,process_dir))
         t2 = GetSecs;
         moco = t2-t1;
-        niftiname = sprintf('nifti%3.3i_re_mcf.nii.gz', thisTR);
+        niftiname = sprintf('nifti%3.3i_mcf.nii.gz', thisTR);
         niftidata = readnifti(niftiname);
         newVol = niftidata(roi);
         patterns.raw(iTrial,:) = newVol;  % keep patterns for later training
