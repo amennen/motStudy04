@@ -32,7 +32,7 @@ COLORS.BGCOLOR = [50 50 50];
 WRAPCHARS = 70;
 %HideCursor;
 %% INITIALIZE EXPERIMENT
-NUM_TASK_RUNS = 4;
+NUM_TASK_RUNS = 3;
 % orientation session
 SETUP = 1; % stimulus assignment 1
 FAMILIARIZE = SETUP + 1; % rsvp study learn associates 2
@@ -2258,7 +2258,7 @@ switch SESSION
                                 startI = 5;
                                 fileNumber = str2double(filename(startI:(length(filename)-4)));
                                 % let's see if we've loaded this before
-                                if ~ismember(fileNumber,foundFn)
+                                if ~ismember(fileNumber,foundFn) && ismember(fileNumber,allMotionTRs(5:end,n)) % so only accept it if it's one of the TR's for that trial
                                     % now add this to the found file
                                     foundFn(end+1) = fileNumber;
                                 % have it load the newest file
@@ -2902,7 +2902,7 @@ fps = 30;
 %speed = 25;
 %speed = mean(windowSize.pixels)*2;
 %repfulse = 7/3;
-if speed < 0
+if speed <= 0
     shade = abs(speed);
     speed = 0.3; %make it so the dots never actually stop moving
     %take gray amount as distance from 3;

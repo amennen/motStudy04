@@ -1,7 +1,7 @@
-base_path = [fileparts(which('mot_realtime02.m')) filesep];
+base_path = [fileparts(which('mot_realtime04MB.m')) filesep];
 cd(base_path);
 
-SUBJECT = 13;
+SUBJECT = 100;
 
 
 NUM_TASK_RUNS = 3;
@@ -21,7 +21,7 @@ RSVP = TOCRITERION2_REP + 1; % rsvp train to critereon
 % day 2
 STIM_REFRESH = RSVP + 2; %12
 SCAN_PREP = STIM_REFRESH + 1; %13
-MOT_PRACTICE2 = SCAN_PREP + 1; %12
+MOT_PRACTICE2 = SCAN_PREP + 1; %14
 RECALL_PRACTICE = MOT_PRACTICE2 + 1;
 %SCAN_PREP = RECALL_PRACTICE + 1;
 RSVP2 = RECALL_PRACTICE + 1; % rsvp train to critereon
@@ -35,18 +35,19 @@ for i=1:NUM_TASK_RUNS
     counter = counter + 1;
 end
 RECALL2 = MOT{end} + 1; % post-scan rsvp memory test
-ASSOCIATES = RECALL2 + 1;
+DESCRIPTION = RECALL2 + 1; %26
+ASSOCIATES = DESCRIPTION + 1; %27
 
 %% first practice set
-mot_realtime02(SUBJECT, SETUP, [], 0, 0);
+mot_realtime04MB(SUBJECT, SETUP, 1, 0, 0);
 
 % this will continue to train test and practice MOT, then move on to
 % MOT_Practice, MOT_PREP
 %mot_realtime02(SUBJECT,MOT_PRACTICE,[],0,0);
-mot_realtime02(SUBJECT, FAMILIARIZE2, [], 0, 0); %continue because want to not go through the break
+mot_realtime04MB(SUBJECT, FAMILIARIZE2, 1, 0, 0); %continue because want to not go through the break
 
 %% refresh on day 2
-mot_realtime02(SUBJECT, STIM_REFRESH, [], 0, 0);
+mot_realtime04MB(SUBJECT, STIM_REFRESH, [], 0, 0);
 
 %% after scanner, test associates
-mot_realtime02(SUBJECT,ASSOCIATES, [], 0, 0); 
+mot_realtime04MB(SUBJECT,ASSOCIATES, [], 0, 0); 

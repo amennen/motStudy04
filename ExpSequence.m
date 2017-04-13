@@ -14,7 +14,7 @@ addpath(genpath(SPTB_PATH));
 % else
 %     allScanNums = [7 11:2:21];
 % end
-NUM_TASK_RUNS = 4;
+NUM_TASK_RUNS = 3;
 % orientation session
 SETUP = 1; % stimulus assignment 1
 FAMILIARIZE = SETUP + 1; % rsvp study learn associates 2
@@ -31,7 +31,7 @@ RSVP = TOCRITERION2_REP + 1; % rsvp train to critereon
 % day 2
 STIM_REFRESH = RSVP + 2; %12
 SCAN_PREP = STIM_REFRESH + 1; %13
-MOT_PRACTICE2 = SCAN_PREP + 1; %12
+MOT_PRACTICE2 = SCAN_PREP + 1; %14
 RECALL_PRACTICE = MOT_PRACTICE2 + 1;
 %SCAN_PREP = RECALL_PRACTICE + 1;
 RSVP2 = RECALL_PRACTICE + 1; % rsvp train to critereon
@@ -45,7 +45,8 @@ for i=1:NUM_TASK_RUNS
     counter = counter + 1;
 end
 RECALL2 = MOT{end} + 1; % post-scan rsvp memory test
-ASSOCIATES = RECALL2 + 1;
+DESCRIPTION = RECALL2 + 1; %26
+ASSOCIATES = DESCRIPTION + 1; %27
 %last input is scan number
 %scanning numbers should be 21 total3
 % 1-4: SCOUT

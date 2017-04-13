@@ -1,0 +1,111 @@
+trial	ons(s)	stim_id	stim      	cond    	dur 	rt  	acc 	resp    	cresp   
+1   	3.3   	1   	TICKET    	lure    	0.6 	NR  	1   	NR      	NR      
+2   	4     	2   	CANDLE    	lure    	0.634	NR  	1   	NR      	NR      
+3   	4.7   	3   	NOTE      	lure    	0.52	NR  	1   	NR      	NR      
+4   	5.3   	4   	PHONE     	lure    	0.477	NR  	1   	NR      	NR      
+5   	5.8   	5   	ANCHOR    	lure    	0.301	NR  	1   	NR      	NR      
+6   	6.2   	1   	TICKET (repeat 1)	lure    	0.31	NR  	1   	NR      	NR      
+7   	6.5   	3   	NOTE (repeat 1)	lure    	0.513	NR  	1   	NR      	NR      
+8   	7.1   	4   	PHONE (repeat 1)	lure    	0.419	NR  	1   	NR      	NR      
+9   	7.6   	1   	TICKET (repeat 2)	lure    	0.397	NR  	1   	NR      	NR      
+10  	8     	2   	CANDLE (repeat 1)	lure    	0.569	NR  	1   	NR      	NR      
+11  	8.7   	6   	PAINT     	lure    	0.44	NR  	1   	NR      	NR      
+12  	9.2   	2   	CANDLE (repeat 2)	lure    	0.468	NR  	1   	NR      	NR      
+13  	9.7   	4   	PHONE (repeat 2)	lure    	0.374	NR  	1   	NR      	NR      
+14  	10.1  	5   	ANCHOR (repeat 1)	lure    	0.451	NR  	1   	NR      	NR      
+15  	10.6  	7   	LIME      	fruit   	0.951	NR  	0   	NR      	target  
+16  	11.7  	5   	ANCHOR (repeat 2)	lure    	0.298	NR  	1   	NR      	NR      
+17  	12    	3   	NOTE (repeat 2)	lure    	0.401	NR  	1   	NR      	NR      
+18  	12.5  	8   	EASEL     	lure    	0.344	NR  	1   	NR      	NR      
+19  	12.9  	1   	TICKET (repeat 3)	lure    	0.403	NR  	1   	NR      	NR      
+20  	13.3  	8   	EASEL (repeat 1)	lure    	0.542	NR  	1   	NR      	NR      
+21  	13.9  	1   	TICKET (repeat 4)	lure    	0.379	NR  	1   	NR      	NR      
+22  	14.4  	5   	ANCHOR (repeat 3)	lure    	0.589	NR  	1   	NR      	NR      
+23  	15    	1   	TICKET (repeat 5)	lure    	0.608	NR  	1   	NR      	NR      
+24  	15.7  	2   	CANDLE (repeat 3)	lure    	0.374	NR  	1   	NR      	NR      
+25  	16.1  	8   	EASEL (repeat 2)	lure    	0.502	NR  	1   	NR      	NR      
+26  	16.7  	5   	ANCHOR (repeat 4)	lure    	0.547	NR  	1   	NR      	NR      
+27  	17.3  	8   	EASEL (repeat 3)	lure    	0.563	NR  	1   	NR      	NR      
+28  	17.9  	5   	ANCHOR (repeat 5)	lure    	0.28	NR  	1   	NR      	NR      
+29  	18.2  	2   	CANDLE (repeat 4)	lure    	0.605	NR  	1   	NR      	NR      
+30  	18.9  	5   	ANCHOR (repeat 6)	lure    	0.499	NR  	1   	NR      	NR      
+31  	19.5  	4   	PHONE (repeat 3)	lure    	0.299	NR  	1   	NR      	NR      
+32  	19.8  	3   	NOTE (repeat 3)	lure    	0.542	NR  	1   	NR      	NR      
+33  	20.4  	8   	EASEL (repeat 4)	lure    	0.465	NR  	1   	NR      	NR      
+34  	20.9  	4   	PHONE (repeat 4)	lure    	0.389	NR  	1   	NR      	NR      
+35  	21.4  	5   	ANCHOR (repeat 7)	lure    	0.389	NR  	1   	NR      	NR      
+36  	21.8  	2   	CANDLE (repeat 5)	lure    	0.451	NR  	1   	NR      	NR      
+37  	22.3  	7   	LIME (repeat 1)	fruit   	0.951	NR  	0   	NR      	target  
+38  	23.4  	6   	PAINT (repeat 1)	lure    	0.329	NR  	1   	NR      	NR      
+39  	23.7  	3   	NOTE (repeat 4)	lure    	0.581	NR  	1   	NR      	NR      
+40  	24.4  	4   	PHONE (repeat 5)	lure    	0.582	NR  	1   	NR      	NR      
+41  	25    	2   	CANDLE (repeat 6)	lure    	0.509	NR  	1   	NR      	NR      
+42  	25.6  	1   	TICKET (repeat 6)	lure    	0.566	NR  	1   	NR      	NR      
+43  	26.2  	3   	NOTE (repeat 5)	lure    	0.324	NR  	1   	NR      	NR      
+44  	26.6  	6   	PAINT (repeat 2)	lure    	0.583	NR  	1   	NR      	NR      
+45  	27.2  	8   	EASEL (repeat 5)	lure    	0.442	NR  	1   	NR      	NR      
+46  	27.7  	2   	CANDLE (repeat 7)	lure    	0.598	NR  	1   	NR      	NR      
+47  	28.4  	5   	ANCHOR (repeat 8)	lure    	0.385	NR  	1   	NR      	NR      
+48  	28.8  	1   	TICKET (repeat 7)	lure    	0.392	NR  	1   	NR      	NR      
+49  	29.3  	4   	PHONE (repeat 6)	lure    	0.337	NR  	1   	NR      	NR      
+50  	29.7  	3   	NOTE (repeat 6)	lure    	0.369	NR  	1   	NR      	NR      
+51  	30.1  	2   	CANDLE (repeat 8)	lure    	0.611	NR  	1   	NR      	NR      
+52  	30.8  	3   	NOTE (repeat 7)	lure    	0.618	NR  	1   	NR      	NR      
+53  	31.5  	2   	CANDLE (repeat 9)	lure    	0.677	NR  	1   	NR      	NR      
+54  	32.2  	8   	EASEL (repeat 6)	lure    	0.598	NR  	1   	NR      	NR      
+55  	32.9  	1   	TICKET (repeat 8)	lure    	0.414	NR  	1   	NR      	NR      
+56  	33.3  	5   	ANCHOR (repeat 9)	lure    	0.501	NR  	1   	NR      	NR      
+57  	33.9  	8   	EASEL (repeat 7)	lure    	0.451	NR  	1   	NR      	NR      
+58  	34.4  	1   	TICKET (repeat 9)	lure    	0.422	NR  	1   	NR      	NR      
+59  	34.9  	5   	ANCHOR (repeat 10)	lure    	0.451	NR  	1   	NR      	NR      
+60  	35.4  	1   	TICKET (repeat 10)	lure    	0.378	NR  	1   	NR      	NR      
+61  	35.8  	8   	EASEL (repeat 8)	lure    	0.451	NR  	1   	NR      	NR      
+62  	36.4  	9   	PINEAPPLE 	fruit   	0.951	NR  	0   	NR      	target  
+63  	37.4  	1   	TICKET (repeat 11)	lure    	0.415	NR  	1   	NR      	NR      
+64  	37.8  	5   	ANCHOR (repeat 11)	lure    	0.522	NR  	1   	NR      	NR      
+65  	38.4  	6   	PAINT (repeat 3)	lure    	0.645	NR  	1   	NR      	NR      
+66  	39.1  	4   	PHONE (repeat 7)	lure    	0.27	NR  	1   	NR      	NR      
+67  	39.5  	3   	NOTE (repeat 8)	lure    	0.486	NR  	1   	NR      	NR      
+68  	40    	8   	EASEL (repeat 9)	lure    	0.618	NR  	1   	NR      	NR      
+69  	40.7  	2   	CANDLE (repeat 10)	lure    	0.551	NR  	1   	NR      	NR      
+70  	41.3  	3   	NOTE (repeat 9)	lure    	0.293	NR  	1   	NR      	NR      
+71  	41.6  	2   	CANDLE (repeat 11)	lure    	0.307	NR  	1   	NR      	NR      
+72  	42    	4   	PHONE (repeat 8)	lure    	0.449	NR  	1   	NR      	NR      
+73  	42.5  	5   	ANCHOR (repeat 12)	lure    	0.567	NR  	1   	NR      	NR      
+74  	43.1  	4   	PHONE (repeat 9)	lure    	0.688	NR  	1   	NR      	NR      
+75  	43.9  	2   	CANDLE (repeat 12)	lure    	0.402	NR  	1   	NR      	NR      
+76  	44.4  	8   	EASEL (repeat 10)	lure    	0.316	NR  	1   	NR      	NR      
+77  	44.7  	6   	PAINT (repeat 4)	lure    	0.301	NR  	1   	NR      	NR      
+78  	45.1  	3   	NOTE (repeat 10)	lure    	0.433	NR  	1   	NR      	NR      
+79  	45.6  	2   	CANDLE (repeat 13)	lure    	0.422	NR  	1   	NR      	NR      
+80  	46.1  	3   	NOTE (repeat 11)	lure    	0.552	NR  	1   	NR      	NR      
+81  	46.7  	2   	CANDLE (repeat 14)	lure    	0.656	NR  	1   	NR      	NR      
+82  	47.4  	1   	TICKET (repeat 12)	lure    	0.362	NR  	1   	NR      	NR      
+83  	47.8  	5   	ANCHOR (repeat 13)	lure    	0.362	NR  	1   	NR      	NR      
+84  	48.2  	8   	EASEL (repeat 11)	lure    	0.451	NR  	1   	NR      	NR      
+85  	48.7  	5   	ANCHOR (repeat 14)	lure    	0.692	NR  	1   	NR      	NR      
+86  	49.5  	3   	NOTE (repeat 12)	lure    	0.451	NR  	1   	NR      	NR      
+87  	50    	6   	PAINT (repeat 5)	lure    	0.569	NR  	1   	NR      	NR      
+88  	50.6  	2   	CANDLE (repeat 15)	lure    	0.451	NR  	1   	NR      	NR      
+89  	51.1  	3   	NOTE (repeat 13)	lure    	0.337	NR  	1   	NR      	NR      
+90  	51.6  	1   	TICKET (repeat 13)	lure    	0.451	NR  	1   	NR      	NR      
+91  	52.1  	3   	NOTE (repeat 14)	lure    	0.619	NR  	1   	NR      	NR      
+92  	52.7  	1   	TICKET (repeat 14)	lure    	0.451	NR  	1   	NR      	NR      
+93  	53.2  	10  	BANANA    	fruit   	0.951	NR  	0   	NR      	target  
+94  	54.2  	2   	CANDLE (repeat 16)	lure    	0.308	NR  	1   	NR      	NR      
+95  	54.6  	4   	PHONE (repeat 10)	lure    	0.509	NR  	1   	NR      	NR      
+96  	55.2  	1   	TICKET (repeat 15)	lure    	0.47	NR  	1   	NR      	NR      
+97  	55.7  	3   	NOTE (repeat 15)	lure    	0.598	NR  	1   	NR      	NR      
+98  	56.4  	8   	EASEL (repeat 12)	lure    	0.476	NR  	1   	NR      	NR      
+99  	56.9  	6   	PAINT (repeat 6)	lure    	0.561	NR  	1   	NR      	NR      
+100 	57.5  	3   	NOTE (repeat 16)	lure    	0.456	NR  	1   	NR      	NR      
+101 	58    	2   	CANDLE (repeat 17)	lure    	0.578	NR  	1   	NR      	NR      
+102 	58.7  	8   	EASEL (repeat 13)	lure    	0.328	NR  	1   	NR      	NR      
+103 	59    	3   	NOTE (repeat 17)	lure    	0.567	NR  	1   	NR      	NR      
+104 	59.7  	8   	EASEL (repeat 14)	lure    	0.524	NR  	1   	NR      	NR      
+105 	60.2  	2   	CANDLE (repeat 18)	lure    	0.289	NR  	1   	NR      	NR      
+106 	60.6  	3   	NOTE (repeat 18)	lure    	0.553	NR  	1   	NR      	NR      
+107 	61.2  	4   	PHONE (repeat 11)	lure    	0.59	NR  	1   	NR      	NR      
+108 	61.9  	8   	EASEL (repeat 15)	lure    	0.555	NR  	1   	NR      	NR      
+109 	62.5  	4   	PHONE (repeat 12)	lure    	0.33	NR  	1   	NR      	NR      
+110 	62.9  	6   	PAINT (repeat 7)	lure    	0.527	NR  	1   	NR      	NR      
