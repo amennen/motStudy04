@@ -411,8 +411,8 @@ switch SESSION
                 outdoorOM = allOptions(~ismember(allOptions,outdoorRT));
                 outdoorRT = outdoorRT + nstim;
                 outdoorOM = outdoorOM + nstim;
-                RTIND = shuffle([indoorRT outdoorRT]);
-                OMIND = shuffle([indoorOM outdoorOM]);
+                RTIND = Shuffle([indoorRT outdoorRT]);
+                OMIND = Shuffle([indoorOM outdoorOM]);
                 for cond2 = [REALTIME OMIT]
                     if cond2 == REALTIME
                         takefrom = RTIND;
@@ -1447,7 +1447,7 @@ switch SESSION
         [stim.cond stim.condString stim.associate] = counterbalance_items({cues{STIMULI}{REALTIME}, cues{STIMULI}{OMIT}},CONDSTRINGS);
         % Get practice images--don't worry about balancing indoor/outdoor
         % here
-        stim.stim(1:nPractice) = shuffle(pics(1:nPractice)); % practice words from before is current state?
+        stim.stim(1:nPractice) = Shuffle(pics(1:nPractice)); % practice words from before is current state?
         stim.cond = [PRACTICE PRACTICE PRACTICE stim.cond];
         stim.condString = [CONDSTRINGS{PRACTICE} CONDSTRINGS{PRACTICE} CONDSTRINGS{PRACTICE} stim.condString];
         stim.associate = [CONDSTRINGS{PRACTICE} CONDSTRINGS{PRACTICE} CONDSTRINGS{PRACTICE} stim.associate];
