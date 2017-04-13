@@ -73,7 +73,7 @@ if ~prev %if getting data today
     subjectName = [datestr(now,5) datestr(now,7) datestr(now,11) num2str(runNum) '_' projectName];
     dicom_dir = ['/Data1/subjects/' datestr(now,10) datestr(now,5) datestr(now,7) '.' subjectName '.' subjectName '/'];
 else
-    allDates = {'9-16-16'};
+    allDates = {'4-5-17'};
     %allDates = {'7-1-2016' '3-26-2016', '3-29-2016', '4-1-2016', '4-27-2016', '4-29-2016', '5-05-2016'};
     subjectName = [datestr(allDates{1},5) datestr(allDates{1},7) datestr(allDates{1},11) num2str(runNum) '_' projectName];
     dicom_dir = ['/Data1/subjects/' datestr(allDates{1},10) datestr(allDates{1},5) datestr(allDates{1},7) '.' subjectName '.' subjectName '/'];
@@ -150,7 +150,6 @@ patterns.regressor = newpattern.regressor;
 
 seed = sum(100*clock); %get random seed
 %RandStream.setDefaultStream(RandStream('mt19937ar','seed',seed));%set seed
-
 %initialize system time calls
 GetSecs;
 
@@ -161,7 +160,7 @@ TR = 1; % changed here back!
 shiftTR = 4/TR; % this will now be 4 TR's (was 2 TRs for a 2 s TR)
 %% Block Sequence
 
-patterns.nTRs = size(patterns.regressor.twoCond,2); %already has first 10 removed
+patterns.nTRs = size(patterns.regressor.twoCond,2); %already has first 20 removed
 patterns.firstTestTR = find(patterns.regressor.twoCond(1,:)+patterns.regressor.twoCond(2,:),1,'first') ; %(because took out first 10)
 patterns.fileAvail = zeros(1,patterns.nTRs);
 patterns.newFile = cell(1,patterns.nTRs);
@@ -232,9 +231,10 @@ for iTrial = 1:patterns.nTRs % the first 10 TRs have been taken out to detrend
         t0 = GetSecs;
         niftiname = sprintf('nifti%3.3i', thisTR);
         unix(sprintf('%sdcm2niix %s -f %s -o %s -s y %s%s',dcm2path,dicom_dir,niftiname,runHeader,dicom_dir,patterns.newFile{iTrial}))
-        %unix(sprintf('%sdicom2bxh %s%s %s.bxh',bxhpath,dicom_dir,filename,niftiname));
+        %unix(sprintf('%sdicom2bxh %s%s %s.bxh',bxhpath,dicom_dir,patterns.newFile{iTrial},niftiname));
         %unix(sprintf('%sbxhreorient --orientation=LAS %s.bxh %s_re.bxh',bxhpath,niftiname,niftiname));
         %unix(sprintf('%sbxh2analyze --overwrite --analyzetypes --niigz --niftihdr -s %s_re.bxh %s_re',bxhpath,niftiname,niftiname))
+        %unix(sprintf('gunzip %s_re.nii.gz',niftiname))
         t1 = GetSecs;
         unix(sprintf('%smcflirt -in %s.nii -reffile %sexfunc_re.nii',fslpath,niftiname,process_dir))
         t2 = GetSecs;
