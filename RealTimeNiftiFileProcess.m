@@ -84,7 +84,7 @@ fprintf('fMRI files being read from: %s\n',dicom_dir);
 %check that the fMRI dicom files do NOT exist (if real-time)
 if scanNow == 1
     [testFile testFileName] = GetSpecificFMRIFile(dicom_dir,scanNum,1);
-    if exist([dicom_dir testFileName],'file');
+    if exist([dicom_dir testFileN2ame],'file');
         reply = input('Files with this scan number already exist. Do you want to continue? Y/N [N]: ', 's');
         if isempty(reply)
             reply = 'N';
