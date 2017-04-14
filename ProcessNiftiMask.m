@@ -27,8 +27,8 @@ addpath(genpath(multipath));
 setenv('FSLOUTPUTTYPE','NIFTI_GZ');
 
 % inputs (eventually function)
-subjNum = 1;
-subjDate = '4-5-17';
+subjNum = 2;
+%subjDate = '4-5-17';
 subjDate = NaN;
 runNum = 1;
 highresScan = 2;
@@ -46,11 +46,9 @@ code_dir = ['/Data1/code/' projectName '/' 'code' '/']; %change to wherever code
 if ~isnan(subjDate)
     subjectName = [datestr(subjDate,5) datestr(subjDate,7) datestr(subjDate,11) num2str(runNum) '_' projectName];
     dicom_dir = ['/Data1/subjects/' datestr(subjDate,10) datestr(subjDate,5) datestr(subjDate,7) '.' subjectName '.' subjectName '/'];
-
 else
     subjectName = [datestr(now,5) datestr(now,7) datestr(now,11) num2str(runNum) '_' projectName];
     dicom_dir = ['/Data1/subjects/' datestr(now,10) datestr(now,5) datestr(now,7) '.' subjectName '.' subjectName '/'];
-
 end
 addpath(genpath(code_dir));
 if ~exist(process_dir)
@@ -78,18 +76,18 @@ unix(sprintf('%sinvwarp -w highres2standard_warp -o standard2highres_warp -r %s_
 
 %% Process each spin echo file
 onlyFirstTR = 1;
-if onlyFirstTR
-    APname = 'SE_AP2';
+if onlyFirstTR % only use first TR for each spin echo to save time
+    APname = 'SE_AP1';
     AP_re = [APname '_re'];
-    AP_genstr = sprintf('%s001_0000%s_0000{01..84}.dcm',dicom_dir,num2str(APScan,'%2.2i'));
+    AP_genstr = sprintf('%s001_0000%s_0000{01..48}.dcm',dicom_dir,num2str(APScan,'%2.2i'));
     unix(sprintf('%sdicom2bxh %s %s.bxh',bxhpath,AP_genstr,APname));
     unix(sprintf('%sbxhreorient --orientation=LAS %s.bxh %s.bxh',bxhpath,APname,AP_re));
     unix(sprintf('%sbxh2analyze --overwrite --analyzetypes --niigz --niftihdr -s %s.bxh %s',bxhpath,AP_re,AP_re))
     
     % now do the same thing with PA
-    PAname = 'SE_PA2';
+    PAname = 'SE_PA1';
     PA_re = [PAname '_re'];
-    PA_genstr = sprintf('%s001_0000%s_0000{01..84}.dcm',dicom_dir,num2str(PAScan,'%2.2i'));
+    PA_genstr = sprintf('%s001_0000%s_0000{01..48}.dcm',dicom_dir,num2str(PAScan,'%2.2i'));
     unix(sprintf('%sdicom2bxh %s %s.bxh',bxhpath,PA_genstr,PAname));
     unix(sprintf('%sbxhreorient --orientation=LAS %s.bxh %s.bxh',bxhpath,PAname,PA_re));
     unix(sprintf('%sbxh2analyze --overwrite --analyzetypes --niigz --niftihdr -s %s.bxh %s',bxhpath,PA_re,PA_re))
@@ -101,14 +99,14 @@ if onlyFirstTR
     unix(sprintf('%sfslmerge -t %s.nii.gz %s.nii.gz %s.nii.gz', fslpath,fieldmapfn,AP_re,PA_re))
     
     % now run topup!
-    textfile = 'acqparamsTWO.txt';
+    textfile = 'acqparamsONE.txt';
     cnffile = 'b02b0.cnf';
     unix(sprintf('%stopup --imain=%s.nii.gz --datain=%s%s --config=%s%s --out=topup_output --iout=topup_iout --fout=topup_fout --logout=topup_logout',fslpath,fieldmapfn,multipath,textfile,multipath,cnffile))
     
     % create magnitude image from topup
     unix(sprintf('%sfslmaths topup_iout -Tmean magnitude',fslpath))
     % create brain-extracted magnitude image
-    unix(sprintf('%sbet magnitude magnitude_brain',fslpath)) %really weird this runs on
+    unix(sprintf('%sbet magnitude magnitude_brain -r 100',fslpath)) % check that this is okay afterwards!!!!
     unix(sprintf('%sfslmaths topup_fout.nii.gz -mul 6.28 fieldmap_rads',fslpath))
     time2 = GetSecs;
     topuptime = time2-time1;
@@ -142,7 +140,7 @@ else
     % create magnitude image from topup
     unix(sprintf('%sfslmaths topup_iout -Tmean magnitude',fslpath))
     % create brain-extracted magnitude image
-    unix(sprintf('%sbet magnitude magnitude_brain',fslpath)) %really weird this runs on
+    unix(sprintf('%sbet magnitude magnitude_brain -r 100',fslpath)) % check that this is okay afterwards!!!!
     unix(sprintf('%sfslmaths topup_fout.nii.gz -mul 6.28 fieldmap_rads',fslpath))
     time2 = GetSecs;
     topuptime = time2-time1;
@@ -164,8 +162,6 @@ highres2exfunc_mat='highres2example_func';
 
 unix(sprintf('%sepi_reg --epi=%s.nii.gz --t1=%s.nii.gz --t1brain=%s_brain.nii.gz --out=%s --fmap=fieldmap_rads --fmapmag=magnitude --fmapmagbrain=magnitude_brain --echospacing=0.000345 --pedir=y',fslpath,functionalFN_RE,highresFN_RE,highresFN_RE,exfunc2highres_mat))
 
-unix(sprintf('%sepi_reg --epi=%s.nii.gz --t1=%s.nii.gz --t1brain=%s_brain.nii.gz --out=%sNEG --fmap=fieldmap_rads --fmapmag=magnitude --fmapmagbrain=magnitude_brain --echospacing=0.000345 --pedir=-y',fslpath,functionalFN_RE,highresFN_RE,highresFN_RE,exfunc2highres_mat))
-
 timefunc2highres = GetSecs-t1;
 unix(sprintf('%sconvert_xfm -inverse -omat %s.mat %s.mat',fslpath,highres2exfunc_mat,exfunc2highres_mat));
 
@@ -180,7 +176,7 @@ end
 
 % brain extract functional scan to make sure we stay inside the brain of
 % the subject!
-unix(sprintf('%sbet %s.nii.gz %s_brain -R',fslpath,functionalFN_RE,functionalFN_RE));
+unix(sprintf('%sbet %s.nii.gz %s_brain -r 100',fslpath,functionalFN_RE,functionalFN_RE)); % check that this is okay!
 % now unzip and convert to load into matlab
 %unzip, if necessary
 if exist(sprintf('%s.nii.gz',functionalFN_RE),'file')

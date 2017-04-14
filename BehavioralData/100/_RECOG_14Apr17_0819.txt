@@ -1,0 +1,2 @@
+trial	ons(s)	stim_id	stim      	cond    	dur 	rt  	acc 	resp    	cresp   
+1   	5.3   	3   	pici17.jpg	5       	2.469	1.262	1   	left    	left    

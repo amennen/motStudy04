@@ -15,7 +15,7 @@ function [outputLastPat] = SmoothRealTime(inputLastPat,roiDims,roiInds,FWHM)
 
 %smoothing parameters 
 smooth_kernelsize = [3 3 3]; %[units]
-voxel_size = 3; %[mm]
+voxel_size = 2.5; %[mm]
 smooth_sigma  = (FWHM/voxel_size)/(2*sqrt(2*log(2)));
 
 %smooth in 3D

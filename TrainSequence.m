@@ -46,8 +46,12 @@ mot_realtime04MB(SUBJECT, SETUP, [], 0, 0);
 %mot_realtime02(SUBJECT,MOT_PRACTICE,[],0,0);
 mot_realtime04MB(SUBJECT, FAMILIARIZE2, [], 0, 0); %continue because want to not go through the break
 
-%% refresh on day 2
+%% DAY TWO
+
+%% Refresh on day 2
 mot_realtime04MB(SUBJECT, STIM_REFRESH, [], 0, 0);
 
-%% after scanner, test associates
+%% after scanner, test associates and descriptions
+
+mot_realtime04MB(SUBJECT,DESCRIPTION, [], 0, 0); 
 mot_realtime04MB(SUBJECT,ASSOCIATES, [], 0, 0); 

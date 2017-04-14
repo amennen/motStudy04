@@ -95,7 +95,7 @@ end
 SESSIONSTRINGS{RECALL_PRACTICE} = 'DELIBERATE RECALL PRACTICE'; % get used to task during anatomical
 SESSIONSTRINGS{RECALL1} = 'RECALL1'; % baseline recollection, used to train recollection classifier
 SESSIONSTRINGS{RECALL2} = 'RECALL2'; % post-test recollection, used to measure effectiveness of manipulation
-SESSIONSTRINGS{DESCRIPTION} = 'TYPING IMAGE DESCRIPTIONS'; 
+SESSIONSTRINGS{DESCRIPTION} = 'SCENE DESCRIPTION TASK'; 
 SESSIONSTRINGS{ASSOCIATES} = 'ASSOCIATES TASK'; % face-scene classification
 % SETUP: prepare experiment
 if ~exist('SUBJECT','var'), SUBJECT = -1; end
@@ -969,8 +969,7 @@ switch SESSION
             'ignoring other mental imagery (e.g., you pictured a beach). You will use the provided rating scale to indicate details, using all five fingers on the key pad.'...
             '\n\n---- Press ' PROGRESS_TEXT ' once you understand these instructions,\n then press it again when you are done viewing the rating scale ---'];
         
-        
-        
+   
         % initialize stimulus order with initial warmup item
         if SESSION == RECALL_PRACTICE
             stim.stim = cues{STIMULI}{LEARN}(1:3);
@@ -978,7 +977,7 @@ switch SESSION
             condmap = makeMap({'PRACTICE'});
             stim.condString = {CONDSTRINGS{PRACTICE}, CONDSTRINGS{PRACTICE}, CONDSTRINGS{PRACTICE}};
             displayText(mainWindow,['MENTAL PICTURES TASK - PRACTICE\n\nThis is a memory test with some differences ' ...
-                'from earlier: you will get only one try per item, there is no feedback, and you will verbally recall the scenes instead of choosing the correct option.' ...
+                'from earlier: you will get only one try per item and there is no feedback. Instead, you will be visualizing the scenes.' ...
                 'Please carefully review today''s instructions, since many things have ' ...
                 'changed and it is important you follow them exactly.\n\n' ...
                 '-- Please press ' PROGRESS_TEXT ' to briefly review the instructions --'],minimumDisplay,'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
@@ -1015,7 +1014,6 @@ switch SESSION
         displayText(mainWindow,stim.instruct1,minimumDisplay,'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
         waitForKeyboard(kbTrig_keycode,DEVICE);
         displayText(mainWindow,stim.instruct2,minimumDisplay,'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
-        
         waitForKeyboard(kbTrig_keycode,DEVICE);
         keymap_image = imread(KEY_MAPPING);
         keymap_prompt = Screen('MakeTexture', mainWindow, keymap_image);
@@ -1179,19 +1177,12 @@ switch SESSION
            %% 4. Typing description task
     case {DESCRIPTION}
         % stimulus presentation parameters
-        stim.promptDur = 8*SPEED; % cue word alone
+        stim.promptDur = 6*SPEED; % cue word alone
         stim.prepDur = 2*SPEED;
         stim.isiDuration = 4*SPEED; %
-        stim.fixBlock = 20*SPEED;
         stim.typeDur = 20*SPEED;
-        num_digit_qs = 3;
-        digits_promptDur = 1.9*SPEED;
-        digits_isi = 0.1*SPEED;
-        digits_triggerNext = false;
-        minimal_format = true;
         % stimulus data fields
-        stim.triggerCounter = 1;
-        stim.missedTriggers = 0;
+
         stim.description = {};
         PROGRESS_TEXT = 'INDEX';
         
@@ -1202,18 +1193,16 @@ switch SESSION
         quoteKey=52;
         commaKey=54;
         % all the instructions
-        stim.instruct1 = ['MENTAL PICTURES TASK\n\nThis is a memory test, though it is not multiple choice anymore. When a word appears, picture the scene it names as vividly as if you were looking ' ...
+        stim.instruct1 = ['SCENE DESCRIPTION TASK\n\nWhen a word appears, picture the scene it names as vividly as if you were looking ' ...
             'at it now. Picture its objects, features, and anything else you can imagine. HOLD the image, letting it continue to mature ' ...
             'and take shape for the entire ' num2str(stim.promptDur) ' seconds it is on the screen. Don''t let it fade, and don''t let ' ...
             'yourself "space out". It is essential you actually do this!\n\n' ...
             '-- Press ' PROGRESS_TEXT ' once you understand these instructions --'];
-        stim.instruct2 = ['After you have had several seconds to form an image, we will ask you how detailed it was. This rating is not a "test": ' ...
-            'we want to understand your real experience, even if no image formed when you felt you SHOULD have had one. Similarly, you should not ' ...
-            'adjust your rating based on how sure you are it''s the correct scene. Please make your rating based only on how much scene detail comes to you, ' ...
-            'ignoring other mental imagery (e.g., you pictured a beach). You will use the provided rating scale to indicate details, using all five fingers on the key pad.'...
-            '\n\n---- Press ' PROGRESS_TEXT ' once you understand these instructions,\n then press it again when you are done viewing the rating scale ---'];
-        
-        
+        stim.instruct2 = ['After you have had several seconds to form an image, we will ask you to describe the scene. Your description (minimum of 5-10 words) '...
+            'should aim to capture the key elements of the scene so that someone unfamiliar with the scene could reliably select the image corresponding to your description. '...
+            'You will have 20 seconds to type your answer. After 15 seconds, you will see a red bar appear to signal that you have 5 seconds left. Please keep describing for all '...
+            '20 seconds though.\n\n-- Press ' PROGRESS_TEXT ' once you understand these instructions --'];
+
         % let's have the first three trials be practice ones
         % prepare counterbalanced trial sequence (at most 2 in a row)
         [stim.cond stim.condString stim.stim] = counterbalance_items({cues{STIMULI}{REALTIME}, cues{STIMULI}{OMIT}},CONDSTRINGS);
@@ -1223,8 +1212,8 @@ switch SESSION
         stim.condString = [CONDSTRINGS{PRACTICE} CONDSTRINGS{PRACTICE} CONDSTRINGS{PRACTICE} stim.condString];
         % initialize stimulus order with initial warmup item
         
-        displayText(mainWindow,['MENTAL PICTURES TASK - PRACTICE\n\nThis is a memory test with some differences ' ...
-                'from earlier: you will get only one try per item, there is no feedback, and you will verbally recall the scenes instead of choosing the correct option.' ...
+        displayText(mainWindow,['SCENE DESCRIPTION TASK\n\nThis is a memory test with some differences ' ...
+                'from earlier: you will get only one try per item, there is no feedback, and you will type descriptions of the scenes instead of choosing the correct option.' ...
                 'Please carefully review today''s instructions, since many things have ' ...
                 'changed and it is important you follow them exactly.\n\n' ...
                 '-- Please press ' PROGRESS_TEXT ' to briefly review the instructions --'],minimumDisplay,'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
@@ -1238,36 +1227,16 @@ switch SESSION
         waitForKeyboard(kbTrig_keycode,DEVICE);
 
         %last instructions
-            displayText(mainWindow,['To help you get used to the feel of this task, we will ' ...
-                'now give you three practice words.\n\n' ...
-                '-- Press ' PROGRESS_TEXT ' to begin once you understand these instructions --'], ...
-                minimumDisplay,'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
-            stim.subjStartTime = waitForKeyboard(kbTrig_keycode,DEVICE);
-        
-        
-        digits_scale = makeMap({'even','odd'},[0 1],keyCell([1 5]));
-        condmap = makeMap({'even','odd'});
-        digitsEK = initEasyKeys('odd_even', SUBJ_NAME, ppt_dir,...
-            'default_respmap', digits_scale, ...
-            'condmap', condmap, ...
-            'trigger_next', digits_triggerNext, ...
-            'prompt_dur', digits_promptDur, ...
-            'device', DEVICE);
-                
-        % fixation period for 20 s
-        if CURRENTLY_ONLINE && SESSION > TOCRITERION3
-            [timing.trig.wait timing.trig.waitSuccess] = WaitTRPulse(TRIGGER_keycode,DEVICE);
-            runStart = timing.trig.wait;
-            displayText(mainWindow,STILLREMINDER,STILLDURATION,'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
-            DrawFormattedText(mainWindow,'+','center','center',COLORS.MAINFONTCOLOR,WRAPCHARS);
-            Screen('Flip', mainWindow)
-            config.wait = stim.fixBlock; % stim.fixation - 20 s? so 10 TRs
-        else
-            runStart = GetSecs;
-            config.wait = 0;
-        end
-        
-        
+        displayText(mainWindow,['To help you get used to the feel of this task, we will ' ...
+            'now give you three practice words. Because of the system used, shift keys won''t work so don''t use symbols. ' ...
+            ' You can use letters, backspace, and basic punctuation though. If you want to type numbers, type them out as ''four'' and not ''4''. \n\n' ...
+            '-- Press ' PROGRESS_TEXT ' to begin once you understand these instructions --'], ...
+            minimumDisplay,'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
+        stim.subjStartTime = waitForKeyboard(kbTrig_keycode,DEVICE);
+
+        runStart = GetSecs;
+        config.wait = 0;
+
         % want: cued word then window to type description
         % then math, ISI
         % for all stimuli
@@ -1275,17 +1244,15 @@ switch SESSION
         config.nTRs.ISI = stim.isiDuration/stim.TRlength;
         config.nTRs.prompt = stim.promptDur/stim.TRlength;
         config.nTRs.type = stim.typeDur/stim.TRlength;
-        config.nTRs.math = (num_digit_qs*(digits_promptDur + digits_isi))/stim.TRlength;
         config.nTrials = length(stim.stim);
-        config.nTRs.perTrial = (config.nTRs.ISI + config.nTRs.prompt + config.nTRs.type + config.nTRs.math);
+        config.nTRs.perTrial = (config.nTRs.ISI + config.nTRs.prompt + config.nTRs.type);
         config.nTRs.perBlock = config.wait/config.TR + (config.nTRs.perTrial)*config.nTrials+ config.nTRs.ISI; %includes the last ISI
         
         % calculate all future onsets
         timing.plannedOnsets.preITI(1:config.nTrials) = runStart + config.wait + ((0:config.nTrials-1)*config.nTRs.perTrial)*config.TR;
         timing.plannedOnsets.prompt(1:config.nTrials) = timing.plannedOnsets.preITI + config.nTRs.ISI*config.TR;
         timing.plannedOnsets.type(1:config.nTrials) = timing.plannedOnsets.prompt + config.nTRs.prompt*config.TR;
-        timing.plannedOnsets.math(1:config.nTrials) = timing.plannedOnsets.type + config.nTRs.type*config.TR;
-        timing.plannedOnsets.lastITI = timing.plannedOnsets.math(end) + config.nTRs.math*config.TR;%%make sure it pauses for this one
+        timing.plannedOnsets.lastITI = timing.plannedOnsets.type(end) + config.nTRs.type*config.TR;
         
      
         stimCond = stim.cond;
@@ -1325,6 +1292,9 @@ switch SESSION
             Screen('TextSize',mainWindow,20); %sets textsize for instructions
             [nxi,nyi,textbox_i] = DrawFormattedText(mainWindow,instructions, 'center', CENTER(2) - CENTER(2)/3, COLORS.MAINFONTCOLOR);
             new = textbox_i;
+            warning = textbox_i;
+            warning(2) = warning(2) + 20;
+            warning(4) = warning(4) + 20;
             movedown = 80;
             moveaway = 80;
             %new(1) = new(1) - moveaway;
@@ -1342,11 +1312,20 @@ switch SESSION
             KbQueueStart;
             AsteriskBuffer=[]; %initializes buffer
             WRAPCHARS = 70;
-            while abs(GetSecs- (timing.plannedOnsets.math(n))) > SLACK % keep checking for more typing until you can't anymore
+
+            AsteriskBuffer = ' ';
+            while GetSecs - timing.actualOnsets.type(n) < stim.typeDur % keep checking for more typing until you can't anymore
                 [ pressed, firstPress]=KbQueueCheck; %checks for keys
-                enterpressed=firstPress(returnKey);%press return key to terminate each response
-                if (pressed && ~enterpressed) %keeps track of key-presses and draws text
-                    if firstPress(deleteKey) %if delete key then erase last key-press
+                if (GetSecs- timing.actualOnsets.type(n)) > 15 % draw red bar if longer than 15 seconds has passed
+                    Screen('FillRect', mainWindow, COLORS.RED, warning)
+                end
+                Screen('TextSize',mainWindow,20);  %sets textsize for instructions
+                [nxi,nyi] = DrawFormattedText(mainWindow,instructions, 'center', CENTER(2) - CENTER(2)/3, COLORS.MAINFONTCOLOR);
+                Screen('FillRect', mainWindow, COLORS.GREY/5, new)
+                Screen('TextSize',mainWindow,20);
+                
+                if pressed %keeps track of key-presses and draws text
+                    if firstPress(deleteKey) && length(AsteriskBuffer>1) %if delete key then erase last key-press
                         AsteriskBuffer=AsteriskBuffer(1:end-1); %erase last key-press
                     elseif firstPress(spaceKey)
                         % we want to add a space instead of writing space lol
@@ -1362,27 +1341,47 @@ switch SESSION
                         [endtime Index]=min(firstPress); % gets the RT of the first key-press and its ID
                         AsteriskBuffer=[AsteriskBuffer KbName(Index)]; %adds key to buffer
                     end
-                    Screen('TextSize',mainWindow,20);  %sets textsize for instructions
-                    [nxi,nyi] = DrawFormattedText(mainWindow,instructions, 'center', CENTER(2) - CENTER(2)/3, COLORS.MAINFONTCOLOR);
-                    Screen('FillRect', mainWindow, COLORS.GREY/5, new)
-                    Screen('TextSize',mainWindow,20);
                     if isempty(AsteriskBuffer)
                         AsteriskBuffer = ' ';
                     end
-                    [nx,ny,textbounds] = DrawFormattedText(mainWindow, AsteriskBuffer, new(1),new(2),COLORS.MAINFONTCOLOR,WRAPCHARS); %it's going where x ends and y starts
-                    %have it so it goes to the next line when they type the next line
-                    Screen('Flip',mainWindow);
-                end;
+                end
+                [nx,ny,textbounds] = DrawFormattedText(mainWindow, AsteriskBuffer, new(1),new(2),COLORS.MAINFONTCOLOR,WRAPCHARS); %it's going where x ends and y starts
+                %have it so it goes to the next line when they type the next line
+                Screen('Flip',mainWindow);
                 WaitSecs(.01); % put in small interval to allow other system events
             end
             stim.description{n} = AsteriskBuffer;
             %endrecord = GetSecs;
             %display even/odd
-            KbQueueRelease;
-            timespec = timing.plannedOnsets.math(n) - SLACK;
-            [stim.digitAcc(stim.trial) stim.digitRT(stim.trial) timing.actualOnsets.math(n)] = odd_even(digitsEK,num_digit_qs,digits_promptDur,digits_isi,minimal_format,mainWindow,keyCell([1 5]),COLORS,DEVICE,SUBJ_NAME,[SESSION stim.trial],SLACK,timespec, keys);
-            fprintf('Flip time error = %.4f\n', timing.actualOnsets.math(n)-timing.plannedOnsets.math(n));
             
+            if n <= 3
+                % WaitSecs(1);
+                OnFB = GetSecs;
+                if strcmp(AsteriskBuffer,' ')
+                    displayText(mainWindow,['Oops, we didn''t record a response. Please let the experimenter know if you have any questions, or just make sure to type a response in time on the remainder of trials. ' ...
+                        '\n\n-- Press ' PROGRESS_TEXT ' to continue --'],minimumDisplay,...
+                        'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
+                    waitForKeyboard(kbTrig_keycode,DEVICE);
+                else
+                    displayText(mainWindow,['Good work! Your response was detected.\n\n-- Press ' ...
+                        PROGRESS_TEXT ' to continue --'],minimumDisplay,'center',COLORS.MAINFONTCOLOR, ...
+                        WRAPCHARS);
+                    waitForKeyboard(kbTrig_keycode,DEVICE);
+                end
+                if n==3
+                    displayText(mainWindow,['We will now move onto the main experiment. Please try your best for all 20 seconds! ' ...
+                        '\n\n-- Press ' PROGRESS_TEXT ' to continue --'],minimumDisplay,...
+                        'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
+                    waitForKeyboard(kbTrig_keycode,DEVICE);
+                end
+                OffFB = GetSecs;
+                timing.plannedOnsets.preITI(n+1:end) = timing.plannedOnsets.preITI(n+1:end) + OffFB-OnFB;
+                timing.plannedOnsets.prompt(n+1:end) = timing.plannedOnsets.prompt(n+1:end) + OffFB-OnFB;
+                timing.plannedOnsets.type(n+1:end) = timing.plannedOnsets.type(n+1:end) + OffFB-OnFB;
+                timing.plannedOnsets.lastITI = timing.plannedOnsets.lastITI + OffFB-OnFB;
+            end
+            
+            KbQueueRelease;            
             save(MATLAB_SAVE_FILE,'stim', 'timing', 'config');
         end
         
@@ -1397,11 +1396,7 @@ switch SESSION
         if GetSecs - timing.actualOnsets.lastITI < 2
             WaitSecs(2 - (GetSecs - timing.actualOnsets.lastITI));
         end
-        %wait in scanner at end of run
-        if CURRENTLY_ONLINE && SESSION > TOCRITERION3
-            WaitSecs(10);
-        end
-        
+
         % clean up
         save(MATLAB_SAVE_FILE,'stim', 'timing', 'config');
         
@@ -1433,11 +1428,11 @@ switch SESSION
         nPractice = 3; % number of practice trials
         
         stim.instruct1 = ['SCENE MEMORY\n\nYou''re almost done! This is the final task.\n\nWe will show you pictures of various scenes and ask you ' ...
-            'which of the two images displayed you''ve seen before. Press the "' recog_scale.inputs{1} '" key if you''ve seen the image on the left before OR press '...
-            'the "' recog_scale.inputs{2} '" key if the image on the right is the image that you''ve seen before. Try to respond as accurately and quickly as possible. '...
+            'which of the two images displayed you''ve seen before. Press the "' recog_scale.inputs{1} '" key if you''ve seen the left image before OR press '...
+            'the "' recog_scale.inputs{2} '" key if you''ve seen the right image before. Both may look familiar, but you''ve only seen one of them. Please try to respond as accurately as possible. '...
             '\n\n-- Press ' PROGRESS_TEXT ' once you understand these instructions --'];
-        stim.instruct2 = ['To get you started, we''re going to give you three practice trials. Each time, just choose the happy emoji! After this, we will move on to the task '...
-            'where you will be choosing LEFT or RIGHT based on which scene you''ve seen before. \n\n-- Press ' PROGRESS_TEXT ' once you understand these instructions --'];
+        stim.instruct2 = ['To get you started, we''re going to give you three practice trials. After this, we will move on to the task. '...
+            'Remember to choose whatever side the scene you''ve seen before is on: LEFT or RIGHT. \n\n-- Press ' PROGRESS_TEXT ' once you understand these instructions --'];
         % stimulus data fields
         stim.triggerCounter = 1;
         stim.missedTriggers = 0;
@@ -1458,6 +1453,7 @@ switch SESSION
             else
                 thisPic = pics{n};
             end
+            pstim{n} = thisPic;
             insideP(n) = isempty(strfind(thisPic, 'o')); 
             outsideP(n) = ~insideP(n);
         end
@@ -1475,7 +1471,7 @@ switch SESSION
                 chosen = usedInside(matchI);
                 usedInside(matchI) = [];
             end
-            stim.matchStim{n} = pics{chosen};
+            stim.matchStim{n} = pstim{chosen};
             stim.id(n) = find(strcmp(pics,stim.stim{n}));
         end
         % STOPPED HERE KEEP CHANGING IT AND ADDING ASSOCIATES!!!!!
@@ -1492,27 +1488,40 @@ switch SESSION
             end
         end
         
-        insideI = find(inside);
-        usedInside = insideI;
-        outsideI = find(outside);
-        usedOutside = outsideI;
+        
         % now make the matches--CHECK ALL OF THIS
-        for n = 1:length(stim.cond)
-            if stim.cond(n) ~= PRACTICE
-                if inside(n)
-                    matchI = randperm(length(usedOutside),1);
-                    chosen = usedOutside(matchI);
-                    usedOutside(matchI) = []; %remove so not repeated
-                else % if an outside pic, use inside
-                    matchI =randperm(length(usedInside),1);
-                    chosen = usedInside(matchI);
-                    usedInside(matchI) = [];
+        COMPLETED = 0;
+        while ~COMPLETED
+            insideI = find(inside);
+            usedInside = insideI;
+            outsideI = find(outside);
+            usedOutside = outsideI;
+            for n = 1:length(stim.cond)
+                if stim.cond(n) ~= PRACTICE
+                    if inside(n)
+                        matchI = randperm(length(usedOutside),1);
+                        chosen = usedOutside(matchI);
+                        usedOutside(matchI) = []; %remove so not repeated
+                    else % if an outside pic, use inside
+                        matchI =randperm(length(usedInside),1);
+                        chosen = usedInside(matchI);
+                        usedInside(matchI) = [];
+                    end
+                    stim.matchStim{n} = stim.stim{chosen}; %CHECK THAT THIS INDEX IS FOR STIM.STIM
+                    stim.id(n) = find(strcmp(pics,stim.stim{n}));
                 end
-                stim.matchStim{n} = stim.stim{chosen}; %CHECK THAT THIS INDEX IS FOR STIM.STIM
-                stim.id(n) = find(strcmp(pics,stim.stim{n}));
+            end
+            % check none of the same stimulus come within 10 of each other
+            for i = nPractice + 1:length(stim.cond)
+                iSTIM = i;
+                iMatch = find(strcmp(stim.stim{i},stim.matchStim));
+                diffinpos(i) = abs(iSTIM-iMatch);
+            end
+            nokay = length(find(diffinpos >=5));
+            if nokay == length(stim.cond)-nPractice
+                COMPLETED =1;
             end
         end
-        
         
         % display instructions
         DrawFormattedText(mainWindow,' ','center','center',COLORS.MAINFONTCOLOR,WRAPCHARS);
@@ -1622,7 +1631,7 @@ switch SESSION
                     waitForKeyboard(kbTrig_keycode,DEVICE);
                 end
                 if n==3
-                    displayText(mainWindow,['We will now move into the real experiment. Remember to choose which image you''ve seen before by pressing the "' recog_scale.inputs{1} '" key for LEFT  or the "' recog_scale.inputs{2} '" ' ...
+                    displayText(mainWindow,['We will now move onto the main experiment. Remember to choose which image you''ve seen before by pressing the "' recog_scale.inputs{1} '" key for LEFT  or the "' recog_scale.inputs{2} '" ' ...
                         'key for RIGHT. Try to respond as quickly and accurately as ' ...
                         'possible.\n\n-- Press ' PROGRESS_TEXT ' to continue --'],minimumDisplay,...
                         'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
@@ -1677,7 +1686,7 @@ switch SESSION
                 'go ahead and take the opportunity to stretch or scratch whenever the scanner is silent. Just try your best to keep your head in the same place when you do so.\n\n' ...
                 '-- please press the index finger button to continue --'],minimumDisplay,'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
             waitForKeyboard(kbTrig_keycode,DEVICE);
-            displayText(mainWindow,['We''re now going to start with a five-minute anatomical scan while you complete some training tasks in preparation for later. Please work through these and we''ll get in ' ...
+            displayText(mainWindow,['We''re now going to start with a five-minute anatomical scan as well as a couple other example scans while you complete some training tasks in preparation for later. Please work through these and we''ll get in ' ...
                 'touch with you when you finish.\n\n-- please press the index finger button to continue --'],INSTANT,'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
             waitForKeyboard(kbTrig_keycode,DEVICE);
         end

@@ -2,7 +2,7 @@
 %%fmri session
 %first these are all the session numbers
 
-SUBJECT = 1; %experimental subject number
+SUBJECT = 2; %experimental subject number
 prev = 0; %if today's date (0) or previous date (1)
 scanNow = 1; %if using triggers (1)
 runNum = 1; %what number subject they are today
@@ -49,17 +49,17 @@ DESCRIPTION = RECALL2 + 1; %26
 ASSOCIATES = DESCRIPTION + 1; %27
 %last input is scan number
 %scanning numbers should be 21 total3
-% 1-4: SCOUT
-% 5-8
-% 5: MPRAGE
-% (6)7: EXFUNCTIONAL
-% 8-9: FIELDMAP
-% (10)11: LOCALIZER
-% (12)13: RECALL 1
-% (14)15: MOT 1
-% (16)17: MOT 2
-% (18)19: MOT 3
-% (20)21: RECALL 2
+% 1: SCOUT
+% 2: MPRAGE
+% 3: AP Scan
+% 4: PA Scan
+% 5: Example functional
+% 6: LOCALIZER
+% 7: RECALL 1
+% 8: MOT 1
+% 9: MOT 2
+% 10: MOT 3
+% 11: RECALL 2
 
 %% RUN MP_RAGE FIRST
 %% RUN VARIOUS BEHAVIORAL TASKS
@@ -67,7 +67,7 @@ ASSOCIATES = DESCRIPTION + 1; %27
 mot_realtime04MB(SUBJECT,MOT_PRACTICE2, [],0,scanNow); %will move automatically into RECALL_PRACTICE
 %then start RSVP task5
 %% SCAN_PREP: instructions and also 8 seconds
-scanNum = 7;
+scanNum = 7; % here run process Nifti but look at outputs--make sure magnitude bet is okay and functional bet!
 mot_realtime04MB(SUBJECT,SCAN_PREP,[],scanNum,scanNow)
 
 %% SCAN_PREP FILE PROCESS
@@ -88,53 +88,43 @@ mot_realtime04MB(SUBJECT,MOT_LOCALIZER,[],scanNum,scanNow);
 % number of TR's total: 1376 (should be 688 originally)
 scanNum = 6;
 crossval = 0;
-%crossval = 1;=
 featureSelect = 1;
 LocalizerNiftiFileProcess(SUBJECT,crossval,featureSelect,prev,scanNow,scanNum,MOT_LOCALIZER,runNum)
 
 %% RECALL 1
 % number of TR's total: 474
-scanNum = 13;
+scanNum = 7;
 mot_realtime04MB(SUBJECT,RECALL1,[],scanNum,scanNow);
 
 %% MOT RUN 1 DISPLAY
 % number of TR's total 452 (should be 226 originally)
-scanNum = 15; %new would be 15
+scanNum = 8; %new would be 15
 mot_realtime04MB(SUBJECT,MOT{1},[],scanNum,scanNow);
 %% MOT RUN 1 FILE PROCESS
-scanNum = 15;%normally 15;
+scanNum = 8;%normally 15;
 blockNum = 1;
 featureSelect = 1;
 RealTimeNiftiFileProcess(SUBJECT,featureSelect,prev,scanNow,scanNum,MOT{1},blockNum,runNum);
 
 %% MOT RUN 2 DISPLAY
-scanNum = 17;
+scanNum = 9;
 mot_realtime04MB(SUBJECT,MOT{2},[],scanNum,scanNow);
 %% MOT RUN 2 FILE PROCESS
-scanNum = 17;
+scanNum = 9;
 featureSelect = 1;
 blockNum = 2;
 RealTimeNiftiFileProcess(SUBJECT,featureSelect,prev,scanNow,scanNum,MOT{2},blockNum,runNum);
 
 %% MOT RUN 3 DISPLAY
-scanNum = 19;
+scanNum = 10;
 mot_realtime04MB(SUBJECT,MOT{3},[],scanNum,scanNow);
 %% MOT RUN 3 FILE PROCESS
-scanNum = 19;
+scanNum = 10;
 featureSelect = 1;
 blockNum = 3;
 RealTimeNiftiFileProcess(SUBJECT,featureSelect,prev,scanNow,scanNum,MOT{3},blockNum,runNum);
-%% MOT RUN 4 DISPLAY
-scanNum = 21;
-mot_realtime04MB(SUBJECT,MOT{4},[],scanNum,scanNow);
-%% MOT RUN 3 FILE PROCESS
-scanNum = 21;
-featureSelect = 1;
-blockNum = 4;
-RealTimeNiftiFileProcess(SUBJECT,featureSelect,prev,scanNow,scanNum,MOT{4},blockNum,runNum);
-
 %% RECALL 2
-scanNum = 21;
+scanNum = 11;
 mot_realtime04MB(SUBJECT,RECALL2,[],scanNum,scanNow);
 %% ANALYZE RECALL DATA
 % do for recall 1 and recall 2
