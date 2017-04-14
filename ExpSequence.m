@@ -5,7 +5,7 @@
 SUBJECT = 2; %experimental subject number
 prev = 0; %if today's date (0) or previous date (1)
 scanNow = 1; %if using triggers (1)
-runNum = 1; %what number subject they are today
+runNum = 2; %what number subject they are today
 
 SPTB_PATH = ['/Data1/code/SPTBanne'];
 addpath(genpath(SPTB_PATH));
@@ -67,7 +67,7 @@ ASSOCIATES = DESCRIPTION + 1; %27
 mot_realtime04MB(SUBJECT,MOT_PRACTICE2, [],0,scanNow); %will move automatically into RECALL_PRACTICE
 %then start RSVP task5
 %% SCAN_PREP: instructions and also 8 seconds
-scanNum = 7; % here run process Nifti but look at outputs--make sure magnitude bet is okay and functional bet!
+scanNum = 5; % here run process Nifti but look at outputs--make sure magnitude bet is okay and functional bet!
 mot_realtime04MB(SUBJECT,SCAN_PREP,[],scanNum,scanNow)
 
 %% SCAN_PREP FILE PROCESS
@@ -81,7 +81,7 @@ mot_realtime04MB(SUBJECT,RSVP2,[],0,scanNow) %will continue until TOCRITERION3
 %look for mask and test it
 
 %% LOCALIZER DISPLAY
-scanNum = 7;
+scanNum = 6;
 mot_realtime04MB(SUBJECT,MOT_LOCALIZER,[],scanNum,scanNow);
 
 %% LOCALIZER FILE PROCESS

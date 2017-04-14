@@ -1,0 +1,41 @@
+trial	ons(s)	stim_id	stim      	cond    	dur 	rt  	acc 	resp    	cresp   
+1   	47.4  	31  	SPONGE    	rt-targ 	2.071	NR  	0   	NR      	1 detail, 2+ details, full
+2   	53.4  	31  	SPONGE (repeat 1)	rt-targ 	2.008	2.005	1   	1 detail	1 detail, 2+ details, full
+3   	59.4  	31  	SPONGE (repeat 2)	rt-targ 	1.984	1.982	1   	1 detail	1 detail, 2+ details, full
+4   	65.4  	31  	SPONGE (repeat 3)	rt-targ 	2.012	2.011	1   	1 detail	1 detail, 2+ details, full
+5   	89.4  	32  	PLUG      	rt-targ 	1.982	1.98	0   	generic 	1 detail, 2+ details, full
+6   	95.4  	32  	PLUG (repeat 1)	rt-targ 	2.05	2.048	0   	generic 	1 detail, 2+ details, full
+7   	101.4 	32  	PLUG (repeat 2)	rt-targ 	2.051	2.049	0   	generic 	1 detail, 2+ details, full
+8   	107.4 	32  	PLUG (repeat 3)	rt-targ 	2.015	2.013	0   	generic 	1 detail, 2+ details, full
+9   	131.4 	30  	MIRROR    	rt-targ 	2.002	2   	0   	generic 	1 detail, 2+ details, full
+10  	137.4 	30  	MIRROR (repeat 1)	rt-targ 	2.018	2.016	0   	generic 	1 detail, 2+ details, full
+11  	143.4 	30  	MIRROR (repeat 2)	rt-targ 	2.014	2.012	0   	generic 	1 detail, 2+ details, full
+12  	149.4 	30  	MIRROR (repeat 3)	rt-targ 	2.013	2.012	0   	generic 	1 detail, 2+ details, full
+13  	173.4 	28  	BRACELET  	rt-targ 	2.014	2.012	0   	generic 	1 detail, 2+ details, full
+14  	179.4 	28  	BRACELET (repeat 1)	rt-targ 	2.001	1.999	0   	generic 	1 detail, 2+ details, full
+15  	185.4 	28  	BRACELET (repeat 2)	rt-targ 	2.016	2.014	0   	generic 	1 detail, 2+ details, full
+16  	191.4 	28  	BRACELET (repeat 3)	rt-targ 	2.047	2.045	0   	generic 	1 detail, 2+ details, full
+17  	215.4 	34  	ROPE      	rt-targ 	2.048	2.046	0   	generic 	1 detail, 2+ details, full
+18  	221.4 	34  	ROPE (repeat 1)	rt-targ 	2.015	2.013	0   	generic 	1 detail, 2+ details, full
+19  	227.4 	34  	ROPE (repeat 2)	rt-targ 	1.986	1.984	0   	generic 	1 detail, 2+ details, full
+20  	233.4 	34  	ROPE (repeat 3)	rt-targ 	1.978	1.977	0   	generic 	1 detail, 2+ details, full
+21  	257.4 	25  	PURSE     	rt-targ 	1.984	1.983	0   	generic 	1 detail, 2+ details, full
+22  	263.4 	25  	PURSE (repeat 1)	rt-targ 	1.98	1.978	0   	generic 	1 detail, 2+ details, full
+23  	269.4 	25  	PURSE (repeat 2)	rt-targ 	2.049	2.047	0   	generic 	1 detail, 2+ details, full
+24  	275.4 	25  	PURSE (repeat 3)	rt-targ 	2.012	2.011	0   	generic 	1 detail, 2+ details, full
+25  	299.4 	33  	HOOK      	rt-targ 	2.012	2.011	1   	1 detail	1 detail, 2+ details, full
+26  	305.4 	33  	HOOK (repeat 1)	rt-targ 	2.014	2.013	1   	1 detail	1 detail, 2+ details, full
+27  	311.4 	33  	HOOK (repeat 2)	rt-targ 	2.047	2.045	1   	1 detail	1 detail, 2+ details, full
+28  	317.4 	33  	HOOK (repeat 3)	rt-targ 	1.983	1.981	1   	1 detail	1 detail, 2+ details, full
+29  	341.4 	27  	HOSE      	rt-targ 	2.012	2.011	0   	generic 	1 detail, 2+ details, full
+30  	347.4 	27  	HOSE (repeat 1)	rt-targ 	2.048	2.047	0   	generic 	1 detail, 2+ details, full
+31  	353.4 	27  	HOSE (repeat 2)	rt-targ 	2.051	2.049	0   	generic 	1 detail, 2+ details, full
+32  	359.4 	27  	HOSE (repeat 3)	rt-targ 	2.012	2.01	0   	generic 	1 detail, 2+ details, full
+33  	383.4 	29  	NICKEL    	rt-targ 	1.983	1.981	0   	generic 	1 detail, 2+ details, full
+34  	389.4 	29  	NICKEL (repeat 1)	rt-targ 	2.015	2.014	0   	generic 	1 detail, 2+ details, full
+35  	395.4 	29  	NICKEL (repeat 2)	rt-targ 	2.021	2.019	0   	generic 	1 detail, 2+ details, full
+36  	401.4 	29  	NICKEL (repeat 3)	rt-targ 	2.014	2.013	0   	generic 	1 detail, 2+ details, full
+37  	425.4 	26  	DRILL     	rt-targ 	2.019	2.017	0   	generic 	1 detail, 2+ details, full
+38  	431.4 	26  	DRILL (repeat 1)	rt-targ 	2.015	2.013	0   	generic 	1 detail, 2+ details, full
+39  	437.4 	26  	DRILL (repeat 2)	rt-targ 	2.012	2.011	0   	generic 	1 detail, 2+ details, full
+40  	443.4 	26  	DRILL (repeat 3)	rt-targ 	2.011	2.01	0   	generic 	1 detail, 2+ details, full

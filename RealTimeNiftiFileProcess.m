@@ -84,7 +84,7 @@ fprintf('fMRI files being read from: %s\n',dicom_dir);
 %check that the fMRI dicom files do NOT exist (if real-time)
 if scanNow == 1
     [testFile testFileName] = GetSpecificFMRIFile(dicom_dir,scanNum,1);
-    if exist([dicom_dir testFileN2ame],'file');
+    if exist([dicom_dir testFileName],'file');
         reply = input('Files with this scan number already exist. Do you want to continue? Y/N [N]: ', 's');
         if isempty(reply)
             reply = 'N';
@@ -230,15 +230,13 @@ for iTrial = 1:patterns.nTRs % the first 10 TRs have been taken out to detrend
         %[newVol patterns.timeRead{iTrial}] = ReadFile([dicom_dir patterns.newFile{iTrial}],imgmat,roi); % NTB: only reads top file
         t0 = GetSecs;
         niftiname = sprintf('nifti%3.3i', thisTR);
+        
         unix(sprintf('%sdcm2niix %s -f %s -o %s -s y %s%s',dcm2path,dicom_dir,niftiname,runHeader,dicom_dir,patterns.newFile{iTrial}))
-        %unix(sprintf('%sdicom2bxh %s%s %s.bxh',bxhpath,dicom_dir,patterns.newFile{iTrial},niftiname));
-        %unix(sprintf('%sbxhreorient --orientation=LAS %s.bxh %s_re.bxh',bxhpath,niftiname,niftiname));
-        %unix(sprintf('%sbxh2analyze --overwrite --analyzetypes --niigz --niftihdr -s %s_re.bxh %s_re',bxhpath,niftiname,niftiname))
-        %unix(sprintf('gunzip %s_re.nii.gz',niftiname))
         t1 = GetSecs;
         unix(sprintf('%smcflirt -in %s.nii -reffile %sexfunc_re.nii',fslpath,niftiname,process_dir))
         t2 = GetSecs;
         moco = t2-t1;
+        
         niftiname = sprintf('nifti%3.3i_mcf.nii.gz', thisTR);
         niftidata = readnifti(niftiname);
         newVol = niftidata(roi);

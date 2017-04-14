@@ -1,0 +1,5 @@
+trial	ons(s)	stim_id	stim      	cond    	dur 	rt  	acc 	resp    	cresp   
+1   	36.1  	2   	BELL      	targ_easy	1.951	1.64	1   	target  	target  
+2   	78.1  	45  	RATTLE    	lure_hard	1.95	1.328	1   	non-target	non-target
+3   	120.1 	1   	RAINBOW   	targ_hard	1.951	0.912	0   	target  	non-target
+4   	162.1 	46  	DENT      	lure_easy	1.95	1.136	1   	non-target	non-target
