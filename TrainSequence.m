@@ -39,7 +39,7 @@ DESCRIPTION = RECALL2 + 1; %26
 ASSOCIATES = DESCRIPTION + 1; %27
 
 %% first practice set
-mot_realtime04MB(SUBJECT, SETUP, [], 0, 0);
+mot_realtime04MB(SUBJECT, 4, [], 0, 0);
 
 % this will continue to train test and practice MOT, then move on to
 % MOT_Practice, MOT_PREP

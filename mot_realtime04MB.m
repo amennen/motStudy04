@@ -2097,7 +2097,7 @@ switch SESSION
                 
         rtData.foundFn = [];
         rtData.RTVEC = {};
-        fileNumber = -1;
+        fileNumber = 1;
         for n=1:length(stim.cond)
             stim.trial = n;
             train = [];
