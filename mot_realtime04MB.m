@@ -2095,8 +2095,9 @@ switch SESSION
         sessionInfoFile = fullfile(ppt_dir, ['SessionInfo' '_' num2str(SESSION) '.mat']);
         save(sessionInfoFile, 'stimCond','stimID', 'timing', 'config'); 
                 
-        foundFn = [];
-
+        rtData.foundFn = [];
+        rtData.RTVEC = {};
+        fileNumber = -1;
         for n=1:length(stim.cond)
             stim.trial = n;
             train = [];
@@ -2192,9 +2193,9 @@ switch SESSION
             
             fileTR = 1;
             waitForPulse = false;
-            printlog(LOG_NAME,'trial\tTR\tprompt active\tspeed\tds\tflip error\tfound file\tFileTR\tCategSep\tLastFile\n');
+            printlog(LOG_NAME,'trial\tTR\tprompt active\tspeed\tds\tflip error\tFound File #\tThisTR\tCategSep\n');
             check = [];
-            RTVEC = [];
+            rtData.RTVEC{n} = [];
             while abs(GetSecs - timing.plannedOnsets.probe(n)) > 0.050;%SLACK*2 %so this is just constatnly running, stops when it's within a flip
                
                 stim.frame_counter(stim.trial) = stim.frame_counter(stim.trial) + 1;
@@ -2246,7 +2247,7 @@ switch SESSION
                 
               
    
-                waitFrames = 15; % looking at half second rate--start to begin
+                waitFrames = 5; % looking at half second rate--start to begin % ACM changed this from 15 to 2 after subject 2
                 % but we don't want this to look for the same file more
                 % than once or go through the same loop
                 if realtime
@@ -2267,22 +2268,15 @@ switch SESSION
                                 startI = 5;
                                 fileNumber = str2double(filename(startI:(length(filename)-4)));
                                 % let's see if we've loaded this before
-                                if ~ismember(fileNumber,foundFn) && ismember(fileNumber,allMotionTRs(5:end,n)) % so only accept it if it's one of the TR's for that trial
+                                if ~ismember(fileNumber,rtData.foundFn) && ismember(fileNumber,allMotionTRs(5:end,n)) % so only accept it if it's one of the TR's for that trial
                                     % now add this to the found file
-                                    foundFn(end+1) = fileNumber;
-                                % have it load the newest file
-                                % check that we haven't found it before
-                                % change all these indices!! fileTR
-                                    %[rtData.classOutputFileLoad(fileNumber), rtData.classOutputFile{fileNumber}] = GetSpecificClassOutputFile(classOutputDir,fileNumber);
-                                    % make a vector of all the data that's been
-                                    % used for the whole trial
-                                    % don't need that call anymore because
-                                    % we're getting the number
+                                    rtData.foundFn(end+1) = fileNumber;
+
                                     rtData.classOutputFileLoad(fileNumber) = 1;
                                     tempStruct = load(fullfile(classOutputDir,filename));
                                     rtData.rtDecoding(fileNumber) = tempStruct.classOutput;
-                                    RTVEC(end+1) = rtData.rtDecoding(fileNumber);
-                                    rtData.rtDecodingFunction(fileNumber) = PID(RTVEC,Kp,Ki,Kd,OptimalForget,maxIncrement);
+                                    rtData.RTVEC{n}(end+1) = rtData.rtDecoding(fileNumber);
+                                    rtData.rtDecodingFunction(fileNumber) = PID(rtData.RTVEC{n},Kp,Ki,Kd,OptimalForget,maxIncrement);
                                     
                                     % update speed here
                                     current_speed = current_speed + rtData.rtDecodingFunction(fileNumber); % apply in THIS TR what was from 2 TR's ago (indexed by what file it is) so file 3 will be applied at TR5!
@@ -2297,16 +2291,13 @@ switch SESSION
                                     % stim.maxspeed] (0,30) right now
                                     current_speed = min([stim.maxspeed current_speed]);
                                     current_speed = max([stim.minspeed current_speed]);
-                                    % need something to make sure if it
-                                    % comes back in the same TR it doesn't
-                                    % count the same data again
                                 end
                             end
                             
                         else
                             rtData.rtDecoding(fileTR) = rand(1)*2-1;
-                            RTVEC(end+1) = rtData.rtDecoding(fileTR);
-                            rtData.rtDecodingFunction(fileTR) = PID(RTVEC,Kp,Ki,Kd,OptimalForget,maxIncrement);
+                            rtData.RTVEC{n}(end+1) = rtData.rtDecoding(fileTR);
+                            rtData.rtDecodingFunction(fileTR) = PID(rtData.RTVEC{n},Kp,Ki,Kd,OptimalForget,maxIncrement);
                             % update speed here
                             current_speed = current_speed + rtData.rtDecodingFunction(fileNumber); % apply in THIS TR what was from 2 TR's ago (indexed by what file it is) so file 3 will be applied at TR5!
                             stim.changeSpeed(TRcounter,n) = rtData.rtDecodingFunction(fileNumber); %speed changed ON that TR
@@ -2337,10 +2328,10 @@ switch SESSION
                 end
                 if TRcounter > 1 && (GetSecs >= timing.plannedOnsets.motion(TRcounter,n) + config.TR-.25) && printTR(TRcounter) %after when should have found file
                     %z = GetSecs - timing.plannedOnsets.motion(TRcounter,n);
-                    printlog(LOG_NAME,'%d\t%d\t%d\t\t%5.3f\t%5.3f\t%5.4f\t\t%i\t\t%d\t\t%5.3f\t\t%s\n',n,TRcounter,prompt_active,current_speed,stim.changeSpeed(TRcounter,n),timing.actualOnsets.motion(TRcounter,stim.trial) - timing.plannedOnsets.motion(TRcounter,stim.trial),rtData.classOutputFileLoad(allMotionTRs(TRcounter-1,n)),fileTR,rtData.rtDecoding(fileTR),rtData.newestFile{allMotionTRs(TRcounter,n)});
+                    printlog(LOG_NAME,'%d\t%d\t%d\t\t%5.3f\t%5.3f\t%5.4f\t\t%i\t\t%d\t\t%5.3f\n',n,TRcounter,prompt_active,current_speed,stim.changeSpeed(TRcounter,n),timing.actualOnsets.motion(TRcounter,stim.trial) - timing.plannedOnsets.motion(TRcounter,stim.trial),fileNumber,thisTR,rtData.rtDecoding(fileNumber));
                     printTR(TRcounter) = 0;
                 elseif TRcounter ==1 && (GetSecs >= timing.plannedOnsets.motion(TRcounter,n) + config.TR-.25) && printTR(TRcounter)
-                    printlog(LOG_NAME,'%d\t%d\t%d\t\t%5.3f\t%5.3f\t%5.4f\t\t%i\t\t%d\t\t%5.3f\t\t%s\n',n,TRcounter,prompt_active,current_speed,stim.changeSpeed(TRcounter,n),timing.actualOnsets.motion(TRcounter,stim.trial) - timing.plannedOnsets.motion(TRcounter,stim.trial),rtData.classOutputFileLoad(allMotionTRs(TRcounter,n)),fileTR,rtData.rtDecoding(fileTR),rtData.newestFile{allMotionTRs(TRcounter,n)});
+                    printlog(LOG_NAME,'%d\t%d\t%d\t\t%5.3f\t%5.3f\t%5.4f\t\t%i\t\t%d\t\t%5.3f\n',n,TRcounter,prompt_active,current_speed,stim.changeSpeed(TRcounter,n),timing.actualOnsets.motion(TRcounter,stim.trial) - timing.plannedOnsets.motion(TRcounter,stim.trial),fileNumber,thisTR,rtData.rtDecoding(fileNumber));
                     printTR(TRcounter) = 0;
                 end
 
