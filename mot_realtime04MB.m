@@ -1176,7 +1176,7 @@ switch SESSION
         sca
            %% 4. Typing description task
     case {DESCRIPTION}
-        % stimulus presentation parameters
+         % stimulus presentation parameters
         stim.promptDur = 6*SPEED; % cue word alone
         stim.prepDur = 2*SPEED;
         stim.isiDuration = 4*SPEED; %
@@ -1299,7 +1299,7 @@ switch SESSION
             moveaway = 80;
             %new(1) = new(1) - moveaway;
             new(2) = new(2) + movedown;
-            boxsize = 120;
+            boxsize = 200;
             new(4) = new(4)+ boxsize + movedown;
             %new(3) = new(3) + moveaway; %making the textbox a bit wider
             new(1) = CENTER(1) - CENTER(1)/1.5;
@@ -1311,7 +1311,7 @@ switch SESSION
             KbQueueCreate;
             KbQueueStart;
             AsteriskBuffer=[]; %initializes buffer
-            WRAPCHARS = 70;
+            WRAPCHARS = 100;
 
             AsteriskBuffer = ' ';
             while GetSecs - timing.actualOnsets.type(n) < stim.typeDur % keep checking for more typing until you can't anymore
@@ -1322,7 +1322,7 @@ switch SESSION
                 Screen('TextSize',mainWindow,20);  %sets textsize for instructions
                 [nxi,nyi] = DrawFormattedText(mainWindow,instructions, 'center', CENTER(2) - CENTER(2)/3, COLORS.MAINFONTCOLOR);
                 Screen('FillRect', mainWindow, COLORS.GREY/5, new)
-                Screen('TextSize',mainWindow,20);
+                Screen('TextSize',mainWindow,25);
                 
                 if pressed %keeps track of key-presses and draws text
                     if firstPress(deleteKey) && length(AsteriskBuffer>1) %if delete key then erase last key-press
@@ -1350,6 +1350,7 @@ switch SESSION
                 Screen('Flip',mainWindow);
                 WaitSecs(.01); % put in small interval to allow other system events
             end
+            Screen('TextSize',mainWindow,20); 
             stim.description{n} = AsteriskBuffer;
             %endrecord = GetSecs;
             %display even/odd
@@ -1409,7 +1410,6 @@ switch SESSION
         % clean up stuff loaded in memory, and restore user input
         KbQueueRelease();
         sca
-        
         %% POST PICTURES TASK
         
     case ASSOCIATES
