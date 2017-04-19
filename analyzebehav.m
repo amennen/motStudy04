@@ -53,3 +53,19 @@ for i = 1:2
 end
 
 %% look at AB' d' ratings
+% YS suggestion: look at the difference between presented first and
+% presented after if related--so if getting right once will mess up getting
+% right the other time
+r = dir(fullfile(behavioral_dir, ['_RECOG' '*.mat']));
+r = load(fullfile(behavioral_dir,r(end).name));
+trials = table2cell(r.datastruct.trials);
+stimID = cell2mat(trials(:,8));
+cond = cell2mat(trials(:,9));
+acc = cell2mat(trials(:,11));
+rt = cell2mat(trials(:,13));
+
+easy = find(cond==2);
+hard = find(cond==1);
+easyRT = nanmedian(rt(easy));
+hardRT = nanmedian(rt(hard));
+% should make sure it's not influenced by order for RT******
