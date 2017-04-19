@@ -48,7 +48,7 @@ RECALL2 = MOT{end} + 1; % post-scan rsvp memory test
 DESCRIPTION = RECALL2 + 1; %26
 ASSOCIATES = DESCRIPTION + 1; %27
 %last input is scan number
-%scanning numbers should be 21 total3
+
 % 1: SCOUT
 % 2: MPRAGE
 % 3: AP Scan
@@ -69,14 +69,18 @@ mot_realtime04MB(SUBJECT,MOT_PRACTICE2, [],0,scanNow); %will move automatically 
 %% SCAN_PREP: instructions and also 8 seconds
 scanNum = 5; % here run process Nifti but look at outputs--make sure magnitude bet is okay and functional bet!
 mot_realtime04MB(SUBJECT,SCAN_PREP,[],scanNum,scanNow)
-
+% run the AP scan, PA scan, and functional scan here!! then just quit
+% qhenever they finish
 %% SCAN_PREP FILE PROCESS
-scanNum = 7; %change 
-processNew = 1;
-ProcessNiftiMask(SUBJECT,processNew,prev,scanNum,runNum) %have it so it waits until it finds the file
+% scanNum = 7; %change 
+% processNew = 1;
+% ProcessNiftiMask(SUBJECT,processNew,prev,scanNum,runNum) %have it so it waits until it finds the file
 
 %% NOW RUN FIELD MAPS WHILE NEXT BEHAVIORAL TASKS (RSVP2,FAMILIARIZE3,TOCRITERION3)
 %changed from RSVP2 change back!!
+% run after functional scans! as soon as it finishes!
+% (could maybe have two windows to process anatomical and other functional
+% ones but eh)
 mot_realtime04MB(SUBJECT,RSVP2,[],0,scanNow) %will continue until TOCRITERION3
 %look for mask and test it
 

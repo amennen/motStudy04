@@ -27,10 +27,10 @@ addpath(genpath(multipath));
 setenv('FSLOUTPUTTYPE','NIFTI_GZ');
 
 % inputs (eventually function)
-subjNum = 2;
+subjNum = 3;
 %subjDate = '4-5-17';
 subjDate = NaN;
-runNum = 2;
+runNum = 1;
 highresScan = 2;
 APScan = 3;
 PAScan = 4;

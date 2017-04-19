@@ -2097,6 +2097,7 @@ switch SESSION
                 
         rtData.foundFn = [];
         rtData.RTVEC = {};
+        rtData.allSpeeds = {};
         fileNumber = 1;
         for n=1:length(stim.cond)
             stim.trial = n;
@@ -2169,7 +2170,8 @@ switch SESSION
                 initFeedback = lastDecoding(stim.id(stim.trial));
                 initFunction = lastDecodingFunction(stim.id(stim.trial));
             end
-            
+            rtData.allSpeeds{n} = [];
+            rtData.allSpeeds{n}(1) = current_speed;
             if current_speed < 0
                 shade = abs(current_speed);
             end
@@ -2196,6 +2198,7 @@ switch SESSION
             printlog(LOG_NAME,'trial\tTR\tprompt active\tspeed\tds\tflip error\tFound File #\tThisTR\tCategSep\n');
             check = [];
             rtData.RTVEC{n} = [];
+           
             while abs(GetSecs - timing.plannedOnsets.probe(n)) > 0.050;%SLACK*2 %so this is just constatnly running, stops when it's within a flip
                
                 stim.frame_counter(stim.trial) = stim.frame_counter(stim.trial) + 1;
@@ -2291,6 +2294,7 @@ switch SESSION
                                     % stim.maxspeed] (0,30) right now
                                     current_speed = min([stim.maxspeed current_speed]);
                                     current_speed = max([stim.minspeed current_speed]);
+                                    rtData.allSpeeds{n}(end+1) = current_speed;
                                 end
                             end
                             
@@ -2719,7 +2723,7 @@ switch SESSION
         
     case SCAN_PREP
         % instructions
-        displayText(mainWindow,['Great job! Now, we''re now going to have a short functional run before you complete various tasks. Please work through these and we''ll get in ' ...
+        displayText(mainWindow,['Great job! Now, we''re now going to take a sequence of short scans before you complete various tasks. Please work through these and we''ll get in ' ...
              'touch with you when you finish.\n\n-- please press the index finger button to continue --'],INSTANT,'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
         waitForKeyboard(kbTrig_keycode,DEVICE);
         DrawFormattedText(mainWindow,'Waiting for scanner start, hold tight!','center','center',COLORS.MAINFONTCOLOR,WRAPCHARS);
@@ -2735,7 +2739,7 @@ switch SESSION
             runStart = GetSecs;
         end
        % runStart = timing.trig.wait;
-        config.wait = 10; % we want this to be up for 8 seconds to collect sample TR's
+        config.wait = 300; % we want this to be up for 8 seconds to collect sample TR's - this will run for 5 minutes so just stop whenever it's done!
         config.TR = 1;
         timing.plannedOnsets.offEx = runStart + config.wait;
         DrawFormattedText(mainWindow,'Done!','center','center',COLORS.MAINFONTCOLOR,WRAPCHARS);
