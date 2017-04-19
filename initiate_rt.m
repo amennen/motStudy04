@@ -49,7 +49,7 @@ function [mainWindow windowSize colors device trigger workingDir logName matlabS
         addpath(genpath('/Users/amennen/mychanges_sptb/'));
     catch
         try % my laptop
-            ls('/Users/amennen/mot_study')
+            ls('/Users/amennen/motStudy04/')
             workingDir = '/Users/amennen/motStudy04/';
             windowSize.degrees = [35 30];
         catch
