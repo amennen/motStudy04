@@ -1,0 +1,41 @@
+trial	ons(s)	stim_id	stim      	cond    	dur 	rt  	acc 	resp    	cresp   
+1   	51.4  	29  	NICKEL    	rt-targ 	2.078	2.074	1   	1 detail	1 detail, 2+ details, full
+2   	57.4  	29  	NICKEL (repeat 1)	rt-targ 	2.02	2.018	1   	2+ details	1 detail, 2+ details, full
+3   	63.4  	29  	NICKEL (repeat 2)	rt-targ 	2.018	2.017	1   	2+ details	1 detail, 2+ details, full
+4   	69.4  	29  	NICKEL (repeat 3)	rt-targ 	2.012	2.011	1   	2+ details	1 detail, 2+ details, full
+5   	93.4  	32  	PURSE     	rt-targ 	2.015	2.014	1   	1 detail	1 detail, 2+ details, full
+6   	99.4  	32  	PURSE (repeat 1)	rt-targ 	2.016	2.014	1   	2+ details	1 detail, 2+ details, full
+7   	105.4 	32  	PURSE (repeat 2)	rt-targ 	2.016	2.014	1   	2+ details	1 detail, 2+ details, full
+8   	111.4 	32  	PURSE (repeat 3)	rt-targ 	2.014	2.012	1   	2+ details	1 detail, 2+ details, full
+9   	135.4 	33  	CHALK     	rt-targ 	2.02	2.018	1   	2+ details	1 detail, 2+ details, full
+10  	141.4 	33  	CHALK (repeat 1)	rt-targ 	2.011	2.01	1   	2+ details	1 detail, 2+ details, full
+11  	147.4 	33  	CHALK (repeat 2)	rt-targ 	2.013	2.011	1   	2+ details	1 detail, 2+ details, full
+12  	153.4 	33  	CHALK (repeat 3)	rt-targ 	2.018	2.017	1   	2+ details	1 detail, 2+ details, full
+13  	177.4 	31  	FOAM      	rt-targ 	2.016	2.014	1   	2+ details	1 detail, 2+ details, full
+14  	183.4 	31  	FOAM (repeat 1)	rt-targ 	2.016	2.014	1   	2+ details	1 detail, 2+ details, full
+15  	189.4 	31  	FOAM (repeat 2)	rt-targ 	2.012	2.011	1   	2+ details	1 detail, 2+ details, full
+16  	195.4 	31  	FOAM (repeat 3)	rt-targ 	2.017	2.015	1   	2+ details	1 detail, 2+ details, full
+17  	219.4 	27  	ROPE      	rt-targ 	2.013	2.012	0   	no image	1 detail, 2+ details, full
+18  	225.4 	27  	ROPE (repeat 1)	rt-targ 	2.014	2.012	0   	generic 	1 detail, 2+ details, full
+19  	231.4 	27  	ROPE (repeat 2)	rt-targ 	2.013	2.012	1   	1 detail	1 detail, 2+ details, full
+20  	237.4 	27  	ROPE (repeat 3)	rt-targ 	2.013	2.011	1   	1 detail	1 detail, 2+ details, full
+21  	261.4 	28  	HOOK      	rt-targ 	2.012	2.011	1   	1 detail	1 detail, 2+ details, full
+22  	267.4 	28  	HOOK (repeat 1)	rt-targ 	2.014	2.012	1   	2+ details	1 detail, 2+ details, full
+23  	273.4 	28  	HOOK (repeat 2)	rt-targ 	2.014	2.013	1   	2+ details	1 detail, 2+ details, full
+24  	279.4 	28  	HOOK (repeat 3)	rt-targ 	2.015	2.014	1   	2+ details	1 detail, 2+ details, full
+25  	303.4 	30  	DRILL     	rt-targ 	2.012	2.011	1   	1 detail	1 detail, 2+ details, full
+26  	309.4 	30  	DRILL (repeat 1)	rt-targ 	2.015	2.014	1   	1 detail	1 detail, 2+ details, full
+27  	315.4 	30  	DRILL (repeat 2)	rt-targ 	2.019	2.017	1   	2+ details	1 detail, 2+ details, full
+28  	321.4 	30  	DRILL (repeat 3)	rt-targ 	2.015	2.014	1   	2+ details	1 detail, 2+ details, full
+29  	345.4 	25  	PYRAMID   	rt-targ 	2.018	2.016	1   	1 detail	1 detail, 2+ details, full
+30  	351.4 	25  	PYRAMID (repeat 1)	rt-targ 	2.012	2.011	1   	1 detail	1 detail, 2+ details, full
+31  	357.4 	25  	PYRAMID (repeat 2)	rt-targ 	2.02	2.018	1   	1 detail	1 detail, 2+ details, full
+32  	363.4 	25  	PYRAMID (repeat 3)	rt-targ 	2.018	2.017	1   	1 detail	1 detail, 2+ details, full
+33  	387.4 	26  	BRACELET  	rt-targ 	2.036	NR  	0   	NR      	1 detail, 2+ details, full
+34  	393.4 	26  	BRACELET (repeat 1)	rt-targ 	2.021	2.019	1   	2+ details	1 detail, 2+ details, full
+35  	399.4 	26  	BRACELET (repeat 2)	rt-targ 	2.013	2.011	0   	generic 	1 detail, 2+ details, full
+36  	405.4 	26  	BRACELET (repeat 3)	rt-targ 	2.012	NR  	0   	NR      	1 detail, 2+ details, full
+37  	429.4 	34  	PLUG      	rt-targ 	2.02	2.018	0   	generic 	1 detail, 2+ details, full
+38  	435.4 	34  	PLUG (repeat 1)	rt-targ 	2.021	2.019	1   	2+ details	1 detail, 2+ details, full
+39  	441.4 	34  	PLUG (repeat 2)	rt-targ 	2.014	2.012	1   	2+ details	1 detail, 2+ details, full
+40  	447.4 	34  	PLUG (repeat 3)	rt-targ 	2.016	2.014	1   	2+ details	1 detail, 2+ details, full
