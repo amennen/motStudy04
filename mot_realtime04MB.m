@@ -1408,8 +1408,9 @@ switch SESSION
         WaitSecs(4);
         
         % clean up stuff loaded in memory, and restore user input
-        KbQueueRelease();
-        sca
+        %KbQueueRelease();
+        sca;
+        
         %% POST PICTURES TASK
         
     case ASSOCIATES
@@ -1725,7 +1726,7 @@ switch SESSION
         
         %rt parameters 
         OptimalForget = 0.15;
-        maxIncrement = 1.25; %will also have to check this
+        maxIncrement = 0.625; %will also have to check this
         Kp = 5;
         Ki = .0; %changed after RT worksop from 0.01
         Kd = .5;
@@ -2330,11 +2331,11 @@ switch SESSION
                         [targetBin] = dot_refresh(mainWindow,targetBin,dots,shade,square_bounds,stim.dot_diameter,COLORS,cue,show_targs,show_probe,prompt_active);
                     end
                 end
-                if TRcounter > 1 && (GetSecs >= timing.plannedOnsets.motion(TRcounter,n) + config.TR-.25) && printTR(TRcounter) %after when should have found file
+                if TRcounter > 1 && (GetSecs >= timing.plannedOnsets.motion(TRcounter,n) + config.TR-.1) && printTR(TRcounter) %after when should have found file
                     %z = GetSecs - timing.plannedOnsets.motion(TRcounter,n);
                     printlog(LOG_NAME,'%d\t%d\t%d\t\t%5.3f\t%5.3f\t%5.4f\t\t%i\t\t%d\t\t%5.3f\n',n,TRcounter,prompt_active,current_speed,stim.changeSpeed(TRcounter,n),timing.actualOnsets.motion(TRcounter,stim.trial) - timing.plannedOnsets.motion(TRcounter,stim.trial),fileNumber,thisTR,rtData.rtDecoding(fileNumber));
                     printTR(TRcounter) = 0;
-                elseif TRcounter ==1 && (GetSecs >= timing.plannedOnsets.motion(TRcounter,n) + config.TR-.25) && printTR(TRcounter)
+                elseif TRcounter ==1 && (GetSecs >= timing.plannedOnsets.motion(TRcounter,n) + config.TR-.1) && printTR(TRcounter)
                     printlog(LOG_NAME,'%d\t%d\t%d\t\t%5.3f\t%5.3f\t%5.4f\t\t%i\t\t%d\t\t%5.3f\n',n,TRcounter,prompt_active,current_speed,stim.changeSpeed(TRcounter,n),timing.actualOnsets.motion(TRcounter,stim.trial) - timing.plannedOnsets.motion(TRcounter,stim.trial),fileNumber,thisTR,rtData.rtDecoding(fileNumber));
                     printTR(TRcounter) = 0;
                 end

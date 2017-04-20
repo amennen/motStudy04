@@ -1,5 +1,5 @@
 % check lag in file receiving
-z = load('BehavioralData/2/mot_realtime04_2_21_14Apr17_1418.mat')
+z = load('BehavioralData/3/mot_realtime04_3_21_19Apr17_1436.mat')
 newFile = z.rtData.newestFile;
 delay = [];
 for f =1:length(newFile)

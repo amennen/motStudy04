@@ -133,14 +133,14 @@ mot_realtime04MB(SUBJECT,RECALL2,[],scanNum,scanNow);
 %% ANALYZE RECALL DATA
 % do for recall 1 and recall 2
 makeFile = 1;
-scanNum1 = 13;
-scanNum2 = 21;
+scanNum1 = 7;
+scanNum2 = 11;
 featureSelect = 1;
 if prev
    date = '2-1-17';
 end
-RecallFileProcess(SUBJECT,runNum,scanNum1,RECALL1,date,featureSelect,makeFile);
-RecallFileProcess(SUBJECT,runNum,scanNum2,RECALL2,date,featureSelect,makeFile);
+RecallNiftiFileProcess(SUBJECT,runNum,scanNum1,RECALL1,date,featureSelect,makeFile,1);
+RecallNiftiFileProcess(SUBJECT,runNum,scanNum2,RECALL2,date,featureSelect,makeFile,2);
 %% ANALYZE RECALL DATA FOR ANOTHER MASK
 
 scanNum1 = 13;
