@@ -1416,7 +1416,7 @@ switch SESSION
     case ASSOCIATES
         
         % declarations
-        stim.promptDur = 2.5*SPEED;
+        stim.promptDur = .75*SPEED;
         stim.listenDur = 0.5*SPEED;
         stim.isiDuration = 2*SPEED;
         PROGRESS = INDEXFINGER;
@@ -1428,102 +1428,69 @@ switch SESSION
         % change it to be index for left, middle for right choice
         nPractice = 3; % number of practice trials
         
-        stim.instruct1 = ['SCENE MEMORY\n\nYou''re almost done! This is the final task.\n\nWe will show you pictures of various scenes and ask you ' ...
-            'which of the two images displayed you''ve seen before. Press the "' recog_scale.inputs{1} '" key if you''ve seen the left image before OR press '...
-            'the "' recog_scale.inputs{2} '" key if you''ve seen the right image before. Both may look familiar, but you''ve only seen one of them. Please try to respond as accurately as possible. '...
-            '\n\n-- Press ' PROGRESS_TEXT ' once you understand these instructions --'];
+        stim.instruct1 = ['SCENE MEMORY LIGHTNING ROUND\n\nYou''re almost done! This is the final task.\n\nWe will show you pictures of various scenes and ask you ' ...
+            'whether they are old ("' recog_scale.inputs{1} '" key) or new ("' recog_scale.inputs{2} '" key). Try to respond ' ...
+            'as quickly and accurately as possible.\n So press ' recog_scale.inputs{1} ' = OLD IMAGE and ' recog_scale.inputs{2} ' = NEW IMAGE.\n\n-- Press ' PROGRESS_TEXT ' once you understand these instructions --'];
+        
         stim.instruct2 = ['To get you started, we''re going to give you three practice trials. After this, we will move on to the task. '...
-            'Remember to choose whatever side the scene you''ve seen before is on: LEFT or RIGHT. \n\n-- Press ' PROGRESS_TEXT ' once you understand these instructions --'];
+            ' Remember to press ' recog_scale.inputs{1} ' = OLD IMAGE and ' recog_scale.inputs{2} ' = NEW IMAGE. \n\n-- Press ' PROGRESS_TEXT ' once you understand these instructions --'];
         % stimulus data fields
         stim.triggerCounter = 1;
         stim.missedTriggers = 0;
         
   
         % prepare stimuli: first actual ones that were seen
-        [stim.cond stim.condString stim.associate] = counterbalance_items({cues{STIMULI}{REALTIME}, cues{STIMULI}{OMIT}},CONDSTRINGS);
-        % Get practice images--don't worry about balancing indoor/outdoor
-        % here
-        stim.stim(1:nPractice) = Shuffle(pics(1:nPractice)); % practice words from before is current state?
-        stim.cond = [PRACTICE PRACTICE PRACTICE stim.cond];
-        stim.condString = [CONDSTRINGS{PRACTICE} CONDSTRINGS{PRACTICE} CONDSTRINGS{PRACTICE} stim.condString];
-        stim.associate = [CONDSTRINGS{PRACTICE} CONDSTRINGS{PRACTICE} CONDSTRINGS{PRACTICE} stim.associate];
-        % get practice indoor/outdoor
-        for n = 1:8 % go through all 8 practice items
-            if n <= nPractice
-                thisPic = stim.stim{n};
-            else
-                thisPic = pics{n};
-            end
-            pstim{n} = thisPic;
-            insideP(n) = isempty(strfind(thisPic, 'o')); 
-            outsideP(n) = ~insideP(n);
-        end
-        insideI = find(insideP);
-        usedInside = insideI;
-        outsideI = find(outsideP);
-        usedOutside = outsideI;
-        for n = 1:nPractice
-            if insideP(n) % find an outdoor
-                matchI = randperm(length(usedOutside),1);
-                chosen = usedOutside(matchI);
-                usedOutside(matchI)= [];
-            else
-                matchI = randperm(length(usedInside),1);
-                chosen = usedInside(matchI);
-                usedInside(matchI) = [];
-            end
-            stim.matchStim{n} = pstim{chosen};
-            stim.id(n) = find(strcmp(pics,stim.stim{n}));
-        end
-        % STOPPED HERE KEEP CHANGING IT AND ADDING ASSOCIATES!!!!!
-        inside = zeros(1,length(stim.cond));
-        outside = zeros(1,length(stim.cond));
-        % get the correct picture
-        for n = 1:length(stim.cond)
-            if stim.cond(n) ~=PRACTICE
-            cueSearch = strcmp(preparedCues,stim.associate{n});
-            stim.pos(n) = find(cueSearch);
-            stim.stim{n} = pics{stim.pos(n)};
-            inside(n) = isempty(strfind(stim.stim{n}, 'o')); %if this is true, then the trial's image is an indoor image
-            outside(n) = ~inside(n); %THE STIM ID WAS WRONG BEFORE MAKE SURE NOW IT'S OKAY!!
-            end
-        end
         
-        
-        % now make the matches--CHECK ALL OF THIS
         COMPLETED = 0;
         while ~COMPLETED
-            insideI = find(inside);
-            usedInside = insideI;
-            outsideI = find(outside);
-            usedOutside = outsideI;
+            [stim.cond stim.condString stim.associate] = counterbalance_items({cues{STIMULI}{REALTIME}, cues{STIMULI}{OMIT}},CONDSTRINGS);
+            [stim.cond2 stim.condString2 stim.associate2] = counterbalance_items({cues{STIMULI}{REALTIME}, cues{STIMULI}{OMIT}},CONDSTRINGS);
             for n = 1:length(stim.cond)
-                if stim.cond(n) ~= PRACTICE
-                    if inside(n)
-                        matchI = randperm(length(usedOutside),1);
-                        chosen = usedOutside(matchI);
-                        usedOutside(matchI) = []; %remove so not repeated
-                    else % if an outside pic, use inside
-                        matchI =randperm(length(usedInside),1);
-                        chosen = usedInside(matchI);
-                        usedInside(matchI) = [];
-                    end
-                    stim.matchStim{n} = stim.stim{chosen}; %CHECK THAT THIS INDEX IS FOR STIM.STIM
-                    stim.id(n) = find(strcmp(pics,stim.stim{n}));
-                end
+                cueSearch = strcmp(preparedCues,stim.associate{n});
+                stim.pos1(n) = find(cueSearch);
+                stim.stim1{n} = pics{stim.pos1(n)};
+                stim.id1(n) = find(strcmp(pics,stim.stim1{n}));
+                
+                cueSearch = strcmp(preparedCues,stim.associate2{n});
+                stim.pos2(n) = find(cueSearch);
+                stim.stim2{n} = pics{stim.pos2(n)};
+                stim.id2(n) = find(strcmp(pics,stim.stim2{n}));
             end
-            % check none of the same stimulus come within 10 of each other
-            for i = nPractice + 1:length(stim.cond)
-                iSTIM = i;
-                iMatch = find(strcmp(stim.stim{i},stim.matchStim));
-                diffinpos(i) = abs(iSTIM-iMatch);
+            allImages = [stim.id1 stim.id2];
+            for n = 1:length(stim.cond)
+                thisImage = allImages(n);
+                nextImage = max(find(thisImage == allImages));
+                diffinpos(n) = abs(n-nextImage);
             end
-            nokay = length(find(diffinpos >=5));
-            if nokay == length(stim.cond)-nPractice
+            nokay = length(find(diffinpos >=10));
+            if nokay == length(stim.cond)
                 COMPLETED =1;
             end
         end
         
+        % now choose which ones come AA' and which are A'A
+        % choose 5 omit images
+        OMIT_INDS = find(stim.cond==OMIT);
+        omit_AAP = OMIT_INDS(randperm(10,5));
+        REALTIME_INDS = find(stim.cond==REALTIME);
+        rt_AAP = REALTIME_INDS(randperm(10,5));
+        stim.AAP = [omit_AAP rt_AAP]; % for the first round of all 20 these will have A first
+        stim.AAPID = stim.id1(stim.AAP); % these are the stimulus id numbers to present the A first!
+        % Get practice images--don't worry about balancing indoor/outdoor
+        % here
+        stim.cond = [stim.cond stim.cond2];
+        stim.stim = [stim.stim1 stim.stim2];
+        stim.id = [stim.id1 stim.id2];
+        stim.associate = [stim.associate stim.associate2];
+        
+        stim.stim = [Shuffle(pics(1:nPractice)) stim.stim]; % practice words from before is current state?
+        stim.id = [-1 -1 -1 stim.id];
+        stim.cond = [PRACTICE PRACTICE PRACTICE stim.cond];
+        stim.condString = [CONDSTRINGS{PRACTICE} CONDSTRINGS{PRACTICE} CONDSTRINGS{PRACTICE} stim.condString stim.condString2];
+        stim.associate = [CONDSTRINGS{PRACTICE} CONDSTRINGS{PRACTICE} CONDSTRINGS{PRACTICE} stim.associate];
+        % get practice indoor/outdoor
+
+       
         % display instructions
         DrawFormattedText(mainWindow,' ','center','center',COLORS.MAINFONTCOLOR,WRAPCHARS);
         displayText(mainWindow,stim.instruct1,minimumDisplay,'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
@@ -1565,41 +1532,54 @@ switch SESSION
             timing.actualOnsets.preITI(n) = isi_specific(mainWindow,COLORS.MAINFONTCOLOR,timespec);
             fprintf('Flip time error = %.4f\n', timing.actualOnsets.preITI(n) - timing.plannedOnsets.preITI(n));
             
-            pos = randi(CHOICES); %choose if correct image is on the left or not
-            
-            if pos==1
-                recog.cresp_str{n} = 'left';
-                cresp = recog_scale.inputs(1);
-                cresp_map = keys.map(2,:);
-                cor = 1;
-                incor = 2;
-            else
-                recog.cresp_str{n} = 'right';
-                cresp = recog_scale.inputs(2);
-                cresp_map = keys.map(3,:);
-                cor = 2;
-                incor = 1;
-            end
-            
+
             
             % now present the target and lure and choose where to put them!
-            if n <= 3 % then use example photos!
-                picIndex(cor) = prepImage(strcat(TRAININGFOLDER,stim.stim{n}),mainWindow);
-                picIndex(incor) = prepImage(strcat(TRAININGLURESFOLDER, stim.matchStim{n}),mainWindow);
+            if n <= nPractice% randomize if lure or not
+                lure = randi(2);
+                if lure == 1
+                    picIndex = prepImage(strcat(TRAININGFOLDER,stim.stim{n}),mainWindow);
+                    cresp = recog_scale.inputs(1);
+                    cresp_map = keys.map(2,:);
+                    recog.cresp_string{n} = 'old';
+                else
+                    picIndex = prepImage(strcat(TRAININGLURESFOLDER, stim.stim{n}),mainWindow);
+                    cresp = recog_scale.inputs(2);
+                    cresp_map = keys.map(3,:);
+                    recog.cresp_string{n} = 'new';
+                end
             else
-                picIndex(cor) = prepImage(strcat(MOTFOLDER, stim.stim{n}),mainWindow);
-                picIndex(incor) = prepImage(strcat(MOTLURESFOLDER, stim.matchStim{n}),mainWindow);
+                if ismember(stim.id(n),stim.AAPID)
+                    if n <=20
+                        picIndex = prepImage(strcat(MOTFOLDER, stim.stim{n}),mainWindow);
+                        cresp = recog_scale.inputs(1);
+                        cresp_map = keys.map(2,:);
+                        recog.cresp_string{n} = 'old';
+                    else
+                        picIndex = prepImage(strcat(MOTLURESFOLDER, stim.stim{n}),mainWindow);
+                        cresp = recog_scale.inputs(2);
+                        cresp_map = keys.map(3,:);
+                        recog.cresp_string{n} = 'new';
+                    end
+                else
+                    if n <= 20
+                        picIndex = prepImage(strcat(MOTLURESFOLDER, stim.stim{n}),mainWindow);
+                        cresp = recog_scale.inputs(2);
+                        cresp_map = keys.map(3,:);
+                        recog.cresp_string{n} = 'new';
+                    else
+                        picIndex = prepImage(strcat(MOTFOLDER, stim.stim{n}),mainWindow);
+                        cresp = recog_scale.inputs(1);
+                        cresp_map = keys.map(2,:);
+                    	recog.cresp_string{n} = 'old';
+                    end
+                end
             end
 
-            %destDims = min(PICDIMS*RESCALE_FACTOR,PICDIMS .* (stim.choiceWidth ./ PICDIMS(HORIZONTAL)));
-            RESCALE_NEW = destDims(2)/PICDIMS(2);
-            topLeft(HORIZONTAL) = CENTER(HORIZONTAL) - (destDims(HORIZONTAL)*CHOICES/2) - (stim.gapWidth*CHOICES/2);
-            topLeft(VERTICAL) = stim.picRow - (PICDIMS(VERTICAL)*RESCALE_NEW)/2;
-            Screen('FillRect', mainWindow, COLORS.BGCOLOR);
-            for i=1:CHOICES
-                Screen('DrawTexture', mainWindow, picIndex(i), [0 0 PICDIMS],[topLeft topLeft+destDims]);
-                topLeft(HORIZONTAL) = topLeft(HORIZONTAL) + destDims(HORIZONTAL) + stim.gapWidth;
-            end
+            % now present the target
+            topLeft(HORIZONTAL) = CENTER(HORIZONTAL) - (PICDIMS(HORIZONTAL)*RESCALE_FACTOR/2);
+            topLeft(VERTICAL) = CENTER(VERTICAL) - (PICDIMS(VERTICAL)*RESCALE_FACTOR/2);
+            Screen('DrawTexture', mainWindow, picIndex, [0 0 PICDIMS],[topLeft topLeft+PICDIMS*RESCALE_FACTOR]);
             timespec = timing.plannedOnsets.cue(n) - SLACK; %first one will be .4 off but it's because it's not expecting there to be an etra .4 seconds
             timing.actualOnsets.cue(n) = Screen('Flip',mainWindow,timespec);
             fprintf('Flip time error = %.4f\n', timing.actualOnsets.cue(n) - timing.plannedOnsets.cue(n));
@@ -1620,8 +1600,8 @@ switch SESSION
                 OnFB = GetSecs;
                 if isnan(recogEK.trials.resp(end))
                     displayText(mainWindow,['Oops, you either did not respond in time, or did not ' ...
-                        'press an appropriate key. Remember to choose which image you''ve seen before by pressing the "' recog_scale.inputs{1} '" key for LEFT  or the "' recog_scale.inputs{2} '" ' ...
-                        'key for RIGHT. Try to respond as quickly and accurately as ' ...
+                        'press an appropriate key. Remember to respond with "' recog_scale.inputs{1} '" key for OLD IMAGE and "' recog_scale.inputs{2} '" ' ...
+                        'key for a NEW IMAGE. Try to respond as quickly and accurately as ' ...
                         'possible.\n\n-- Press ' PROGRESS_TEXT ' to continue --'],minimumDisplay,...
                         'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
                     waitForKeyboard(kbTrig_keycode,DEVICE);
@@ -1632,8 +1612,8 @@ switch SESSION
                     waitForKeyboard(kbTrig_keycode,DEVICE);
                 end
                 if n==3
-                    displayText(mainWindow,['We will now move onto the main experiment. Remember to choose which image you''ve seen before by pressing the "' recog_scale.inputs{1} '" key for LEFT  or the "' recog_scale.inputs{2} '" ' ...
-                        'key for RIGHT. Try to respond as quickly and accurately as ' ...
+                    displayText(mainWindow,['We will now move onto the main experiment. Remember to respond with "' recog_scale.inputs{1} '" key for OLD IMAGE and "' recog_scale.inputs{2} '" ' ...
+                        'key for a NEW IMAGE. Try to respond as quickly and accurately as ' ...
                         'possible.\n\n-- Press ' PROGRESS_TEXT ' to continue --'],minimumDisplay,...
                         'center',COLORS.MAINFONTCOLOR,WRAPCHARS);
                     waitForKeyboard(kbTrig_keycode,DEVICE);

@@ -882,3 +882,11 @@ session	trial	pair	onset	dur	cue         	associate
 
 SESSION 15 ended 14-Apr-2017 10:08:31 for SUBJECT number 100
 
+
+
+SESSION 26 ended 20-Apr-2017 16:15:30 for SUBJECT number 100
+
+
+
+
+******************************************************************************
