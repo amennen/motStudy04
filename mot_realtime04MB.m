@@ -2740,7 +2740,7 @@ switch SESSION
             runStart = GetSecs;
         end
        % runStart = timing.trig.wait;
-        config.wait = 300; % we want this to be up for 8 seconds to collect sample TR's - this will run for 5 minutes so just stop whenever it's done!
+        config.wait = 180; % we want this to be up for 8 seconds to collect sample TR's - this will run for 5 minutes so just stop whenever it's done!
         config.TR = 1;
         timing.plannedOnsets.offEx = runStart + config.wait;
         DrawFormattedText(mainWindow,'Done!','center','center',COLORS.MAINFONTCOLOR,WRAPCHARS);
