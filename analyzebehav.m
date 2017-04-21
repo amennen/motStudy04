@@ -1,5 +1,5 @@
 % analyze behav
-subjectNum = 3;
+subjectNum = 4;
 NUM_TASK_RUNS = 3;
 % orientation session
 SETUP = 1; % stimulus assignment 1
