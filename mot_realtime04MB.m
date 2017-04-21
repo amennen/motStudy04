@@ -1404,7 +1404,7 @@ switch SESSION
         printlog(LOG_NAME,['\n\nSESSION ' int2str(SESSION) ' ended ' datestr(now) ' for SUBJECT number ' int2str(SUBJECT) '\n\n']);
         
         DrawFormattedText(mainWindow, CONGRATS, 'center', 'center')
-        Screen('Flip',min(windows));
+        Screen('Flip',mainWindow);
         WaitSecs(4);
         
         % clean up stuff loaded in memory, and restore user input
@@ -1550,7 +1550,7 @@ switch SESSION
                 end
             else
                 if ismember(stim.id(n),stim.AAPID)
-                    if n <=20
+                    if n <=20 + nPractice
                         picIndex = prepImage(strcat(MOTFOLDER, stim.stim{n}),mainWindow);
                         cresp = recog_scale.inputs(1);
                         cresp_map = keys.map(2,:);
@@ -1562,7 +1562,7 @@ switch SESSION
                         recog.cresp_string{n} = 'new';
                     end
                 else
-                    if n <= 20
+                    if n <= 20 + nPractice
                         picIndex = prepImage(strcat(MOTLURESFOLDER, stim.stim{n}),mainWindow);
                         cresp = recog_scale.inputs(2);
                         cresp_map = keys.map(3,:);

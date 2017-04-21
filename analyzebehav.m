@@ -56,6 +56,26 @@ end
 % YS suggestion: look at the difference between presented first and
 % presented after if related--so if getting right once will mess up getting
 % right the other time
+stimFile = dir(fullfile(behavioral_dir, ['mot_*' num2str(ASSOCIATES) '*.mat']));
+sf = load(fullfile(behavioral_dir, stimFile(end).name));
+Afirst = sf.stim.AAPID;
+id = sf.stim.id;
+nPractice = 3;
+for i = 1:length(stim.id)
+    if ismember(stim.id(i),stim.AAPID) 
+        if i <=20+nPractice
+            c(i) = 1; % target
+        else
+            c(i) = 2; % lure
+        end
+    else
+        if i<=20+nPractice
+            c(i) = 2; % lure
+        else
+            c(i) = 1; % target
+        end
+    end
+end
 r = dir(fullfile(behavioral_dir, ['_RECOG' '*.mat']));
 r = load(fullfile(behavioral_dir,r(end).name));
 trials = table2cell(r.datastruct.trials);
@@ -63,9 +83,26 @@ stimID = cell2mat(trials(:,8));
 cond = cell2mat(trials(:,9));
 acc = cell2mat(trials(:,11));
 rt = cell2mat(trials(:,13));
+cresp = cell2mat(trials(:,22));
 
 easy = find(cond==2);
 hard = find(cond==1);
+target = find(cresp==1);
+lure = find(cresp==2);
+
+hardTargets = intersect(hard,target);
+hardLures = intersect(hard,lure);
+easyTargets = intersect(easy,target);
+easyLures = intersect(easy,lure);
+% out of hard trials, find rt to familiar items
+HT_RT = nanmedian(rt(hardTargets))
+ET_RT = nanmedian(rt(easyTargets))
+HL_RT = nanmedian(rt(hardLures))
+EL_RT = nanmedian(rt(easyLures))
+
+% get accuracy in each case
+
+
 easyRT = nanmedian(rt(easy));
 hardRT = nanmedian(rt(hard));
 % should make sure it's not influenced by order for RT******
