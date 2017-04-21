@@ -24,25 +24,20 @@ onlyForg = 0;
 post = 0;
 plotDir = ['/Data1/code/' projectName '/' 'Plots2' '/' ]; %should be all
 %plot dir?
-svec = 3;
+svec = [3 4];
 runvec = ones(1,length(svec));
 nTRsperTrial = 8; %because 4 in task, then 2 before 2 after
 if length(runvec)~=length(svec)
     error('Enter in the runs AND date numbers!!')
 end
 %datevec = { '1-11-17', '1-13-17'};
-datevec = { '4-19-17'};
-RT = [3];
+datevec = { '4-19-17', '4-20-17'};
 TR = 1;
 shiftTR = 4/TR;
+RT = [3 4];
 NSUB = length(svec);
 for s = 1:NSUB
     subjectNum = svec(s);
-    if ismember(subjectNum,RT)
-        condition = 1;
-    else
-        condition = 0;
-    end
     runNum = runvec(s);
     date = datevec{s};
  

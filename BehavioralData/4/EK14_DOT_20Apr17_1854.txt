@@ -1,0 +1,5 @@
+trial	ons(s)	stim_id	stim      	cond    	dur 	rt  	acc 	resp    	cresp   
+1   	36    	45  	GLASS     	lure_easy	1.951	1.816	1   	non-target	non-target
+2   	78    	1   	PEBBLE    	targ_hard	1.95	0.864	1   	target  	target  
+3   	120   	2   	RAINBOW   	targ_easy	1.95	0.816	1   	non-target	non-target
+4   	162   	46  	DENT      	lure_hard	1.951	0.936	1   	target  	target  
