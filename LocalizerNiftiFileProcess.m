@@ -109,19 +109,19 @@ for iTrial = 1:nTRs % the first 10 TRs have been taken out to detrend
     
     %if desired file is recognized, pause for 200ms to complete transfer
     if scanNow==1 && patterns.fileAvail(iTrial)
-      % pause(.2);
+       pause(.2);
     end
     
     % if file available, load it
     if (patterns.fileAvail(iTrial))
         
-%         t0 = GetSecs;
-%         niftiname = sprintf('nifti%3.3i', thisTR);
-%         unix(sprintf('%sdcm2niix %s -f %s -o %s -s y %s%s',dcm2path,dicom_dir,niftiname,patterns_dir,dicom_dir,patterns.newFile{iTrial}))
-%         t1 = GetSecs;
-%         unix(sprintf('%smcflirt -in %s.nii -reffile %sexfunc_re.nii',fslpath,niftiname,process_dir))
-%         t2 = GetSecs;
-%         moco = t2-t1;
+        t0 = GetSecs;
+        niftiname = sprintf('nifti%3.3i', thisTR);
+        unix(sprintf('%sdcm2niix %s -f %s -o %s -s y %s%s',dcm2path,dicom_dir,niftiname,patterns_dir,dicom_dir,patterns.newFile{iTrial}))
+        t1 = GetSecs;
+        unix(sprintf('%smcflirt -in %s.nii -reffile %sexfunc_re.nii',fslpath,niftiname,process_dir))
+        t2 = GetSecs;
+        moco = t2-t1;
 %         
          niftiname = sprintf('nifti%3.3i_mcf.nii.gz', thisTR); 
         niftidata = readnifti(niftiname);
