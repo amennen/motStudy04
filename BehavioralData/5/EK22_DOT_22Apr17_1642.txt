@@ -1,0 +1,11 @@
+trial	ons(s)	stim_id	stim      	cond    	dur 	rt  	acc 	resp    	cresp   
+1   	72.5  	32  	DUST      	rt-targ 	1.952	0.737	1   	target  	target  
+2   	114.5 	33  	PYRAMID   	rt-targ 	1.951	0.697	1   	target  	target  
+3   	156.5 	31  	PAGE      	rt-targ 	1.952	0.889	1   	non-target	non-target
+4   	198.5 	29  	ROPE      	rt-targ 	1.951	0.962	1   	non-target	non-target
+5   	240.5 	28  	POWDER    	rt-targ 	1.951	0.914	1   	target  	target  
+6   	282.5 	34  	MIRROR    	rt-targ 	1.952	0.85	1   	non-target	non-target
+7   	324.5 	25  	JAIL      	rt-targ 	1.951	0.795	1   	non-target	non-target
+8   	366.5 	30  	RULER     	rt-targ 	1.951	0.915	1   	target  	target  
+9   	408.5 	26  	BRACELET  	rt-targ 	1.95	0.891	1   	non-target	non-target
+10  	450.5 	27  	HOSE      	rt-targ 	1.951	0.764	1   	non-target	non-target
