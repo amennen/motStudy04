@@ -53,5 +53,5 @@ mot_realtime04MB(SUBJECT, STIM_REFRESH, [], 0, 0);
 
 %% after scanner, test associates and descriptions
 
-%mot_realtime04MB(SUBJECT,DESCRIPTION, [], 0, 0); 
+mot_realtime04MB(SUBJECT,DESCRIPTION, [], 0, 0); 
 mot_realtime04MB(SUBJECT,ASSOCIATES, [], 0, 0); 
