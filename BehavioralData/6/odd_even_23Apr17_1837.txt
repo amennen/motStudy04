@@ -1,0 +1,30 @@
+trial	ons(s)	stim_id	stim      	cond    	dur 	rt  	acc 	resp    	cresp   
+1   	76.5  	1   	7  +  6   	---     	1.851	0.983	1   	odd     	odd     
+2   	78.5  	2   	9  +  3   	---     	1.851	1.055	1   	even    	even    
+trial	ons(s)	stim_id	stim      	cond    	dur 	rt  	acc 	resp    	cresp   
+1   	118.5 	1   	7  +  9   	---     	1.851	1.047	1   	even    	even    
+2   	120.5 	2   	3  +  9   	---     	1.85	1.007	1   	even    	even    
+trial	ons(s)	stim_id	stim      	cond    	dur 	rt  	acc 	resp    	cresp   
+1   	160.5 	1   	8  +  3   	---     	1.851	0.984	1   	odd     	odd     
+2   	162.5 	2   	5  +  8   	---     	1.85	1.071	1   	odd     	odd     
+trial	ons(s)	stim_id	stim      	cond    	dur 	rt  	acc 	resp    	cresp   
+1   	202.5 	1   	6  +  7   	---     	1.851	0.951	1   	odd     	odd     
+2   	204.5 	2   	9  +  9   	---     	1.854	0.703	1   	even    	even    
+trial	ons(s)	stim_id	stim      	cond    	dur 	rt  	acc 	resp    	cresp   
+1   	244.5 	1   	7  +  7   	---     	1.851	0.727	1   	even    	even    
+2   	246.5 	2   	6  +  5   	---     	1.851	0.8 	1   	odd     	odd     
+trial	ons(s)	stim_id	stim      	cond    	dur 	rt  	acc 	resp    	cresp   
+1   	286.5 	1   	2  +  9   	---     	1.852	1.328	1   	odd     	odd     
+2   	288.5 	2   	9  +  7   	---     	1.85	1.088	1   	even    	even    
+trial	ons(s)	stim_id	stim      	cond    	dur 	rt  	acc 	resp    	cresp   
+1   	328.5 	1   	2  +  9   	---     	1.851	1.328	0   	even    	odd     
+2   	330.5 	2   	6  +  5   	---     	1.851	0.777	1   	odd     	odd     
+trial	ons(s)	stim_id	stim      	cond    	dur 	rt  	acc 	resp    	cresp   
+1   	370.5 	1   	7  +  5   	---     	1.853	1.113	1   	even    	even    
+2   	372.5 	2   	3  +  9   	---     	1.851	0.801	1   	even    	even    
+trial	ons(s)	stim_id	stim      	cond    	dur 	rt  	acc 	resp    	cresp   
+1   	412.5 	1   	7  +  5   	---     	1.851	0.841	1   	even    	even    
+2   	414.5 	2   	8  +  3   	---     	1.851	0.825	1   	odd     	odd     
+trial	ons(s)	stim_id	stim      	cond    	dur 	rt  	acc 	resp    	cresp   
+1   	454.5 	1   	2  +  9   	---     	1.851	1.185	1   	odd     	odd     
+2   	456.5 	2   	9  +  6   	---     	1.851	1.36	1   	odd     	odd     
