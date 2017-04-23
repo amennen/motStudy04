@@ -1,0 +1,112 @@
+trial	ons(s)	stim_id	stim      	cond    	dur 	rt  	acc 	resp    	cresp   
+1   	13.6  	1   	MOON      	lure    	0.55	NR  	1   	NR      	NR      
+2   	14.2  	2   	PUDDLE    	lure    	0.403	NR  	1   	NR      	NR      
+3   	14.7  	3   	PADDLE    	lure    	0.392	NR  	1   	NR      	NR      
+4   	15.1  	2   	PUDDLE (repeat 1)	lure    	0.554	NR  	1   	NR      	NR      
+5   	15.8  	4   	NAIL      	lure    	0.545	NR  	1   	NR      	NR      
+6   	16.4  	5   	DENT      	lure    	0.332	NR  	1   	NR      	NR      
+7   	16.7  	1   	MOON (repeat 1)	lure    	0.44	NR  	1   	NR      	NR      
+8   	17.2  	5   	DENT (repeat 1)	lure    	0.36	NR  	1   	NR      	NR      
+9   	17.7  	2   	PUDDLE (repeat 2)	lure    	0.562	NR  	1   	NR      	NR      
+10  	18.3  	4   	NAIL (repeat 1)	lure    	0.602	NR  	1   	NR      	NR      
+11  	18.9  	6   	PAINT     	lure    	0.256	NR  	1   	NR      	NR      
+12  	19.2  	7   	BUBBLE    	lure    	0.6 	NR  	1   	NR      	NR      
+13  	19.9  	3   	PADDLE (repeat 1)	lure    	0.654	NR  	1   	NR      	NR      
+14  	20.6  	2   	PUDDLE (repeat 3)	lure    	0.451	NR  	1   	NR      	NR      
+15  	21.1  	4   	NAIL (repeat 2)	lure    	0.601	NR  	1   	NR      	NR      
+16  	21.8  	1   	MOON (repeat 2)	lure    	0.451	NR  	1   	NR      	NR      
+17  	22.3  	6   	PAINT (repeat 1)	lure    	0.371	NR  	1   	NR      	NR      
+18  	22.7  	7   	BUBBLE (repeat 1)	lure    	0.451	NR  	1   	NR      	NR      
+19  	23.2  	6   	PAINT (repeat 2)	lure    	0.634	NR  	1   	NR      	NR      
+20  	23.9  	5   	DENT (repeat 2)	lure    	0.451	NR  	1   	NR      	NR      
+21  	24.4  	4   	NAIL (repeat 3)	lure    	0.609	NR  	1   	NR      	NR      
+22  	25    	2   	PUDDLE (repeat 4)	lure    	0.451	NR  	1   	NR      	NR      
+23  	25.5  	1   	MOON (repeat 3)	lure    	0.558	NR  	1   	NR      	NR      
+24  	26.2  	3   	PADDLE (repeat 2)	lure    	0.451	NR  	1   	NR      	NR      
+25  	26.7  	8   	APPLE     	fruit   	0.955	0.594	1   	target  	target  
+26  	27.7  	2   	PUDDLE (repeat 5)	lure    	0.483	NR  	1   	NR      	NR      
+27  	28.2  	7   	BUBBLE (repeat 2)	lure    	0.624	NR  	1   	NR      	NR      
+28  	28.9  	1   	MOON (repeat 4)	lure    	0.455	NR  	1   	NR      	NR      
+29  	29.4  	2   	PUDDLE (repeat 6)	lure    	0.536	NR  	1   	NR      	NR      
+30  	30    	7   	BUBBLE (repeat 3)	lure    	0.558	NR  	1   	NR      	NR      
+31  	30.6  	4   	NAIL (repeat 4)	lure    	0.325	NR  	1   	NR      	NR      
+32  	31    	3   	PADDLE (repeat 3)	lure    	0.284	NR  	1   	NR      	NR      
+33  	31.3  	4   	NAIL (repeat 5)	lure    	0.653	NR  	1   	NR      	NR      
+34  	32    	3   	PADDLE (repeat 4)	lure    	0.549	NR  	1   	NR      	NR      
+35  	32.6  	6   	PAINT (repeat 3)	lure    	0.441	NR  	1   	NR      	NR      
+36  	33.1  	5   	DENT (repeat 3)	lure    	0.561	NR  	1   	NR      	NR      
+37  	33.7  	4   	NAIL (repeat 6)	lure    	0.536	NR  	1   	NR      	NR      
+38  	34.3  	1   	MOON (repeat 5)	lure    	0.615	NR  	1   	NR      	NR      
+39  	35    	7   	BUBBLE (repeat 4)	lure    	0.431	NR  	1   	NR      	NR      
+40  	35.5  	3   	PADDLE (repeat 5)	lure    	0.511	NR  	1   	NR      	NR      
+41  	36.1  	5   	DENT (repeat 4)	lure    	0.385	NR  	1   	NR      	NR      
+42  	36.5  	6   	PAINT (repeat 4)	lure    	0.45	NR  	1   	NR      	NR      
+43  	37    	2   	PUDDLE (repeat 7)	lure    	0.459	NR  	1   	NR      	NR      
+44  	37.5  	6   	PAINT (repeat 5)	lure    	0.391	NR  	1   	NR      	NR      
+45  	38    	1   	MOON (repeat 6)	lure    	0.451	NR  	1   	NR      	NR      
+46  	38.5  	9   	PLUM      	fruit   	0.955	0.744	1   	target  	target  
+47  	39.5  	6   	PAINT (repeat 6)	lure    	0.662	NR  	1   	NR      	NR      
+48  	40.2  	2   	PUDDLE (repeat 8)	lure    	0.296	NR  	1   	NR      	NR      
+49  	40.5  	4   	NAIL (repeat 7)	lure    	0.349	NR  	1   	NR      	NR      
+50  	40.9  	5   	DENT (repeat 5)	lure    	0.327	NR  	1   	NR      	NR      
+51  	41.3  	3   	PADDLE (repeat 6)	lure    	0.638	NR  	1   	NR      	NR      
+52  	42    	5   	DENT (repeat 6)	lure    	0.408	NR  	1   	NR      	NR      
+53  	42.5  	6   	PAINT (repeat 7)	lure    	0.597	NR  	1   	NR      	NR      
+54  	43.1  	1   	MOON (repeat 7)	lure    	0.539	NR  	1   	NR      	NR      
+55  	43.7  	4   	NAIL (repeat 8)	lure    	0.568	NR  	1   	NR      	NR      
+56  	44.3  	7   	BUBBLE (repeat 5)	lure    	0.457	NR  	1   	NR      	NR      
+57  	44.9  	5   	DENT (repeat 7)	lure    	0.343	NR  	1   	NR      	NR      
+58  	45.3  	1   	MOON (repeat 8)	lure    	0.351	NR  	1   	NR      	NR      
+59  	45.7  	5   	DENT (repeat 8)	lure    	0.514	NR  	1   	NR      	NR      
+60  	46.2  	7   	BUBBLE (repeat 6)	lure    	0.617	NR  	1   	NR      	NR      
+61  	46.9  	2   	PUDDLE (repeat 9)	lure    	0.368	NR  	1   	NR      	NR      
+62  	47.3  	3   	PADDLE (repeat 7)	lure    	0.691	NR  	1   	NR      	NR      
+63  	48.1  	5   	DENT (repeat 9)	lure    	0.251	NR  	1   	NR      	NR      
+64  	48.4  	6   	PAINT (repeat 8)	lure    	0.399	NR  	1   	NR      	NR      
+65  	48.8  	2   	PUDDLE (repeat 10)	lure    	0.557	NR  	1   	NR      	NR      
+66  	49.4  	7   	BUBBLE (repeat 7)	lure    	0.433	NR  	1   	NR      	NR      
+67  	49.9  	6   	PAINT (repeat 9)	lure    	0.451	NR  	1   	NR      	NR      
+68  	50.4  	1   	MOON (repeat 9)	lure    	0.283	NR  	1   	NR      	NR      
+69  	50.7  	5   	DENT (repeat 10)	lure    	0.451	NR  	1   	NR      	NR      
+70  	51.2  	6   	PAINT (repeat 10)	lure    	0.34	NR  	1   	NR      	NR      
+71  	51.6  	4   	NAIL (repeat 9)	lure    	0.451	NR  	1   	NR      	NR      
+72  	52.1  	10  	STRAWBERRY	fruit   	0.955	0.553	1   	target  	target  
+73  	53.2  	1   	MOON (repeat 10)	lure    	0.292	NR  	1   	NR      	NR      
+74  	53.5  	2   	PUDDLE (repeat 11)	lure    	0.412	NR  	1   	NR      	NR      
+75  	54    	4   	NAIL (repeat 10)	lure    	0.366	NR  	1   	NR      	NR      
+76  	54.4  	2   	PUDDLE (repeat 12)	lure    	0.533	NR  	1   	NR      	NR      
+77  	55    	5   	DENT (repeat 11)	lure    	0.58	NR  	1   	NR      	NR      
+78  	55.6  	3   	PADDLE (repeat 8)	lure    	0.44	NR  	1   	NR      	NR      
+79  	56.1  	2   	PUDDLE (repeat 13)	lure    	0.342	NR  	1   	NR      	NR      
+80  	56.5  	3   	PADDLE (repeat 9)	lure    	0.384	NR  	1   	NR      	NR      
+81  	57    	2   	PUDDLE (repeat 14)	lure    	0.366	NR  	1   	NR      	NR      
+82  	57.4  	1   	MOON (repeat 11)	lure    	0.437	NR  	1   	NR      	NR      
+83  	57.9  	5   	DENT (repeat 12)	lure    	0.309	NR  	1   	NR      	NR      
+84  	58.2  	7   	BUBBLE (repeat 8)	lure    	0.544	NR  	1   	NR      	NR      
+85  	58.8  	3   	PADDLE (repeat 10)	lure    	0.66	NR  	1   	NR      	NR      
+86  	59.6  	6   	PAINT (repeat 11)	lure    	0.545	NR  	1   	NR      	NR      
+87  	60.2  	2   	PUDDLE (repeat 15)	lure    	0.663	NR  	1   	NR      	NR      
+88  	60.9  	7   	BUBBLE (repeat 9)	lure    	0.38	NR  	1   	NR      	NR      
+89  	61.3  	5   	DENT (repeat 13)	lure    	0.46	NR  	1   	NR      	NR      
+90  	61.8  	7   	BUBBLE (repeat 10)	lure    	0.281	NR  	1   	NR      	NR      
+91  	62.2  	1   	MOON (repeat 12)	lure    	0.609	NR  	1   	NR      	NR      
+92  	62.8  	7   	BUBBLE (repeat 11)	lure    	0.555	NR  	1   	NR      	NR      
+93  	63.4  	2   	PUDDLE (repeat 16)	lure    	0.607	NR  	1   	NR      	NR      
+94  	64.1  	7   	BUBBLE (repeat 12)	lure    	0.451	NR  	1   	NR      	NR      
+95  	64.6  	11  	CRANBERRY 	fruit   	0.955	0.492	1   	target  	target  
+96  	65.6  	7   	BUBBLE (repeat 13)	lure    	0.618	NR  	1   	NR      	NR      
+97  	66.3  	2   	PUDDLE (repeat 17)	lure    	0.298	NR  	1   	NR      	NR      
+98  	66.7  	5   	DENT (repeat 14)	lure    	0.39	NR  	1   	NR      	NR      
+99  	67.1  	4   	NAIL (repeat 11)	lure    	0.645	NR  	1   	NR      	NR      
+100 	67.8  	6   	PAINT (repeat 12)	lure    	0.7 	NR  	1   	NR      	NR      
+101 	68.6  	3   	PADDLE (repeat 11)	lure    	0.48	NR  	1   	NR      	NR      
+102 	69.1  	5   	DENT (repeat 15)	lure    	0.406	NR  	1   	NR      	NR      
+103 	69.6  	7   	BUBBLE (repeat 14)	lure    	0.342	NR  	1   	NR      	NR      
+104 	70    	4   	NAIL (repeat 12)	lure    	0.37	NR  	1   	NR      	NR      
+105 	70.4  	7   	BUBBLE (repeat 15)	lure    	0.598	NR  	1   	NR      	NR      
+106 	71.1  	4   	NAIL (repeat 13)	lure    	0.443	NR  	1   	NR      	NR      
+107 	71.6  	2   	PUDDLE (repeat 18)	lure    	0.365	NR  	1   	NR      	NR      
+108 	72    	5   	DENT (repeat 16)	lure    	0.422	NR  	1   	NR      	NR      
+109 	72.5  	2   	PUDDLE (repeat 19)	lure    	0.33	NR  	1   	NR      	NR      
+110 	72.9  	1   	MOON (repeat 13)	lure    	0.375	NR  	1   	NR      	NR      
+111 	73.4  	6   	PAINT (repeat 13)	lure    	0.423	NR  	1   	NR      	NR      

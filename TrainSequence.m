@@ -1,7 +1,7 @@
 base_path = [fileparts(which('mot_realtime04MB.m')) filesep];
 cd(base_path);
 
-SUBJECT = 5;
+SUBJECT = 6;
 
 
 NUM_TASK_RUNS = 3;
@@ -53,5 +53,5 @@ mot_realtime04MB(SUBJECT, STIM_REFRESH, [], 0, 0);
 
 %% after scanner, test associates and descriptions
 
-%mot_realtime04MB(SUBJECT,DESCRIPTION, [], 0, 0); 
+mot_realtime04MB(SUBJECT,DESCRIPTION, [], 0, 0); 
 mot_realtime04MB(SUBJECT,ASSOCIATES, [], 0, 0); 

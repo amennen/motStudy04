@@ -157,9 +157,15 @@ unix(sprintf('%sbxh2analyze --overwrite --analyzetypes --niigz --niftihdr -s %s.
 
 % now register to highres!
 t1 = GetSecs;
+<<<<<<< HEAD
+exfunc2highres_mat='example_func2highresNOFIELDMAP';
+highres2exfunc_mat='highres2example_funcNOFIELDMAP';
+%unix(sprintf('%sepi_reg --epi=%s --t1=%s --t1brain=%s_brain --out=%sNOFIELDMAP',fslpath,functionalFN_RE,highresFN_RE,highresFN_RE,exfunc2highres_mat))
+=======
 exfunc2highres_mat='example_func2highres';
 highres2exfunc_mat='highres2example_func';
 unix(sprintf('%sepi_reg --epi=%s --t1=%s --t1brain=%s_brain --out=%sNOFIELDMAP',fslpath,functionalFN_RE,highresFN_RE,highresFN_RE,exfunc2highres_mat))
+>>>>>>> 356e297c822850d53940e26c620c95617e8f04df
 
 unix(sprintf('%sepi_reg --epi=%s.nii.gz --t1=%s.nii.gz --t1brain=%s_brain.nii.gz --out=%s3 --fmap=fieldmap_rads3 --fmapmag=magnitude3 --fmapmagbrain=magnitude3_brain --echospacing=0.00035 --pedir=y',fslpath,functionalFN_RE,highresFN_RE,highresFN_RE,exfunc2highres_mat))
 unix(sprintf('%sepi_reg --epi=%s.nii.gz --t1=%s.nii.gz --t1brain=%s_brain.nii.gz --out=%s --fmap=fieldmap_rads --fmapmag=magnitude --fmapmagbrain=magnitude_brain --echospacing=0.00035 --pedir=y',fslpath,functionalFN_RE,highresFN_RE,highresFN_RE,exfunc2highres_mat))
