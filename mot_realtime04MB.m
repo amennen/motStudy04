@@ -2079,6 +2079,7 @@ switch SESSION
         rtData.foundFn = [];
         rtData.RTVEC = {};
         rtData.allSpeeds = {};
+        rtData.allTimeChanges = {};
         fileNumber = 1;
         for n=1:length(stim.cond)
             stim.trial = n;
@@ -2153,6 +2154,7 @@ switch SESSION
             end
             rtData.allSpeeds{n} = [];
             rtData.allSpeeds{n}(1) = current_speed;
+            rtData.allTimeChanges{n} = [];
             if current_speed < 0
                 shade = abs(current_speed);
             end
@@ -2276,6 +2278,7 @@ switch SESSION
                                     current_speed = min([stim.maxspeed current_speed]);
                                     current_speed = max([stim.minspeed current_speed]);
                                     rtData.allSpeeds{n}(end+1) = current_speed;
+                                    rtData.allTimeChanges{n}(end+1) = GetSecs;
                                 end
                             end
                             

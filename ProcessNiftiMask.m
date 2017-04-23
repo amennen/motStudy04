@@ -27,7 +27,7 @@ addpath(genpath(multipath));
 setenv('FSLOUTPUTTYPE','NIFTI_GZ');
 
 % inputs (eventually function)
-subjNum = 4;
+subjNum = 5;
 %subjDate = '4-5-17';
 subjDate = NaN;
 runNum = 1;
@@ -156,11 +156,17 @@ unix(sprintf('%sbxh2analyze --overwrite --analyzetypes --niigz --niftihdr -s %s.
 
 % now register to highres!
 t1 = GetSecs;
+<<<<<<< HEAD
 exfunc2highres_mat='example_func2highresNOFIELDMAP';
 highres2exfunc_mat='highres2example_funcNOFIELDMAP';
 %unix(sprintf('%sepi_reg --epi=%s --t1=%s --t1brain=%s_brain --out=%sNOFIELDMAP',fslpath,functionalFN_RE,highresFN_RE,highresFN_RE,exfunc2highres_mat))
+=======
+exfunc2highres_mat='example_func2highres';
+highres2exfunc_mat='highres2example_func';
+unix(sprintf('%sepi_reg --epi=%s --t1=%s --t1brain=%s_brain --out=%sNOFIELDMAP',fslpath,functionalFN_RE,highresFN_RE,highresFN_RE,exfunc2highres_mat))
+>>>>>>> 356e297c822850d53940e26c620c95617e8f04df
 
-unix(sprintf('%sepi_reg --epi=%s.nii.gz --t1=%s.nii.gz --t1brain=%s_brain.nii.gz --out=%s --fmap=fieldmap_rads --fmapmag=magnitude --fmapmagbrain=magnitude_brain --echospacing=0.000345 --pedir=y',fslpath,functionalFN_RE,highresFN_RE,highresFN_RE,exfunc2highres_mat))
+%unix(sprintf('%sepi_reg --epi=%s.nii.gz --t1=%s.nii.gz --t1brain=%s_brain.nii.gz --out=%s --fmap=fieldmap_rads --fmapmag=magnitude --fmapmagbrain=magnitude_brain --echospacing=0.000345 --pedir=y',fslpath,functionalFN_RE,highresFN_RE,highresFN_RE,exfunc2highres_mat))
 
 timefunc2highres = GetSecs-t1;
 unix(sprintf('%sconvert_xfm -inverse -omat %s.mat %s.mat',fslpath,highres2exfunc_mat,exfunc2highres_mat));
@@ -187,7 +193,7 @@ if exist(sprintf('%s_brain.nii.gz',functionalFN_RE),'file')
 end
 
 %% Now create mask
-niftiFN = sprintf('%s_exfunc.nii',roi_name);
+niftiFN = sprintf('%s_exfuncNFM.nii',roi_name);
 maskData = readnifti(niftiFN);
 funcData = readnifti(sprintf('%s_brain.nii',functionalFN_RE));
 
@@ -205,7 +211,7 @@ end
 
 % now save mask
 save(fullfile(process_dir, [roi_name '_mask']),'mask_brain')
-
+sprintf('done')
 % % test that it's the same thing just not rotated as before
 % oldm = load('/Data1/code/motStudy03/data/3/reg/retrieval_anat_mask_orig.mat')
 % oldm = oldm.mask_brain;
