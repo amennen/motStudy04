@@ -123,7 +123,7 @@ for iTrial = 1:nTRs % the first 10 TRs have been taken out to detrend
         t2 = GetSecs;
         moco = t2-t1;
 %         
-         niftiname = sprintf('nifti%3.3i_mcf.nii.gz', thisTR); 
+        niftiname = sprintf('nifti%3.3i_mcf.nii.gz', thisTR); 
         niftidata = readnifti(niftiname);
         newVol = niftidata(roi);
         patterns.raw(iTrial,:) = newVol;  % keep patterns for later training

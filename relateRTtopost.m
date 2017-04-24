@@ -110,9 +110,11 @@ end
 %now save data and send to jukebox
 folder= '/jukebox/norman/amennen/PythonMot3';
 fn = 'plottInfo.mat';
-save(fn,'avgsepbystim','PrePostRT','avgPrePostOM', 'avgPrePostRT','avgPostRT', 'diff_stim_hard','all_hard','all_easy','avgPreRT', 'hardacc_ordered', 'hardrt_ordered')
+save(fn,'avgsepbystim','PrePostRT','avgPrePostOM', 'avgPrePostRT','avgPostRT', 'diff_stim_hard','all_hard','all_easy','avgPreRT', 'hardacc_ordered', 'hardrt_ordered', 'PrePostRTbyT', 'PrePostOMbyT')
 unix(['scp ' fn ' amennen@apps.pni.princeton.edu:' folder '/'])
-
+newfn = 'newPrePost.mat';
+save(newfn, 'PrePostRTbyT', 'PrePostOMbyT')
+unix(['scp ' newfn ' amennen@apps.pni.princeton.edu:' folder '/'])
 
 %% now plot the whole thing
 h = figure;
@@ -302,3 +304,59 @@ xlabel('Avg MOT Evidence')
 ylabel('Recognition RT')
 set(findall(gcf,'-property','FontSize'),'FontSize',16)
 print(h, sprintf('%sRTrating_sep.pdf', allplotDir), '-dpdf')
+
+%% NOW GET DATA WITH OLD EXPERIMENT
+oldDir = '/Data1/code/motStudy02/code/';
+cd(oldDir)
+projectName = 'motStudy02';
+allspeeds = [];
+allsep = [];
+nstim = 10;
+nTRs = 15;
+
+subjectVec = [8 12 14 15 16 18 20 22 26 27 28 30 31 32]; %now made it so for all subjects and can separate them into RT/YC afterwards in python 2/17
+
+nsub = length(svec);
+
+for s = 1:nsub
+    allsep = [];
+    subjectNum = svec(s);
+    
+    
+    %% now for the same stimuli load the pre/post patterns: change recall file process and just save the output?
+    % code that just runs recall file process for each subject so you can just
+    % look it up later with the .mat file
+    recallSessions = [19 23];
+    nTRptrial = 4;
+    for i = 1:2
+        session = recallSessions(i);
+        rfn = dir(fullfile(save_dir, ['recallpatternsdata_' num2str(session)  '*.mat']));
+        rp = load(fullfile(save_dir,rfn(end).name));
+        rpat = rp.patterns;
+        [expat,trials,stimOrder] = GetSessionInfoRT(subjectNum,session,behavioral_dir);
+        testTrials = find(any(expat.regressor.allCond));
+        allcond = rpat.regressor.allCond(:,testTrials);
+        categSep = rpat.categSep(:,testTrials);
+        %categSep = rpat.categSep(:,union(testTrials,testTrials+shiftTR)); %all testTR's plus 2 before
+        
+        z = reshape(categSep,nTRptrial,20); %for 20 trials --make sure this works here!
+        byTrial = z';
+        RTtrials = byTrial(trials.hard,:);
+        RTtrials = RTtrials(stimOrder.hard,:);
+        OMITtrials = byTrial(trials.easy,:);
+        OMITtrials = OMITtrials(stimOrder.easy,:);
+        
+        RTevidence(:,:,i) = RTtrials;
+        OMITevidence(:,:,i) = OMITtrials;
+    end
+    PrePostRT = RTevidence(:,:,2) - RTevidence(:,:,1);
+    avgPreRT(:,s) = mean(RTevidence(:,:,1),2);
+    PrePostOMIT = OMITevidence(:,:,2) - OMITevidence(:,:,1);
+    PrePostRTbyT(s,:) = mean(PrePostRT);
+    avgPrePostOM(:,s) = mean(PrePostOMIT,2);
+    %average PrePostRT over all 4 TR's
+    avgPrePostRT(:,s) = mean(PrePostRT,2);
+    avgPostRT(:,s) = mean(RTevidence(:,:,2),2);
+    PrePostOMbyT(s,:) = mean(PrePostOMIT);
+end
+
