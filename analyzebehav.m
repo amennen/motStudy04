@@ -1,5 +1,5 @@
 % analyze behav
-subjectNum = 4;
+subjectNum = 5;
 NUM_TASK_RUNS = 3;
 % orientation session
 SETUP = 1; % stimulus assignment 1
@@ -56,13 +56,17 @@ end
 % YS suggestion: look at the difference between presented first and
 % presented after if related--so if getting right once will mess up getting
 % right the other time
+svec = [4 5];
+for s =1:length(svec);
+    subjectNum = svec(s);
+behavioral_dir =  [base_path 'BehavioralData/' num2str(subjectNum) '/'];
 stimFile = dir(fullfile(behavioral_dir, ['mot_*' num2str(ASSOCIATES) '*.mat']));
 sf = load(fullfile(behavioral_dir, stimFile(end).name));
 Afirst = sf.stim.AAPID;
 id = sf.stim.id;
 nPractice = 3;
-for i = 1:length(stim.id)
-    if ismember(stim.id(i),stim.AAPID) 
+for i = 1:length(sf.stim.id)
+    if ismember(sf.stim.id(i),sf.stim.AAPID) 
         if i <=20+nPractice
             c(i) = 1; % target
         else
@@ -95,14 +99,15 @@ hardLures = intersect(hard,lure);
 easyTargets = intersect(easy,target);
 easyLures = intersect(easy,lure);
 % out of hard trials, find rt to familiar items
-HT_RT = nanmedian(rt(hardTargets))
-ET_RT = nanmedian(rt(easyTargets))
-HL_RT = nanmedian(rt(hardLures))
-EL_RT = nanmedian(rt(easyLures))
+HT_RT(s) = nanmedian(rt(hardTargets))
+ET_RT(s) = nanmedian(rt(easyTargets))
+HL_RT(s) = nanmedian(rt(hardLures))
+EL_RT(s) = nanmedian(rt(easyLures))
 
 % get accuracy in each case
 
 
-easyRT = nanmedian(rt(easy));
-hardRT = nanmedian(rt(hard));
+easyRT(s) = nanmedian(rt(easy));
+hardRT(s) = nanmedian(rt(hard));
 % should make sure it's not influenced by order for RT******
+end
