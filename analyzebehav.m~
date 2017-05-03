@@ -116,15 +116,6 @@ for s = 1:length(subjectVec)
     easyLureSecond = easyLures(easyLures>23);
     
     % average over all HTF
-    HTF(s) = nanmedian(rt(hardTargetFirst));
-    HTS(s) = nanmedian(rt(hardTargetSecond));
-    HLF(s) = nanmedian(rt(hardLureFirst));
-    HLS(s) = nanmedian(rt(hardLureSecond));
-    
-    ETF(s) = nanmedian(rt(easyTargetFirst));
-    ETS(s) = nanmedian(rt(easyTargetSecond));
-    ELF(s) = nanmedian(rt(easyLureFirst));
-    ELS(s) = nanmedian(rt(easyLureSecond));
+    HTF(s) = nanmedian(hardTargetFirst);
+    HTS(s) 
 end
-%% now graph
-figure;

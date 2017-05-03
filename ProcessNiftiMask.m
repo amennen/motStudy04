@@ -44,7 +44,7 @@ process_dir = [save_dir 'reg' '/'];
 roi_dir = ['/Data1/code/' projectName '/data/'];
 code_dir = ['/Data1/code/' projectName '/' 'code' '/']; %change to wherever code is stored
 if ~isnan(subjDate)
-    subjDate = '4-22-17';
+    subjDate = '4-23-17';
     subjectName = [datestr(subjDate,5) datestr(subjDate,7) datestr(subjDate,11) num2str(runNum) '_' projectName];
     dicom_dir = ['/Data1/subjects/' datestr(subjDate,10) datestr(subjDate,5) datestr(subjDate,7) '.' subjectName '.' subjectName '/'];
 else
@@ -112,7 +112,7 @@ if onlyFirstTR % only use first TR for each spin echo to save time
     time2 = GetSecs;
     topuptime = time2-time1;
 else
-    APname = 'SE_AP3';
+    APname = 'SE_AP';
     AP_re = [APname '_re'];
     AP_genstr = sprintf('%s001_00000%s_0*',dicom_dir,num2str(APScan));
     unix(sprintf('%sdicom2bxh %s %s.bxh',bxhpath,AP_genstr,APname));
@@ -120,7 +120,7 @@ else
     unix(sprintf('%sbxh2analyze --overwrite --analyzetypes --niigz --niftihdr -s %s.bxh %s',bxhpath,AP_re,AP_re))
     
     % now do the same thing with PA
-    PAname = 'SE_PA3';
+    PAname = 'SE_PA';
     PA_re = [PAname '_re'];
     PA_genstr = sprintf('%s001_00000%s_0*',dicom_dir,num2str(PAScan));
     unix(sprintf('%sdicom2bxh %s %s.bxh',bxhpath,PA_genstr,PAname));
@@ -130,7 +130,7 @@ else
     % use topup to calculate differences
     % now combine them into a single image
     time1 = GetSecs;
-    fieldmapfn = 'all_SE3';
+    fieldmapfn = 'all_SE';
     unix(sprintf('%sfslmerge -t %s.nii.gz %s.nii.gz %s.nii.gz', fslpath,fieldmapfn,AP_re,PA_re))
     
     % now run topup!
