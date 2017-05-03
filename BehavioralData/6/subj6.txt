@@ -1818,6 +1818,35 @@ SESSION 10 ended 22-Apr-2017 15:19:14 for SUBJECT number 6
 
 
 ******************************************************************************
+<<<<<<< HEAD
+
+SESSION 12 initiated 23-Apr-2017 17:07:55 for SUBJECT number 6
+
+session	trial	pair	onset	dur	cue         	associate   
+12	1	36	2003  	2002  	PLUG        	pico08.jpg  
+12	2	31	10004 	2001  	HOOK        	pico02.jpg  
+12	3	29	18004 	2001  	PURSE       	pico22.jpg  
+12	4	35	26005 	2001  	JAIL        	pici05.jpg  
+12	5	37	34005 	2001  	BRACELET    	pici12.jpg  
+12	6	28	42006 	2001  	FOAM        	pici23.jpg  
+12	7	27	50006 	2001  	PYRAMID     	pici29.jpg  
+12	8	38	58007 	2001  	SPONGE      	pico03.jpg  
+12	9	25	66008 	2001  	LENS        	pici03.jpg  
+12	10	44	74008 	2001  	PAGE        	pico21.jpg  
+12	11	34	82009 	2001  	BROOM       	pici15.jpg  
+12	12	41	90009 	2001  	HOSE        	pico15.jpg  
+12	13	26	98010 	2001  	NICKEL      	pico29.jpg  
+12	14	43	106010	2001  	ROPE        	pici25.jpg  
+12	15	42	114011	2001  	POWDER      	pici01.jpg  
+12	16	32	122011	2001  	DUST        	pico12.jpg  
+12	17	33	130012	2002  	MIRROR      	pici11.jpg  
+12	18	40	138012	1984  	RULER       	pico28.jpg  
+12	19	30	145996	2017  	CHALK       	pico06.jpg  
+12	20	39	154014	1984  	DRILL       	pici08.jpg  
+
+
+SESSION 12 ended 23-Apr-2017 17:10:48 for SUBJECT number 6
+=======
 trial	TR	prompt active	speed	ds	flip error	Found File #	ThisTR	CategSep
 1	1	0		10.832	  NaN	-0.0015		1		5		  NaN
 1	2	0		10.832	  NaN	0.0151		1		6		  NaN
@@ -1949,12 +1978,21 @@ SESSION 15 ended 23-Apr-2017 17:29:29 for SUBJECT number 6
 
 
 SESSION 16 ended 23-Apr-2017 17:37:49 for SUBJECT number 6
+>>>>>>> a7609bec2b3f3fcadda70e41329ba91f29774e7d
 
 
 
 
 ******************************************************************************
 
+<<<<<<< HEAD
+
+SESSION 25 ended 23-Apr-2017 19:21:28 for SUBJECT number 6
+
+
+
+SESSION 26 ended 23-Apr-2017 19:24:23 for SUBJECT number 6
+=======
 SESSION 17 initiated 23-Apr-2017 17:37:55 for SUBJECT number 6
 
 session	trial	pair	onset	dur	cue         	associate   
@@ -1985,11 +2023,14 @@ SESSION 17 ended 23-Apr-2017 17:40:21 for SUBJECT number 6
 
 
 SESSION 18 ended 23-Apr-2017 17:44:09 for SUBJECT number 6
+>>>>>>> a7609bec2b3f3fcadda70e41329ba91f29774e7d
 
 
 
 
 ******************************************************************************
+<<<<<<< HEAD
+=======
 trial	TR	prompt active	speed	ds	flip error	Found File #	ThisTR	CategSep
 1	1	0		-7.500	  NaN	0.0262		1		25		  NaN
 1	2	0		-7.500	  NaN	0.0100		1		26		  NaN
@@ -3920,3 +3961,4 @@ trial	TR	prompt active	speed	ds	flip error	Found File #	ThisTR	CategSep
 
 SESSION 24 ended 23-Apr-2017 19:04:03 for SUBJECT number 6
 
+>>>>>>> a7609bec2b3f3fcadda70e41329ba91f29774e7d
