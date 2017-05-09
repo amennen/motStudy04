@@ -1,8 +1,5 @@
 % analyze behav
-<<<<<<< HEAD
-=======
-subjectNum = 5;
->>>>>>> 09ad57839ad18809b95740701de59acb78004e76
+
 NUM_TASK_RUNS = 3;
 % orientation session
 SETUP = 1; % stimulus assignment 1
@@ -95,7 +92,6 @@ for s = 1:length(subjectVec)
     
     easy = find(cond==2);
     hard = find(cond==1);
-<<<<<<< HEAD
     target = find(cresp==1);
     lure = find(cresp==2);
     
@@ -121,80 +117,51 @@ for s = 1:length(subjectVec)
     easyLureSecond = easyLures(easyLures>23);
     
     % average over all HTF
-    HTF(s) = nanmedian(rt(hardTargetFirst));
-    HTS(s) = nanmedian(rt(hardTargetSecond));
-    HLF(s) = nanmedian(rt(hardLureFirst));
-    HLS(s) = nanmedian(rt(hardLureSecond));
+    HTF(s) = nanmean(rt(hardTargetFirst));
+    HTS(s) = nanmean(rt(hardTargetSecond));
+    HLF(s) = nanmean(rt(hardLureFirst));
+    HLS(s) = nanmean(rt(hardLureSecond));
     
-    ETF(s) = nanmedian(rt(easyTargetFirst));
-    ETS(s) = nanmedian(rt(easyTargetSecond));
-    ELF(s) = nanmedian(rt(easyLureFirst));
-    ELS(s) = nanmedian(rt(easyLureSecond));
+    ETF(s) = nanmean(rt(easyTargetFirst));
+    ETS(s) = nanmean(rt(easyTargetSecond));
+    ELF(s) = nanmean(rt(easyLureFirst));
+    ELS(s) = nanmean(rt(easyLureSecond));
 end
 %% now graph
 figure;
-=======
-    easy_score(i) = nanmean(rating(easy));
-    hard_score(i) = nanmean(rating(hard));
-end
+dataH = [nanmedian(HTF) nanmedian(HTS) nanmedian(HLF) nanmedian(HLS)];
+dataE = [nanmedian(ETF) nanmedian(ETS) nanmedian(ELF) nanmedian(ELS)];
+plot(1:4,dataH, 'r.', 1:4, dataE, 'k.', 'MarkerSize', 12)
+firstgroup = [HTF; ETF];
+secondgroup = [HTS; ETS];
+avgratio = [nanmean(firstgroup,2) nanmean(secondgroup,2)];
+eavgratio = [nanstd(firstgroup,[],2)/sqrt(length(subjectVec)-1) nanstd(secondgroup,[],2)/sqrt(length(subjectVec)-1)];
+thisfig = figure;
+barwitherr(eavgratio,avgratio)
+set(gca,'XTickLabel' , ['MOT ';'OMIT']);
+legend('Target First', 'Target Second')
+xlabel('Stimulus Type')
+ylabel('Recognition RT')
+title('Recognition Accuracy')
+set(findall(gcf,'-property','FontSize'),'FontSize',20)
+ylim([0 1])
+%%
+%%figure;
+dataH = [nanmedian(HLF) nanmedian(HLS) nanmedian(HLF) nanmedian(HLS)];
+dataE = [nanmedian(ELF) nanmedian(ELS) nanmedian(ELF) nanmedian(ELS)];
+plot(1:4,dataH, 'r.', 1:4, dataE, 'k.', 'MarkerSize', 12)
+firstgroup = [HLF; ELF];
+secondgroup = [HLS; ELS];
+avgratio = [nanmean(firstgroup,2) nanmean(secondgroup,2)];
+eavgratio = [nanstd(firstgroup,[],2)/sqrt(length(subjectVec)-1) nanstd(secondgroup,[],2)/sqrt(length(subjectVec)-1)];
+thisfig = figure;
+barwitherr(eavgratio,avgratio)
+set(gca,'XTickLabel' , ['MOT ';'OMIT']);
+legend('Lure First', 'Lure Second')
+xlabel('Stimulus Type')
+ylabel('Recognition RT')
+title('Recognition Accuracy')
+set(findall(gcf,'-property','FontSize'),'FontSize',20)
+ylim([0 1])
 
-%% look at AB' d' ratings
-% YS suggestion: look at the difference between presented first and
-% presented after if related--so if getting right once will mess up getting
-% right the other time
-svec = [4 5];
-for s =1:length(svec);
-    subjectNum = svec(s);
-behavioral_dir =  [base_path 'BehavioralData/' num2str(subjectNum) '/'];
-stimFile = dir(fullfile(behavioral_dir, ['mot_*' num2str(ASSOCIATES) '*.mat']));
-sf = load(fullfile(behavioral_dir, stimFile(end).name));
-Afirst = sf.stim.AAPID;
-id = sf.stim.id;
-nPractice = 3;
-for i = 1:length(sf.stim.id)
-    if ismember(sf.stim.id(i),sf.stim.AAPID) 
-        if i <=20+nPractice
-            c(i) = 1; % target
-        else
-            c(i) = 2; % lure
-        end
-    else
-        if i<=20+nPractice
-            c(i) = 2; % lure
-        else
-            c(i) = 1; % target
-        end
-    end
-end
-r = dir(fullfile(behavioral_dir, ['_RECOG' '*.mat']));
-r = load(fullfile(behavioral_dir,r(end).name));
-trials = table2cell(r.datastruct.trials);
-stimID = cell2mat(trials(:,8));
-cond = cell2mat(trials(:,9));
-acc = cell2mat(trials(:,11));
-rt = cell2mat(trials(:,13));
-cresp = cell2mat(trials(:,22));
-
-easy = find(cond==2);
-hard = find(cond==1);
-target = find(cresp==1);
-lure = find(cresp==2);
-
-hardTargets = intersect(hard,target);
-hardLures = intersect(hard,lure);
-easyTargets = intersect(easy,target);
-easyLures = intersect(easy,lure);
-% out of hard trials, find rt to familiar items
-HT_RT(s) = nanmedian(rt(hardTargets))
-ET_RT(s) = nanmedian(rt(easyTargets))
-HL_RT(s) = nanmedian(rt(hardLures))
-EL_RT(s) = nanmedian(rt(easyLures))
-
-% get accuracy in each case
-
-
-easyRT(s) = nanmedian(rt(easy));
-hardRT(s) = nanmedian(rt(hard));
-% should make sure it's not influenced by order for RT******
-end
->>>>>>> 09ad57839ad18809b95740701de59acb78004e76
+%print(thisfig, sprintf('%sallrecogAcc.pdf', allplotDir), '-dpdf')
