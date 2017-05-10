@@ -2316,10 +2316,10 @@ switch SESSION
                 end
                 if TRcounter > 1 && (GetSecs >= timing.plannedOnsets.motion(TRcounter,n) + config.TR-.1) && printTR(TRcounter) %after when should have found file
                     %z = GetSecs - timing.plannedOnsets.motion(TRcounter,n);
-                    printlog(LOG_NAME,'%d\t%d\t%d\t\t%5.3f\t%5.3f\t%5.4f\t\t%i\t\t%d\t\t%5.3f\n',n,TRcounter,prompt_active,current_speed,stim.changeSpeed(TRcounter,n),timing.actualOnsets.motion(TRcounter,stim.trial) - timing.plannedOnsets.motion(TRcounter,stim.trial),fileNumber,thisTR,rtData.rtDecoding(fileNumber));
+                    printlog(LOG_NAME,'%d\t%d\t%d\t\t%5.3f\t%5.3f\t%5.4f\t\t%i\t\t%d\t\t%5.3f\n',n,TRcounter,prompt_active,current_speed,rtData.rtDecodingFunction(fileNumber),timing.actualOnsets.motion(TRcounter,stim.trial) - timing.plannedOnsets.motion(TRcounter,stim.trial),fileNumber,thisTR,rtData.rtDecoding(fileNumber));
                     printTR(TRcounter) = 0;
                 elseif TRcounter ==1 && (GetSecs >= timing.plannedOnsets.motion(TRcounter,n) + config.TR-.1) && printTR(TRcounter)
-                    printlog(LOG_NAME,'%d\t%d\t%d\t\t%5.3f\t%5.3f\t%5.4f\t\t%i\t\t%d\t\t%5.3f\n',n,TRcounter,prompt_active,current_speed,stim.changeSpeed(TRcounter,n),timing.actualOnsets.motion(TRcounter,stim.trial) - timing.plannedOnsets.motion(TRcounter,stim.trial),fileNumber,thisTR,rtData.rtDecoding(fileNumber));
+                    printlog(LOG_NAME,'%d\t%d\t%d\t\t%5.3f\t%5.3f\t%5.4f\t\t%i\t\t%d\t\t%5.3f\n',n,TRcounter,prompt_active,current_speed,rtData.rtDecodingFunction(fileNumber),timing.actualOnsets.motion(TRcounter,stim.trial) - timing.plannedOnsets.motion(TRcounter,stim.trial),fileNumber,thisTR,rtData.rtDecoding(fileNumber));
                     printTR(TRcounter) = 0;
                 end
 
