@@ -59,7 +59,7 @@ mot_realtime04MB(SUBJECT,ASSOCIATES, [], 0, 0);
 %% now convert recog to cell
 subjects = [4:7];
 for s = 1:length(subjects)
-    behavioral_dir = ['BehavioralData/' num2str(SUBJECT) '/']
+    behavioral_dir = ['BehavioralData/' num2str(subjects(s)) '/']
     r = dir(fullfile(behavioral_dir, ['_RECOG' '*.mat']));
     r = load(fullfile(behavioral_dir,r(end).name));
     trials = table2cell(r.datastruct.trials);

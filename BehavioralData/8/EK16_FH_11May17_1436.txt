@@ -1,0 +1,240 @@
+trial	ons(s)	stim_id	stim      	cond    	dur 	rt  	acc 	resp    	cresp   
+1   	8     	1   	DENT      	lure    	0.448	NR  	1   	NR      	NR      
+2   	8.5   	2   	POLE      	lure    	0.479	NR  	1   	NR      	NR      
+3   	9.1   	3   	RATTLE    	lure    	0.486	NR  	1   	NR      	NR      
+4   	9.6   	4   	BRUSH     	lure    	0.639	NR  	1   	NR      	NR      
+5   	10.3  	5   	GLASS     	lure    	0.689	NR  	1   	NR      	NR      
+6   	11    	6   	TICKET    	lure    	0.358	NR  	1   	NR      	NR      
+7   	11.4  	5   	GLASS (repeat 1)	lure    	0.603	NR  	1   	NR      	NR      
+8   	12.1  	7   	PAINT     	lure    	0.586	NR  	1   	NR      	NR      
+9   	12.7  	8   	SHIRT     	lure    	0.296	NR  	1   	NR      	NR      
+10  	13.1  	4   	BRUSH (repeat 1)	lure    	0.452	NR  	1   	NR      	NR      
+11  	13.6  	9   	NOTE      	lure    	0.488	NR  	1   	NR      	NR      
+12  	14.1  	1   	DENT (repeat 1)	lure    	0.485	NR  	1   	NR      	NR      
+13  	14.6  	10  	PUDDLE    	lure    	0.252	NR  	1   	NR      	NR      
+14  	14.9  	7   	PAINT (repeat 1)	lure    	0.485	NR  	1   	NR      	NR      
+15  	15.5  	11  	NAIL      	lure    	0.452	NR  	1   	NR      	NR      
+16  	16    	12  	MELON     	fruit   	0.95	0.615	1   	target  	target  
+17  	17    	1   	DENT (repeat 2)	lure    	0.375	NR  	1   	NR      	NR      
+18  	17.4  	13  	DRUM      	lure    	0.297	NR  	1   	NR      	NR      
+19  	17.8  	8   	SHIRT (repeat 1)	lure    	0.254	NR  	1   	NR      	NR      
+20  	18.1  	5   	GLASS (repeat 2)	lure    	0.605	NR  	1   	NR      	NR      
+21  	18.7  	4   	BRUSH (repeat 2)	lure    	0.476	NR  	1   	NR      	NR      
+22  	19.3  	2   	POLE (repeat 1)	lure    	0.305	NR  	1   	NR      	NR      
+23  	19.6  	14  	STAPLE    	lure    	0.608	NR  	1   	NR      	NR      
+24  	20.3  	15  	EASEL     	lure    	0.701	NR  	1   	NR      	NR      
+25  	21    	8   	SHIRT (repeat 2)	lure    	0.453	NR  	1   	NR      	NR      
+26  	21.5  	15  	EASEL (repeat 1)	lure    	0.369	NR  	1   	NR      	NR      
+27  	22    	1   	DENT (repeat 3)	lure    	0.26	NR  	1   	NR      	NR      
+28  	22.3  	9   	NOTE (repeat 1)	lure    	0.505	NR  	1   	NR      	NR      
+29  	22.9  	14  	STAPLE (repeat 1)	lure    	0.327	NR  	1   	NR      	NR      
+30  	23.2  	8   	SHIRT (repeat 3)	lure    	0.502	NR  	1   	NR      	NR      
+31  	23.8  	9   	NOTE (repeat 2)	lure    	0.335	NR  	1   	NR      	NR      
+32  	24.2  	4   	BRUSH (repeat 3)	lure    	0.448	NR  	1   	NR      	NR      
+33  	24.7  	15  	EASEL (repeat 2)	lure    	0.465	NR  	1   	NR      	NR      
+34  	25.2  	10  	PUDDLE (repeat 1)	lure    	0.552	NR  	1   	NR      	NR      
+35  	25.8  	8   	SHIRT (repeat 4)	lure    	0.535	NR  	1   	NR      	NR      
+36  	26.4  	16  	PADDLE    	lure    	0.324	NR  	1   	NR      	NR      
+37  	26.8  	6   	TICKET (repeat 1)	lure    	0.365	NR  	1   	NR      	NR      
+38  	27.2  	2   	POLE (repeat 2)	lure    	0.314	NR  	1   	NR      	NR      
+39  	27.6  	6   	TICKET (repeat 2)	lure    	0.451	NR  	1   	NR      	NR      
+40  	28.1  	14  	STAPLE (repeat 2)	lure    	0.346	NR  	1   	NR      	NR      
+41  	28.5  	17  	ANCHOR    	lure    	0.451	NR  	1   	NR      	NR      
+42  	29    	16  	PADDLE (repeat 1)	lure    	0.384	NR  	1   	NR      	NR      
+43  	29.5  	2   	POLE (repeat 3)	lure    	0.452	NR  	1   	NR      	NR      
+44  	30    	17  	ANCHOR (repeat 1)	lure    	0.287	NR  	1   	NR      	NR      
+45  	30.3  	14  	STAPLE (repeat 3)	lure    	0.451	NR  	1   	NR      	NR      
+46  	30.8  	18  	BERRY     	fruit   	0.95	0.748	1   	target  	target  
+47  	31.9  	9   	NOTE (repeat 3)	lure    	0.574	NR  	1   	NR      	NR      
+48  	32.5  	6   	TICKET (repeat 3)	lure    	0.439	NR  	1   	NR      	NR      
+49  	33    	1   	DENT (repeat 4)	lure    	0.522	NR  	1   	NR      	NR      
+50  	33.6  	7   	PAINT (repeat 2)	lure    	0.277	NR  	1   	NR      	NR      
+51  	33.9  	16  	PADDLE (repeat 2)	lure    	0.368	NR  	1   	NR      	NR      
+52  	34.3  	8   	SHIRT (repeat 5)	lure    	0.622	NR  	1   	NR      	NR      
+53  	35    	2   	POLE (repeat 4)	lure    	0.574	NR  	1   	NR      	NR      
+54  	35.6  	17  	ANCHOR (repeat 2)	lure    	0.455	NR  	1   	NR      	NR      
+55  	36.2  	13  	DRUM (repeat 1)	lure    	0.286	NR  	1   	NR      	NR      
+56  	36.5  	7   	PAINT (repeat 3)	lure    	0.565	NR  	1   	NR      	NR      
+57  	37.1  	9   	NOTE (repeat 4)	lure    	0.445	NR  	1   	NR      	NR      
+58  	37.6  	13  	DRUM (repeat 2)	lure    	0.683	NR  	1   	NR      	NR      
+59  	38.4  	7   	PAINT (repeat 4)	lure    	0.629	NR  	1   	NR      	NR      
+60  	39.1  	17  	ANCHOR (repeat 3)	lure    	0.322	NR  	1   	NR      	NR      
+61  	39.4  	1   	DENT (repeat 5)	lure    	0.404	NR  	1   	NR      	NR      
+62  	39.9  	15  	EASEL (repeat 3)	lure    	0.601	NR  	1   	NR      	NR      
+63  	40.6  	6   	TICKET (repeat 4)	lure    	0.608	NR  	1   	NR      	NR      
+64  	41.3  	3   	RATTLE (repeat 1)	lure    	0.652	NR  	1   	NR      	NR      
+65  	42    	7   	PAINT (repeat 5)	lure    	0.639	NR  	1   	NR      	NR      
+66  	42.7  	17  	ANCHOR (repeat 4)	lure    	0.452	NR  	1   	NR      	NR      
+67  	43.2  	2   	POLE (repeat 5)	lure    	0.608	NR  	1   	NR      	NR      
+68  	43.9  	10  	PUDDLE (repeat 2)	lure    	0.46	NR  	1   	NR      	NR      
+69  	44.4  	7   	PAINT (repeat 6)	lure    	0.571	NR  	1   	NR      	NR      
+70  	45.1  	8   	SHIRT (repeat 6)	lure    	0.452	NR  	1   	NR      	NR      
+71  	45.6  	19  	BLACKBERRY	fruit   	0.95	0.797	1   	target  	target  
+72  	46.6  	13  	DRUM (repeat 3)	lure    	0.504	NR  	1   	NR      	NR      
+73  	47.2  	4   	BRUSH (repeat 4)	lure    	0.404	NR  	1   	NR      	NR      
+74  	47.7  	7   	PAINT (repeat 7)	lure    	0.348	NR  	1   	NR      	NR      
+75  	48.1  	8   	SHIRT (repeat 7)	lure    	0.505	NR  	1   	NR      	NR      
+76  	48.7  	14  	STAPLE (repeat 4)	lure    	0.608	NR  	1   	NR      	NR      
+77  	49.4  	9   	NOTE (repeat 5)	lure    	0.488	NR  	1   	NR      	NR      
+78  	49.9  	1   	DENT (repeat 6)	lure    	0.314	NR  	1   	NR      	NR      
+79  	50.3  	16  	PADDLE (repeat 3)	lure    	0.257	NR  	1   	NR      	NR      
+80  	50.6  	9   	NOTE (repeat 6)	lure    	0.265	NR  	1   	NR      	NR      
+81  	51    	11  	NAIL (repeat 1)	lure    	0.675	NR  	1   	NR      	NR      
+82  	51.7  	4   	BRUSH (repeat 5)	lure    	0.389	NR  	1   	NR      	NR      
+83  	52.2  	16  	PADDLE (repeat 4)	lure    	0.42	NR  	1   	NR      	NR      
+84  	52.7  	2   	POLE (repeat 6)	lure    	0.292	NR  	1   	NR      	NR      
+85  	53.1  	14  	STAPLE (repeat 5)	lure    	0.614	NR  	1   	NR      	NR      
+86  	53.8  	7   	PAINT (repeat 8)	lure    	0.315	NR  	1   	NR      	NR      
+87  	54.1  	6   	TICKET (repeat 5)	lure    	0.603	NR  	1   	NR      	NR      
+88  	54.8  	14  	STAPLE (repeat 6)	lure    	0.288	NR  	1   	NR      	NR      
+89  	55.2  	7   	PAINT (repeat 9)	lure    	0.684	NR  	1   	NR      	NR      
+90  	55.9  	3   	RATTLE (repeat 2)	lure    	0.519	NR  	1   	NR      	NR      
+91  	56.5  	13  	DRUM (repeat 4)	lure    	0.32	NR  	1   	NR      	NR      
+92  	56.9  	9   	NOTE (repeat 7)	lure    	0.563	NR  	1   	NR      	NR      
+93  	57.6  	14  	STAPLE (repeat 7)	lure    	0.453	NR  	1   	NR      	NR      
+94  	58.1  	20  	CRANBERRY 	fruit   	0.95	0.722	1   	target  	target  
+95  	59.1  	2   	POLE (repeat 7)	lure    	0.361	NR  	1   	NR      	NR      
+96  	59.6  	17  	ANCHOR (repeat 5)	lure    	0.413	NR  	1   	NR      	NR      
+97  	60.1  	16  	PADDLE (repeat 5)	lure    	0.482	NR  	1   	NR      	NR      
+98  	60.6  	5   	GLASS (repeat 3)	lure    	0.6 	NR  	1   	NR      	NR      
+99  	61.3  	6   	TICKET (repeat 6)	lure    	0.264	NR  	1   	NR      	NR      
+100 	61.7  	10  	PUDDLE (repeat 3)	lure    	0.326	NR  	1   	NR      	NR      
+101 	62.1  	5   	GLASS (repeat 4)	lure    	0.315	NR  	1   	NR      	NR      
+102 	62.5  	14  	STAPLE (repeat 8)	lure    	0.297	NR  	1   	NR      	NR      
+103 	62.8  	7   	PAINT (repeat 10)	lure    	0.35	NR  	1   	NR      	NR      
+104 	63.3  	8   	SHIRT (repeat 8)	lure    	0.295	NR  	1   	NR      	NR      
+105 	63.7  	15  	EASEL (repeat 4)	lure    	0.501	NR  	1   	NR      	NR      
+106 	64.2  	14  	STAPLE (repeat 9)	lure    	0.365	NR  	1   	NR      	NR      
+107 	64.7  	9   	NOTE (repeat 8)	lure    	0.561	NR  	1   	NR      	NR      
+108 	65.3  	14  	STAPLE (repeat 10)	lure    	0.483	NR  	1   	NR      	NR      
+109 	65.9  	4   	BRUSH (repeat 6)	lure    	0.471	NR  	1   	NR      	NR      
+110 	66.5  	16  	PADDLE (repeat 6)	lure    	0.643	NR  	1   	NR      	NR      
+111 	67.2  	3   	RATTLE (repeat 3)	lure    	0.58	NR  	1   	NR      	NR      
+112 	67.9  	6   	TICKET (repeat 7)	lure    	0.33	NR  	1   	NR      	NR      
+113 	68.3  	1   	DENT (repeat 7)	lure    	0.59	NR  	1   	NR      	NR      
+114 	69    	15  	EASEL (repeat 5)	lure    	0.495	NR  	1   	NR      	NR      
+115 	69.5  	6   	TICKET (repeat 8)	lure    	0.265	NR  	1   	NR      	NR      
+116 	69.9  	9   	NOTE (repeat 9)	lure    	0.452	NR  	1   	NR      	NR      
+117 	70.4  	21  	BANANA    	fruit   	0.95	0.669	1   	target  	target  
+118 	71.5  	17  	ANCHOR (repeat 6)	lure    	0.322	NR  	1   	NR      	NR      
+119 	71.9  	15  	EASEL (repeat 6)	lure    	0.445	NR  	1   	NR      	NR      
+120 	72.4  	2   	POLE (repeat 8)	lure    	0.624	NR  	1   	NR      	NR      
+121 	73.1  	1   	DENT (repeat 8)	lure    	0.522	NR  	1   	NR      	NR      
+122 	73.7  	7   	PAINT (repeat 11)	lure    	0.391	NR  	1   	NR      	NR      
+123 	74.2  	4   	BRUSH (repeat 7)	lure    	0.303	NR  	1   	NR      	NR      
+124 	74.6  	9   	NOTE (repeat 10)	lure    	0.398	NR  	1   	NR      	NR      
+125 	75.1  	15  	EASEL (repeat 7)	lure    	0.655	NR  	1   	NR      	NR      
+126 	75.8  	3   	RATTLE (repeat 4)	lure    	0.469	NR  	1   	NR      	NR      
+127 	76.4  	17  	ANCHOR (repeat 7)	lure    	0.363	NR  	1   	NR      	NR      
+128 	76.8  	3   	RATTLE (repeat 5)	lure    	0.544	NR  	1   	NR      	NR      
+129 	77.4  	16  	PADDLE (repeat 7)	lure    	0.492	NR  	1   	NR      	NR      
+130 	78    	2   	POLE (repeat 9)	lure    	0.549	NR  	1   	NR      	NR      
+131 	78.6  	4   	BRUSH (repeat 8)	lure    	0.525	NR  	1   	NR      	NR      
+132 	79.2  	13  	DRUM (repeat 5)	lure    	0.368	NR  	1   	NR      	NR      
+133 	79.7  	2   	POLE (repeat 10)	lure    	0.513	NR  	1   	NR      	NR      
+134 	80.3  	11  	NAIL (repeat 2)	lure    	0.516	NR  	1   	NR      	NR      
+135 	80.9  	17  	ANCHOR (repeat 8)	lure    	0.696	NR  	1   	NR      	NR      
+136 	81.7  	5   	GLASS (repeat 5)	lure    	0.325	NR  	1   	NR      	NR      
+137 	82.1  	7   	PAINT (repeat 12)	lure    	0.452	NR  	1   	NR      	NR      
+138 	82.6  	2   	POLE (repeat 11)	lure    	0.687	NR  	1   	NR      	NR      
+139 	83.4  	6   	TICKET (repeat 9)	lure    	0.451	NR  	1   	NR      	NR      
+140 	83.9  	10  	PUDDLE (repeat 4)	lure    	0.396	NR  	1   	NR      	NR      
+141 	84.4  	14  	STAPLE (repeat 11)	lure    	0.451	NR  	1   	NR      	NR      
+142 	84.9  	1   	DENT (repeat 9)	lure    	0.58	NR  	1   	NR      	NR      
+143 	85.6  	4   	BRUSH (repeat 9)	lure    	0.451	NR  	1   	NR      	NR      
+144 	86.1  	14  	STAPLE (repeat 12)	lure    	0.614	NR  	1   	NR      	NR      
+145 	86.8  	1   	DENT (repeat 10)	lure    	0.451	NR  	1   	NR      	NR      
+146 	87.4  	6   	TICKET (repeat 10)	lure    	0.334	NR  	1   	NR      	NR      
+147 	87.8  	7   	PAINT (repeat 13)	lure    	0.452	NR  	1   	NR      	NR      
+148 	88.3  	3   	RATTLE (repeat 6)	lure    	0.555	NR  	1   	NR      	NR      
+149 	89    	11  	NAIL (repeat 3)	lure    	0.452	NR  	1   	NR      	NR      
+150 	89.5  	14  	STAPLE (repeat 13)	lure    	0.39	NR  	1   	NR      	NR      
+151 	90    	8   	SHIRT (repeat 9)	lure    	0.452	NR  	1   	NR      	NR      
+152 	90.6  	14  	STAPLE (repeat 14)	lure    	0.276	NR  	1   	NR      	NR      
+153 	91    	6   	TICKET (repeat 11)	lure    	0.451	NR  	1   	NR      	NR      
+154 	91.5  	21  	BANANA (repeat 1)	fruit   	0.95	0.691	1   	target  	target  
+155 	92.5  	7   	PAINT (repeat 14)	lure    	0.582	NR  	1   	NR      	NR      
+156 	93.2  	17  	ANCHOR (repeat 9)	lure    	0.299	NR  	1   	NR      	NR      
+157 	93.6  	3   	RATTLE (repeat 7)	lure    	0.68	NR  	1   	NR      	NR      
+158 	94.4  	4   	BRUSH (repeat 10)	lure    	0.617	NR  	1   	NR      	NR      
+159 	95.1  	14  	STAPLE (repeat 15)	lure    	0.661	NR  	1   	NR      	NR      
+160 	95.9  	7   	PAINT (repeat 15)	lure    	0.392	NR  	1   	NR      	NR      
+161 	96.3  	17  	ANCHOR (repeat 10)	lure    	0.551	NR  	1   	NR      	NR      
+162 	97    	11  	NAIL (repeat 4)	lure    	0.431	NR  	1   	NR      	NR      
+163 	97.5  	13  	DRUM (repeat 6)	lure    	0.653	NR  	1   	NR      	NR      
+164 	98.3  	17  	ANCHOR (repeat 11)	lure    	0.615	NR  	1   	NR      	NR      
+165 	99    	1   	DENT (repeat 11)	lure    	0.356	NR  	1   	NR      	NR      
+166 	99.4  	4   	BRUSH (repeat 11)	lure    	0.307	NR  	1   	NR      	NR      
+167 	99.8  	7   	PAINT (repeat 16)	lure    	0.632	NR  	1   	NR      	NR      
+168 	100.5 	10  	PUDDLE (repeat 5)	lure    	0.618	NR  	1   	NR      	NR      
+169 	101.2 	3   	RATTLE (repeat 8)	lure    	0.506	NR  	1   	NR      	NR      
+170 	101.9 	16  	PADDLE (repeat 8)	lure    	0.625	NR  	1   	NR      	NR      
+171 	102.6 	3   	RATTLE (repeat 9)	lure    	0.628	NR  	1   	NR      	NR      
+172 	103.3 	1   	DENT (repeat 12)	lure    	0.451	NR  	1   	NR      	NR      
+173 	103.9 	7   	PAINT (repeat 17)	lure    	0.62	NR  	1   	NR      	NR      
+174 	104.6 	17  	ANCHOR (repeat 12)	lure    	0.452	NR  	1   	NR      	NR      
+175 	105.1 	22  	GRAPE     	fruit   	0.95	0.649	1   	target  	target  
+176 	106.2 	1   	DENT (repeat 13)	lure    	0.295	NR  	1   	NR      	NR      
+177 	106.6 	6   	TICKET (repeat 12)	lure    	0.529	NR  	1   	NR      	NR      
+178 	107.2 	3   	RATTLE (repeat 10)	lure    	0.413	NR  	1   	NR      	NR      
+179 	107.7 	10  	PUDDLE (repeat 6)	lure    	0.612	NR  	1   	NR      	NR      
+180 	108.4 	8   	SHIRT (repeat 10)	lure    	0.295	NR  	1   	NR      	NR      
+181 	108.8 	9   	NOTE (repeat 11)	lure    	0.342	NR  	1   	NR      	NR      
+182 	109.3 	1   	DENT (repeat 14)	lure    	0.698	NR  	1   	NR      	NR      
+183 	110.1 	5   	GLASS (repeat 6)	lure    	0.581	NR  	1   	NR      	NR      
+184 	110.7 	14  	STAPLE (repeat 16)	lure    	0.501	NR  	1   	NR      	NR      
+185 	111.3 	17  	ANCHOR (repeat 13)	lure    	0.275	NR  	1   	NR      	NR      
+186 	111.7 	10  	PUDDLE (repeat 7)	lure    	0.311	NR  	1   	NR      	NR      
+187 	112.1 	4   	BRUSH (repeat 12)	lure    	0.546	NR  	1   	NR      	NR      
+188 	112.8 	10  	PUDDLE (repeat 8)	lure    	0.601	NR  	1   	NR      	NR      
+189 	113.5 	7   	PAINT (repeat 18)	lure    	0.478	NR  	1   	NR      	NR      
+190 	114.1 	10  	PUDDLE (repeat 9)	lure    	0.427	NR  	1   	NR      	NR      
+191 	114.6 	17  	ANCHOR (repeat 14)	lure    	0.695	NR  	1   	NR      	NR      
+192 	115.4 	3   	RATTLE (repeat 11)	lure    	0.582	NR  	1   	NR      	NR      
+193 	116.1 	16  	PADDLE (repeat 9)	lure    	0.278	NR  	1   	NR      	NR      
+194 	116.5 	4   	BRUSH (repeat 13)	lure    	0.69	NR  	1   	NR      	NR      
+195 	117.3 	6   	TICKET (repeat 13)	lure    	0.452	NR  	1   	NR      	NR      
+196 	117.8 	9   	NOTE (repeat 12)	lure    	0.64	NR  	1   	NR      	NR      
+197 	118.5 	8   	SHIRT (repeat 11)	lure    	0.452	NR  	1   	NR      	NR      
+198 	119.1 	15  	EASEL (repeat 8)	lure    	0.456	NR  	1   	NR      	NR      
+199 	119.6 	16  	PADDLE (repeat 10)	lure    	0.452	NR  	1   	NR      	NR      
+200 	120.2 	3   	RATTLE (repeat 12)	lure    	0.287	NR  	1   	NR      	NR      
+201 	120.6 	6   	TICKET (repeat 14)	lure    	0.452	NR  	1   	NR      	NR      
+202 	121.1 	23  	PINEAPPLE 	fruit   	0.951	0.673	1   	target  	target  
+203 	122.2 	7   	PAINT (repeat 19)	lure    	0.698	NR  	1   	NR      	NR      
+204 	123   	16  	PADDLE (repeat 11)	lure    	0.493	NR  	1   	NR      	NR      
+205 	123.6 	15  	EASEL (repeat 9)	lure    	0.329	NR  	1   	NR      	NR      
+206 	124   	1   	DENT (repeat 15)	lure    	0.256	NR  	1   	NR      	NR      
+207 	124.3 	11  	NAIL (repeat 5)	lure    	0.302	NR  	1   	NR      	NR      
+208 	124.8 	9   	NOTE (repeat 13)	lure    	0.499	NR  	1   	NR      	NR      
+209 	125.4 	5   	GLASS (repeat 7)	lure    	0.331	NR  	1   	NR      	NR      
+210 	125.8 	4   	BRUSH (repeat 14)	lure    	0.492	NR  	1   	NR      	NR      
+211 	126.4 	3   	RATTLE (repeat 13)	lure    	0.535	NR  	1   	NR      	NR      
+212 	127.1 	9   	NOTE (repeat 14)	lure    	0.43	NR  	1   	NR      	NR      
+213 	127.6 	2   	POLE (repeat 12)	lure    	0.415	NR  	1   	NR      	NR      
+214 	128.1 	11  	NAIL (repeat 6)	lure    	0.3 	NR  	1   	NR      	NR      
+215 	128.5 	2   	POLE (repeat 13)	lure    	0.613	NR  	1   	NR      	NR      
+216 	129.2 	13  	DRUM (repeat 7)	lure    	0.681	NR  	1   	NR      	NR      
+217 	130   	8   	SHIRT (repeat 12)	lure    	0.468	NR  	1   	NR      	NR      
+218 	130.6 	2   	POLE (repeat 14)	lure    	0.453	NR  	1   	NR      	NR      
+219 	131.1 	8   	SHIRT (repeat 13)	lure    	0.567	NR  	1   	NR      	NR      
+220 	131.7 	1   	DENT (repeat 16)	lure    	0.487	NR  	1   	NR      	NR      
+221 	132.3 	17  	ANCHOR (repeat 15)	lure    	0.431	NR  	1   	NR      	NR      
+222 	132.8 	7   	PAINT (repeat 20)	lure    	0.692	NR  	1   	NR      	NR      
+223 	133.6 	11  	NAIL (repeat 7)	lure    	0.675	NR  	1   	NR      	NR      
+224 	134.4 	6   	TICKET (repeat 15)	lure    	0.259	NR  	1   	NR      	NR      
+225 	134.8 	7   	PAINT (repeat 21)	lure    	0.536	NR  	1   	NR      	NR      
+226 	135.4 	6   	TICKET (repeat 16)	lure    	0.631	NR  	1   	NR      	NR      
+227 	136.2 	5   	GLASS (repeat 8)	lure    	0.687	NR  	1   	NR      	NR      
+228 	137   	15  	EASEL (repeat 10)	lure    	0.579	NR  	1   	NR      	NR      
+229 	137.7 	8   	SHIRT (repeat 14)	lure    	0.519	NR  	1   	NR      	NR      
+230 	138.3 	13  	DRUM (repeat 8)	lure    	0.653	NR  	1   	NR      	NR      
+231 	139.1 	16  	PADDLE (repeat 12)	lure    	0.674	NR  	1   	NR      	NR      
+232 	139.8 	11  	NAIL (repeat 8)	lure    	0.301	NR  	1   	NR      	NR      
+233 	140.3 	5   	GLASS (repeat 9)	lure    	0.35	NR  	1   	NR      	NR      
+234 	140.7 	6   	TICKET (repeat 17)	lure    	0.525	NR  	1   	NR      	NR      
+235 	141.4 	8   	SHIRT (repeat 15)	lure    	0.634	NR  	1   	NR      	NR      
+236 	142.1 	7   	PAINT (repeat 22)	lure    	0.388	NR  	1   	NR      	NR      
+237 	142.6 	3   	RATTLE (repeat 14)	lure    	0.594	NR  	1   	NR      	NR      
+238 	143.3 	14  	STAPLE (repeat 17)	lure    	0.316	NR  	1   	NR      	NR      
+239 	143.7 	17  	ANCHOR (repeat 16)	lure    	0.436	NR  	1   	NR      	NR      
