@@ -57,8 +57,16 @@ mot_realtime04MB(SUBJECT,DESCRIPTION, [], 0, 0);
 mot_realtime04MB(SUBJECT,ASSOCIATES, [], 0, 0); 
 
 %% now convert recog to cell
-behavioral_dir = ['BehavioralData/' num2str(SUBJECT) '/']
-r = dir(fullfile(behavioral_dir, ['_RECOG' '*.mat']));
-r = load(fullfile(behavioral_dir,r(end).name));
-trials = table2cell(r.datastruct.trials);
-save([behavioral_dir '/' 'recogcell.mat'],'trials')
+subjects = [4:7];
+for s = 1:length(subjects)
+    behavioral_dir = ['BehavioralData/' num2str(SUBJECT) '/']
+    r = dir(fullfile(behavioral_dir, ['_RECOG' '*.mat']));
+    r = load(fullfile(behavioral_dir,r(end).name));
+    trials = table2cell(r.datastruct.trials);
+    stimID = cell2mat(trials(:,8));
+    cond = cell2mat(trials(:,9));
+    acc = cell2mat(trials(:,11));
+    rt = cell2mat(trials(:,13));
+    cresp = cell2mat(trials(:,22));
+    save([behavioral_dir '/' 'recogcell.mat'],'stimID', 'cond', 'acc', 'rt', 'cresp')
+end

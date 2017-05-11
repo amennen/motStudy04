@@ -66,4 +66,4 @@ cond = cell2mat(trials(:,9));
 acc = cell2mat(trials(:,11));
 rt = cell2mat(trials(:,13));
 cresp = cell2mat(trials(:,22));
-save([behavioral_dir '/' 'recogcell.mat'],'trials')
+save([behavioral_dir '/' 'recogcell.mat'],'stimID', 'cond', 'acc', 'rt', 'cresp')
