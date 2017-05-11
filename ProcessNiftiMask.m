@@ -27,14 +27,14 @@ addpath(genpath(multipath));
 setenv('FSLOUTPUTTYPE','NIFTI_GZ');
 
 % inputs (eventually function)
-subjNum = 6;
+subjNum = 7;
 %subjDate = '4-5-17';
 subjDate = NaN;
 runNum = 1;
-highresScan = 2;
-APScan = 3;
-PAScan = 4;
-functionalScan = 5;
+highresScan = 3%2;
+APScan = 4%3;
+PAScan = 5%4;
+functionalScan = 6%5;
 
 % set up this subject's paths
 projectName = 'motStudy04';
@@ -181,7 +181,7 @@ end
 
 % brain extract functional scan to make sure we stay inside the brain of
 % the subject!
-unix(sprintf('%sbet %s.nii.gz %s_brain -r 100',fslpath,functionalFN_RE,functionalFN_RE)); % check that this is okay!
+unix(sprintf('%sbet %s.nii.gz %s_brain -R',fslpath,functionalFN_RE,functionalFN_RE)); % check that this is okay!
 % now unzip and convert to load into matlab
 %unzip, if necessary
 if exist(sprintf('%s.nii.gz',functionalFN_RE),'file')
