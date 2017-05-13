@@ -1818,3 +1818,47 @@ SESSION 10 ended 10-May-2017 13:15:41 for SUBJECT number 8
 
 
 ******************************************************************************
+
+SESSION 12 initiated 11-May-2017 14:08:52 for SUBJECT number 8
+
+session	trial	pair	onset	dur	cue         	associate   
+12	1	39	2002  	2002  	POWDER      	pico03.jpg  
+12	2	29	10002 	2001  	DUST        	pici25.jpg  
+12	3	25	18003 	2001  	MIRROR      	pico12.jpg  
+12	4	43	26003 	2001  	PAGE        	pici03.jpg  
+12	5	26	34004 	2001  	SPONGE      	pici11.jpg  
+12	6	40	42005 	2001  	BROOM       	pici08.jpg  
+12	7	37	50005 	2001  	PURSE       	pici12.jpg  
+12	8	30	58006 	2001  	CHALK       	pico21.jpg  
+12	9	44	66006 	2001  	PLUG        	pico28.jpg  
+12	10	31	74007 	2001  	DRILL       	pico29.jpg  
+12	11	36	82007 	2001  	RULER       	pici01.jpg  
+12	12	33	90008 	2001  	PYRAMID     	pici29.jpg  
+12	13	38	98008 	2001  	LENS        	pico08.jpg  
+12	14	27	106009	2001  	HOSE        	pico15.jpg  
+12	15	28	114009	2001  	JAIL        	pici15.jpg  
+12	16	35	122010	2001  	NICKEL      	pici05.jpg  
+12	17	32	130011	2001  	BRACELET    	pici23.jpg  
+12	18	42	138011	2001  	HOOK        	pico02.jpg  
+12	19	41	146012	2001  	FOAM        	pico06.jpg  
+12	20	34	154012	2002  	ROPE        	pico22.jpg  
+
+
+SESSION 12 ended 11-May-2017 14:11:46 for SUBJECT number 8
+
+
+
+
+******************************************************************************
+
+
+SESSION 25 ended 11-May-2017 16:13:14 for SUBJECT number 8
+
+
+
+SESSION 26 ended 11-May-2017 16:16:04 for SUBJECT number 8
+
+
+
+
+******************************************************************************
