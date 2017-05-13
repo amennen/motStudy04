@@ -2,7 +2,7 @@
 %%fmri session
 %first these are all the session numbers
 
-SUBJECT = 7; %experimental subject number
+SUBJECT = 8; %experimental subject number
 prev = 0; %if today's date (0) or previous date (1)
 scanNow = 1; %if using triggers (1)
 runNum = 1; %what number subject they are today
@@ -72,7 +72,7 @@ mot_realtime04MB(SUBJECT,SCAN_PREP,[],scanNum,scanNow)
 % run the AP scan, PA scan, and functional scan here!! then just quit
 % qhenever they finish
 %% SCAN_PREP FILE PROCESS
-% scanNum = 7; %change 
+% scanNum = 5; %change 
 % processNew = 1;
 % ProcessNiftiMask(SUBJECT,processNew,prev,scanNum,runNum) %have it so it waits until it finds the file
 
@@ -90,7 +90,7 @@ mot_realtime04MB(SUBJECT,MOT_LOCALIZER,[],scanNum,scanNow);
 
 %% LOCALIZER FILE PROCESS
 % number of TR's total: 1376 (should be 688 originally)
-scanNum = 7
+scanNum = 6;
 crossval = 0;
 featureSelect = 1;
 LocalizerNiftiFileProcess(SUBJECT,crossval,featureSelect,prev,scanNow,scanNum,MOT_LOCALIZER,runNum)
@@ -102,39 +102,39 @@ mot_realtime04MB(SUBJECT,RECALL1,[],scanNum,scanNow);
 
 %% MOT RUN 1 DISPLAY
 % number of TR's total 452 (should be 226 originally)
-scanNum = 9; %new would be 15
+scanNum = 8; %new would be 15
 mot_realtime04MB(SUBJECT,MOT{1},[],scanNum,scanNow);
 %% MOT RUN 1 FILE PROCESS
-scanNum = 9;%normally 15;
+scanNum = 8;%normally 15;
 blockNum = 1;
 featureSelect = 1;
 RealTimeNiftiFileProcess(SUBJECT,featureSelect,prev,scanNow,scanNum,MOT{1},blockNum,runNum);
 
 %% MOT RUN 2 DISPLAY
-scanNum = 10;
+scanNum = 9;
 mot_realtime04MB(SUBJECT,MOT{2},[],scanNum,scanNow);
 %% MOT RUN 2 FILE PROCESS
-scanNum = 10;
+scanNum = 9;
 featureSelect = 1;
 blockNum = 2;
 RealTimeNiftiFileProcess(SUBJECT,featureSelect,prev,scanNow,scanNum,MOT{2},blockNum,runNum);
 
 %% MOT RUN 3 DISPLAY
-scanNum = 11;
+scanNum = 10;
 mot_realtime04MB(SUBJECT,MOT{3},[],scanNum,scanNow);
 %% MOT RUN 3 FILE PROCESS
-scanNum = 11;
+scanNum = 10;
 featureSelect = 1;
 blockNum = 3;
 RealTimeNiftiFileProcess(SUBJECT,featureSelect,prev,scanNow,scanNum,MOT{3},blockNum,runNum);
 %% RECALL 2
-scanNum = 12;
+scanNum = 11;
 mot_realtime04MB(SUBJECT,RECALL2,[],scanNum,scanNow);
 %% ANALYZE RECALL DATA
 % do for recall 1 and recall 2
 makeFile = 1;
-scanNum1 = 8;
-scanNum2 = 12;
+scanNum1 = 7;
+scanNum2 = 11;
 featureSelect = 1;
 if prev
    date = '2-1-17';

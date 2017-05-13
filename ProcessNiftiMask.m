@@ -27,14 +27,14 @@ addpath(genpath(multipath));
 setenv('FSLOUTPUTTYPE','NIFTI_GZ');
 
 % inputs (eventually function)
-subjNum = 7;
+subjNum = 8;
 %subjDate = '4-5-17';
 subjDate = NaN;
 runNum = 1;
-highresScan = 3%2;
-APScan = 4%3;
-PAScan = 5%4;
-functionalScan = 6%5;
+highresScan = 2;
+APScan = 3;
+PAScan = 4;
+functionalScan = 5;
 
 % set up this subject's paths
 projectName = 'motStudy04';
@@ -67,7 +67,7 @@ unix(sprintf('%sbxh2analyze --overwrite --analyzetypes --niigz --2niftihdr -s %s
 unix(sprintf('%sbet %s.nii.gz %s_brain.nii.gz -R',fslpath,highresFN_RE,highresFN_RE)) 
 % for dcm2niix the command would be 'dcm2niix dicomdir -f test -o dicomdir -s y dicomdir/001_000007_000008.dcm'
 
-% Register to standard
+% Register to standard=
 unix(sprintf('%sflirt -in %s_brain.nii.gz -ref $FSLDIR/data/standard/MNI152_T1_2mm_brain.nii.gz -out highres2standard -omat highres2standard.mat -cost corratio -dof 12 -searchrx -30 30 -searchry -30 30 -searchrz -30 30 -interp trilinear',fslpath,highresFN_RE));
 unix(sprintf('%sfnirt --iout=highres2standard_head --in=%s.nii.gz --aff=highres2standard.mat --cout=highres2standard_warp --iout=highres2standard --jout=highres2highres_jac --config=T1_2_MNI152_2mm --ref=$FSLDIR/data/standard/MNI152_T1_2mm.nii.gz --refmask=$FSLDIR/data/standard/MNI152_T1_2mm_brain_mask_dil --warpres=10,10,10', fslpath,highresFN_RE));
 unix(sprintf('%sapplywarp -i %s_brain.nii.gz -r $FSLDIR/data/standard/MNI152_T1_2mm_brain.nii.gz -o highres2standard -w highres2standard_warp',fslpath,highresFN_RE));
@@ -159,7 +159,7 @@ unix(sprintf('%sbxh2analyze --overwrite --analyzetypes --niigz --niftihdr -s %s.
 t1 = GetSecs;
 exfunc2highres_mat='example_func2highresTESTSE1';
 highres2exfunc_mat='highres2example_funcTESTSE1';
-%unix(sprintf('%sepi_reg --epi=%s --t1=%s --t1brain=%s_brain --out=%sNOFIELDMAP',fslpath,functionalFN_RE,highresFN_RE,highresFN_RE,exfunc2highres_mat))
+unix(sprintf('%sepi_reg --epi=%s --t1=%s --t1brain=%s_brain --out=%s',fslpath,functionalFN_RE,highresFN_RE,highresFN_RE,exfunc2highres_mat))
 %exfunc2highres_mat='example_func2highres';
 %highres2exfunc_mat='highres2example_func';
 unix(sprintf('%sepi_reg --epi=%s --t1=%s --t1brain=%s_brain --out=%sNOFIELDMAP',fslpath,functionalFN_RE,highresFN_RE,highresFN_RE,exfunc2highres_mat))
