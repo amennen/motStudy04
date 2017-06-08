@@ -165,3 +165,41 @@ set(findall(gcf,'-property','FontSize'),'FontSize',20)
 ylim([0 1])
 
 %print(thisfig, sprintf('%sallrecogAcc.pdf', allplotDir), '-dpdf')
+
+%%
+%% look at descriptive ratings
+subjectVec = [4:8];
+nresp = 3*10;
+allresp = zeros(nresp,4);
+for s = 1:length(subjectVec)
+    subjectNum = subjectVec(s);
+    behavioral_dir = [base_path 'BehavioralData/' num2str(subjectNum) '/'];
+    for i = 1:3
+        SESSION = MOT{i};
+        r = dir(fullfile(behavioral_dir, ['EK' num2str(SESSION) '_' 'SUB'  '*.mat']));
+        r = load(fullfile(behavioral_dir,r(end).name));
+        trials = table2cell(r.datastruct.trials);
+        stimID = cell2mat(trials(:,8));
+        resp = cell2mat(trials(:,12));
+
+        if s == 1 && length(stimID) ~= 40 % then we have to add another row
+            beg = stimID(1:7,:);
+            part2 = stimID(8:end,:);
+            beg(8,:) = stimID(7,:);
+            stimID = [beg;part2];
+            begresp = resp(1:7,:);
+            part2resp = resp(8:end,:);
+            begresp(8,:) = NaN;
+            resp = [begresp;part2resp];
+        end
+        IDmat = reshape(stimID,4,length(stimID)/4)';
+        [~,indSort] = sort(IDmat(:,1));
+        IDorder = IDmat(indSort,:);
+        RESPmat = reshape(resp,4,length(resp)/4)';
+        RESPorder = RESPmat(indSort,:);
+        %allresp((i-1)*10 + 1: i*10,:,s ) = RESPorder;
+    end
+
+   
+    
+end
