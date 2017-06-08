@@ -37,13 +37,24 @@ function [patterns, t] = AnatRecallFileProcess(subjectNum,runNum,scanNum,SESSION
 
 
 %% initialize path prefix for different replyDrive
-
-projectName = 'motStudy03';
+projectName = 'motStudy04';
 setenv('FSLOUTPUTTYPE','NIFTI_GZ');
-
+biac_dir = '/Data1/packages/BIAC_Matlab_R2014a/';
+bxhpath='/opt/BXH/1.11.1/bin/';
+fslpath='/opt/fsl/5.0.9/bin/';
+dcm2path = '/opt/MRICROGL/2-2016/';
+%add necessary package
+if ~exist('readmr','file')
+    addpath(genpath(biac_dir));
+    addpath([biac_dir '/mr/']);
+    addpath([biac_dir '/general/'])
+end
+multipath = '/Data1/code/multibandutils/';
+addpath(genpath(multipath));
 save_dir = ['/Data1/code/' projectName '/data/' num2str(subjectNum) '/']; %this is where she sets the save directory!
 process_dir = ['/Data1/code/' projectName '/data/' num2str(subjectNum) '/' 'reg' '/'];
 code_dir = ['/Data1/code/' projectName '/' 'code' '/']; %change to wherever code is stored
+locPatterns_dir = fullfile(save_dir, 'Localizer/');
 behavioral_dir = ['/Data1/code/' projectName '/' 'code' '/BehavioralData/' num2str(subjectNum) '/'];
 addpath(genpath(code_dir));
 subjectName = [datestr(date,5) datestr(date,7) datestr(date,11) num2str(runNum) '_' projectName];
@@ -52,10 +63,17 @@ dicom_dir = ['/Data1/subjects/' datestr(date,10) datestr(date,5) datestr(date,7)
 %check that dicom_dir exists
 assert(logical(exist(dicom_dir,'dir')));
 fprintf('fMRI files being read from: %s\n',dicom_dir);
+if SESSION == 20 %whatever recall 1 is
+    blockNum = 1;
+else
+    blockNum = 2;
+end
+runHeader = [save_dir 'recallrun' num2str(blockNum)];
+if ~exist(runHeader)
+    mkdir(runHeader);
+end
+cd(runHeader)
 
-
-%get ROI
-imgmat = 64; %image matrix size
 roi_name = 'paraHCG_NOFM';
 temp = load(fullfile(process_dir,[roi_name '_mask' '.mat'])); %should be stretched_brain
 roi = logical(temp.mask_brain);
@@ -79,8 +97,8 @@ GetSecs;
 FWHM = 5;
 cutoff = 160;
 rtData = 2;
-TR = 2;
-shiftTR = 2;
+TR = 1;
+shiftTR = 4/TR;
 %% Block Sequence
 
 patterns.nTRs = size(patterns.regressor.twoCond,2); %already has first 10 removed
@@ -101,10 +119,10 @@ patterns.realtimeLastY = nan(1,numel(roiInds));
 patterns.realtimeVar = nan(1,numel(roiInds));
 normalization_const = zeros(1,numel(roiInds));
 if SESSION == 20 %whatever recall 1 is
-    block = 1;
+    blockNum = 1;
     patterns.block = ones(1,patterns.nTRs);
 else
-    block = 2;
+    blockNum = 2;
     patterns.block = 2*ones(1,patterns.nTRs);
 end
 %Output Files Setup
@@ -151,11 +169,11 @@ for iTrial = 1:patterns.nTRs % the first 10 TRs have been taken out to detrend
     zscoreConst1 = 1.0/zscoreLen1;
     % increase count of TRs
     %increase the count of TR pulses
-    thisTR = iTrial + 10; %account for taking out TRs
-    while ~patterns.fileAvail(iTrial)
-        [patterns.fileAvail(iTrial) patterns.newFile{iTrial}] = GetSpecificFMRIFile(dicom_dir,scanNum,thisTR);
-        %timing.fileAppear(iTrial) = toc(tstart(iTrial));
-    end
+    thisTR = iTrial + 20; %account for taking out TRs
+%     while ~patterns.fileAvail(iTrial)
+%         [patterns.fileAvail(iTrial) patterns.newFile{iTrial}] = GetSpecificFMRIFile(dicom_dir,scanNum,thisTR);
+%         %timing.fileAppear(iTrial) = toc(tstart(iTrial));
+%     end
     
     %if desired file is recognized, pause for 200ms to complete transfer
     if rtData==1 || exist('reply','var')
@@ -163,9 +181,20 @@ for iTrial = 1:patterns.nTRs % the first 10 TRs have been taken out to detrend
     end
     
     % if file available, load it
-    if (patterns.fileAvail(iTrial))
-        [newVol patterns.timeRead{iTrial}] = ReadFile([dicom_dir patterns.newFile{iTrial}],imgmat,roi); % NTB: only reads top file
+        if ~exist(sprintf('nifti%3.3i_mcf.nii', thisTR));
+            niftiname = sprintf('nifti%3.3i', thisTR);
+            unix(sprintf('%sdcm2niix %s -f %s -o %s -s y %s%s',dcm2path,dicom_dir,niftiname,runHeader,dicom_dir,patterns.newFile{iTrial}))
+            t1 = GetSecs;
+            unix(sprintf('%smcflirt -in %s.nii -reffile %sexfunc_re.nii',fslpath,niftiname,process_dir))
+            niftiname = sprintf('nifti%3.3i_mcf.nii.gz', thisTR);
+        else
+            niftiname = sprintf('nifti%3.3i_mcf.nii', thisTR);
+        end
+        
+        niftidata = readnifti(niftiname);
+        newVol = niftidata(roi);
         patterns.raw(iTrial,:) = newVol;  % keep patterns for later training
+        
         
         if (any(isnan(patterns.raw(iTrial,:)))) && (iTrial>1)
             patterns.fileload(iTrial) = 0; %mark that load failed
@@ -174,7 +203,6 @@ for iTrial = 1:patterns.nTRs % the first 10 TRs have been taken out to detrend
             patterns.fileload(iTrial) = 1;
         end
         
-    end
     %smooth files
     patterns.raw_sm(iTrial,:) = SmoothRealTime(patterns.raw(iTrial,:),roiDims,roiInds,FWHM);
     
@@ -200,7 +228,7 @@ patterns.raw_sm_filt_z = (patterns.raw_sm_filt - repmat(patterns.runMean,size(pa
 preprocTime = toc(preprocStart);  %end timing
 % print training timing and results
 % now save the anat files
-save(sprintf('%s%s_Recall%iPatterns', save_dir,roi_name,block),'patterns');
+save(sprintf('%s%s_Recall%iPatterns', save_dir,roi_name,blockNum),'patterns');
 fprintf(dataFile,'data preprocessing time: \t%.3f\n',preprocTime);
 fprintf('data preprocessing time: \t%.3f\n',preprocTime);
 end

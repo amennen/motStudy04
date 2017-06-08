@@ -1676,7 +1676,7 @@ switch SESSION
         % stimulus presentation parameters
         instant = 0;
         num_dots = 5; %where set total dots
-        stim.square_dims = round([20 20] ./ mean(WINDOWSIZE.degrees_per_pixel)); % 20ï¿½ visual angle in pixels
+        stim.square_dims = round([20 20] ./ mean(WINDOWSIZE.degrees_per_pixel)); % 20Ã¯Â¿Â½ visual angle in pixels
         stim.dot_diameter = 1.5 / mean(WINDOWSIZE.degrees_per_pixel); % 1.5 visual angle in pixels
 %         if SESSION < MOT{1}
 %             stim.trialDur = 20*SPEED;
@@ -2194,7 +2194,7 @@ switch SESSION
                     nextTRTime = timing.plannedOnsets.motion(nextTRPos,stim.trial);
                     if abs(GetSecs - nextTRTime) <= 0.050
                         %look for speed update here
-                        TRcounter = TRcounter + 1; %update TR count (initialized at 0): so it's the TR that we're currently ON
+                        TRcounter = nextTRpos; %update TR count (initialized at 0): so it's the TR that we're currently ON
                         thisTR = allMotionTRs(TRcounter,n);
                         waitForPulse = true;
                         if ismember(TRcounter,promptTRs)
@@ -2204,9 +2204,9 @@ switch SESSION
                             train.onset(prompt_counter) = GetSecs;
                             check(prompt_counter) = 1;
                         elseif ismember(TRcounter-2,promptTRs) && check(prompt_counter)
-                             [train.acc(prompt_counter), train.resp{prompt_counter}, ~, train.rt(prompt_counter), ~, train.resp_str{prompt_counter}] = ...
-                            multiChoice(queueCheck, embedded_keys, embedded_scale, embedded_cresp, GetSecs, DEVICE, [],sum(keys.map(3:5,:)),subj_map);
-                        
+                            [train.acc(prompt_counter), train.resp{prompt_counter}, ~, train.rt(prompt_counter), ~, train.resp_str{prompt_counter}] = ...
+                                multiChoice(queueCheck, embedded_keys, embedded_scale, embedded_cresp, GetSecs, DEVICE, [],sum(keys.map(3:5,:)),subj_map);
+                            
                             if isempty(train.resp{prompt_counter}), train.resp{prompt_counter} = nan; end % timeout
                             if isnan(train.resp{prompt_counter}),
                                 train.resp_str{prompt_counter} = nan;
@@ -2228,6 +2228,17 @@ switch SESSION
                         % only goes into that loop once
                         remainingTR(nextTRPos) = 0;
                         stim.motionSpeed(TRcounter,n) = current_speed; %this is the speed at the onset of the TR
+                    elseif GetSecs - nextTRTime > 0.050
+                        % then we actually missed the current TR
+                        % counter--look for the next
+                        % check that we didn't just miss the trigger
+                        diffT = (GetSecs - timing.plannedOnsets.motion(:,stim.trial));
+                        %[~,correctTR] = min(abs(GetSecs - timing.plannedOnsets.motion(:,stim.trial)));
+                        % this will go towards the last TR that we passed
+                        correctTR = find(floor(diffT)==0);
+                        TRcounter = correctTR;
+                        thisTR = allMotionTRs(TRcounter,n);
+                        remainingTR(1:correctTR) = 0;
                     end
                 end
                 

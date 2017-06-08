@@ -27,9 +27,8 @@ addpath(genpath(multipath));
 setenv('FSLOUTPUTTYPE','NIFTI_GZ');
 
 % inputs (eventually function)
-subjNum = 8;
-%subjDate = '4-5-17';
-subjDate = NaN;
+subjNum = 7;
+subjDate = '4-19-17';
 runNum = 1;
 highresScan = 2;
 APScan = 3;
@@ -44,7 +43,6 @@ process_dir = [save_dir 'reg' '/'];
 roi_dir = ['/Data1/code/' projectName '/data/'];
 code_dir = ['/Data1/code/' projectName '/' 'code' '/']; %change to wherever code is stored
 if ~isnan(subjDate)
-    subjDate = '5-10-17';
     subjectName = [datestr(subjDate,5) datestr(subjDate,7) datestr(subjDate,11) num2str(runNum) '_' projectName];
     dicom_dir = ['/Data1/subjects/' datestr(subjDate,10) datestr(subjDate,5) datestr(subjDate,7) '.' subjectName '.' subjectName '/'];
 else
@@ -56,15 +54,26 @@ if ~exist(process_dir)
     mkdir(process_dir)
 end
 cd(process_dir)
-
-%% Process t1-weighted MPRAGE
+%% Names of all the files
 highresFN = 'highres';
 highresFN_RE = 'highres_re';
+fieldmapfn = 'all_SE';
+functionalFN = 'exfunc';
+functionalFN_RE = 'exfunc_re';
+Ext = 'CORR';
+exfunc2highres_mat=['example_func2highres' Ext];
+highres2exfunc_mat=['highres2example_func' Ext];
+roi_name = 'retrieval';
+%roi_name = 'paraHCG';
+%roi_name = 'wholebrain';
+maskExt = ['exfunc' Ext];
+%% Process t1-weighted MPRAGE
+
 highresfiles_genstr = sprintf('%s001_0000%s_0*',dicom_dir,num2str(highresScan,'%2.2i')); %general string for ALL mprage files**
 unix(sprintf('%sdicom2bxh %s %s.bxh',bxhpath,highresfiles_genstr,highresFN));
 unix(sprintf('%sbxhreorient --orientation=LAS %s.bxh %s.bxh',bxhpath,highresFN,highresFN_RE));
 unix(sprintf('%sbxh2analyze --overwrite --analyzetypes --niigz --2niftihdr -s %s.bxh %s',bxhpath,highresFN_RE,highresFN_RE))
-unix(sprintf('%sbet %s.nii.gz %s_brain.nii.gz -R',fslpath,highresFN_RE,highresFN_RE)) 
+unix(sprintf('%sbet %s.nii.gz %s_brain2.nii.gz -c 88 128 138 -r 85 -f .48',fslpath,highresFN_RE,highresFN_RE)) 
 % for dcm2niix the command would be 'dcm2niix dicomdir -f test -o dicomdir -s y dicomdir/001_000007_000008.dcm'
 
 % Register to standard=
@@ -96,7 +105,6 @@ if onlyFirstTR % only use first TR for each spin echo to save time
     % use topup to calculate differences
     % now combine them into a single image
     time1 = GetSecs;
-    fieldmapfn = 'all_SE';
     unix(sprintf('%sfslmerge -t %s.nii.gz %s.nii.gz %s.nii.gz', fslpath,fieldmapfn,AP_re,PA_re))
     
     % now run topup!
@@ -146,37 +154,112 @@ else
     time2 = GetSecs;
     topuptime = time2-time1;
 end
+
+%% apply phase map correction outside of FEAT/epi_reg
+% for subject 7 everything is magnitude2 for subject 8 everything is
+% highres2
+
+% pre: need to binarize mag_brain file
+unix(sprintf('%sfslmaths magnitude_brain.nii.gz -bin magnitude_mask.nii.gz', fslpath))
+
+% 1. convert the phase map (topup_fout) into pixel shift map
+unix(sprintf('%sfslmaths topup_fout.nii.gz -mul 0.02964 shiftmap.nii.gz', fslpath))
+
+% 2. convert the pixel shift-map into deformation field
+unix(sprintf('%sconvertwarp -r magnitude2.nii.gz -s shiftmap.nii.gz -o warpfield', fslpath))
+
+% 3. apply deformation field to example-func EPI, output is B0 corrected epi
+unix(sprintf('%sapplywarp -i %s.nii.gz -o %s_corr.nii.gz -r magnitude.nii.gz -w warpfield.nii.gz -m magnitude_mask.nii.gz', fslpath, functionalFN_RE,functionalFN_RE))
+
+% NOW USE EXFUNC_RE_CORR INTO EPI_REG
+unix(sprintf('%sepi_reg --epi=%s_corr.nii.gz --t1=highres_re.nii.gz --t1brain=highres_re_brain.nii.gz --out=%s',fslpath,functionalFN_RE,exfunc2highres_mat))
+
+%run convertxm and apply warp now!
+unix(sprintf('%sconvert_xfm -inverse -omat %s.mat %s.mat',fslpath,highres2exfunc_mat,exfunc2highres_mat));
+
+% now register mask to all data
+unix(sprintf('%sapplywarp -i %s%s.nii.gz -r %s_corr.nii.gz -o %s_%s.nii.gz -w standard2highres_warp.nii.gz --postmat=%s.mat',fslpath,roi_dir,roi_name,functionalFN_RE,roi_name,maskExt,highres2exfunc_mat));
+
+% now get into uncorrect B0 space
+unix(sprintf('%sinvwarp -w warpfield.nii.gz -o invwarpfield.nii.gz -r %s.nii.gz',fslpath, functionalFN_RE))
+
+% now go from ROI corrected to ROI uncorrected
+unix(sprintf('%sapplywarp -i %s_%s.nii.gz -o %s_%s_UN.nii.gz -r %s.nii.gz -w invwarpfield.nii.gz -m magnitude_mask.nii.gz --interp=nn',fslpath,roi_name,maskExt,roi_name,maskExt,functionalFN_RE))
+
+if exist(sprintf('%s_%s_UN.nii.gz',roi_name,maskExt),'file')
+    unix(sprintf('gunzip %s_%s_UN.nii.gz',roi_name,maskExt));
+end
+
+% brain extract functional scan to make sure we stay inside the brain of
+% the subject!
+% now unzip and convert to load into matlab
+%unzip, if necessary
+
+
+% check that i get the same things
+% unix(sprintf('%sapplywarp -i %s_corr.nii.gz -o exfunc-inv -r %s.nii.gz -w invwarpfield.nii.gz -m magnitude_mask.nii.gz',fslpath,functionalFN_RE, functionalFN_RE))
+
+% read in nifti files to make sure
+% orig = readnifti(sprintf('%s.nii',functionalFN_RE));
+% orig_reversed = readnifti('exfunc-inv.nii.gz');
+% for i = 1:48
+%     thisorig = orig(:,:,i);
+%     new = orig_reversed(:,:,i);
+%     [r,col] = find(thisorig~=new);
+%     figure;
+%     imagesc(new);
+%     colorbar;
+%     hold on;
+%     plot(r,col,'k.', 'MarkerSize', 10)
+%     
+% end
 %% Process example epi file
 fileN = 8; % we can choose 10 later
-functionalFN = 'exfunc';
-functionalFN_RE = 'exfunc_re';
+
 exfunc_str = sprintf('%s001_0000%s_0000%s.dcm',dicom_dir,num2str(functionalScan,'%2.2i'),num2str(fileN,'%2.2i')); %general string for ALL mprage files**
 unix(sprintf('%sdicom2bxh %s %s.bxh',bxhpath,exfunc_str,functionalFN));
 unix(sprintf('%sbxhreorient --orientation=LAS %s.bxh %s.bxh',bxhpath,functionalFN,functionalFN_RE));
 unix(sprintf('%sbxh2analyze --overwrite --analyzetypes --niigz --niftihdr -s %s.bxh %s',bxhpath,functionalFN_RE,functionalFN_RE))
 
+%if you want to make a 4d 
+make4d = 0;
+if make4d
+    functional4DFN = 'exfunc4D';
+    functional4DFN_RE = 'exfunc4D_re';
+    exfunc4D_str = sprintf('%s001_0000%s_0*.dcm',dicom_dir,num2str(functionalScan,'%2.2i')); %general string for ALL mprage files**
+    unix(sprintf('%sdicom2bxh %s %s.bxh',bxhpath,exfunc4D_str,functional4DFN));
+    unix(sprintf('%sbxhreorient --orientation=LAS %s.bxh %s.bxh',bxhpath,functional4DFN,functional4DFN_RE));
+    unix(sprintf('%sbxh2analyze --overwrite --analyzetypes --niigz --niftihdr -s %s.bxh %s',bxhpath,functional4DFN_RE,functional4DFN_RE))
+end
 % now register to highres!
 t1 = GetSecs;
-exfunc2highres_mat='example_func2highresTESTSE1';
-highres2exfunc_mat='highres2example_funcTESTSE1';
-unix(sprintf('%sepi_reg --epi=%s --t1=%s --t1brain=%s_brain --out=%s',fslpath,functionalFN_RE,highresFN_RE,highresFN_RE,exfunc2highres_mat))
-%exfunc2highres_mat='example_func2highres';
-%highres2exfunc_mat='highres2example_func';
-unix(sprintf('%sepi_reg --epi=%s --t1=%s --t1brain=%s_brain --out=%sNOFIELDMAP',fslpath,functionalFN_RE,highresFN_RE,highresFN_RE,exfunc2highres_mat))
 
-%unix(sprintf('%sepi_reg --epi=%s.nii.gz --t1=%s.nii.gz --t1brain=%s_brain.nii.gz --out=%s3 --fmap=fieldmap_rads3 --fmapmag=magnitude3 --fmapmagbrain=magnitude3_brain --echospacing=0.00035 --pedir=y',fslpath,functionalFN_RE,highresFN_RE,highresFN_RE,exfunc2highres_mat))
-unix(sprintf('%sepi_reg --epi=%s.nii.gz --t1=%s.nii.gz --t1brain=%s_brain.nii.gz --out=%s --fmap=fieldmap_rads --fmapmag=magnitude --fmapmagbrain=magnitude_brain --echospacing=0.00035 --pedir=y',fslpath,functionalFN_RE,highresFN_RE,highresFN_RE,exfunc2highres_mat))
+% NO FIELD MAP VERSION
+unix(sprintf('%sepi_reg --epi=%s.nii.gz --t1=%s.nii.gz --t1brain=%s_brain.nii.gz --out=%s',fslpath,functionalFN_RE,highresFN_RE,highresFN_RE,exfunc2highres_mat))
+
+unix(sprintf('%sepi_reg --epi=%s.nii.gz --t1=highres2_re.nii.gz --t1brain=highres2_re_brain.nii.gz --out=%s',fslpath,functionalFN_RE,exfunc2highres_mat))
+
+
+% first get the previous mag ready
+unix(sprintf('3dresample -input magnitude.nii.gz -prefix magnitude-up.nii.gz -master %s.nii.gz', highresFN_RE));
+unix(sprintf('3dresample -input magnitude_brain.nii.gz -prefix magnitude-up_brain.nii.gz -master %s.nii.gz', highresFN_RE));
+unix(sprintf('3dresample -input fieldmap_rads.nii.gz -prefix fieldmap_rads-up.nii.gz -master %s.nii.gz', highresFN_RE));
+
+
+%unix(sprintf('%sepi_reg --epi=%s.nii.gz --t1=%s.nii.gz --t1brain=%s_brain.nii.gz --out=%s --fmap=fieldmap_rads --fmapmag=magnitude --fmapmagbrain=magnitude_brain --echospacing=0.00035 --pedir=y',fslpath,functionalFN_RE,highresFN_RE,highresFN_RE,exfunc2highres_mat))
+% now do new version with upsampled magnitude
+unix(sprintf('%sepi_reg --epi=%s.nii.gz --t1=%s.nii.gz --t1brain=%s_brain.nii.gz --out=%s --fmap=fieldmap_rads-up --fmapmag=magnitude-up --fmapmagbrain=magnitude_brain-up --echospacing=0.00035 --pedir=y',fslpath,functionalFN_RE,highresFN_RE,highresFN_RE,exfunc2highres_mat))
 
 timefunc2highres = GetSecs-t1;
 unix(sprintf('%sconvert_xfm -inverse -omat %s.mat %s.mat',fslpath,highres2exfunc_mat,exfunc2highres_mat));
 
 % now register mask to all data
-roi_name = 'retrieval';
-unix(sprintf('%sapplywarp -i %s%s.nii.gz -r %s.nii.gz -o %s_exfunc.nii.gz -w standard2highres_warp.nii.gz --postmat=%s.mat',fslpath,roi_dir,roi_name,functionalFN_RE,roi_name,highres2exfunc_mat));
+unix(sprintf('%sapplywarp -i %s%s.nii.gz -r %s.nii.gz -o %s_%s.nii.gz -w standard2highres_warp.nii.gz --postmat=%s.mat',fslpath,roi_dir,roi_name,functionalFN_RE,roi_name,maskExt,highres2exfunc_mat));
+
 % check after here that the applied warp is binary and in the right
 % orientation so we could just apply to nifti files afterwards
-if exist(sprintf('%s_exfunc.nii.gz',roi_name),'file')
-    unix(sprintf('gunzip %s_exfunc.nii.gz',roi_name));
+if exist(sprintf('%s_%s.nii.gz',roi_name,maskExt),'file')
+    unix(sprintf('gunzip %s_%s.nii.gz',roi_name,maskExt));
 end
 
 % brain extract functional scan to make sure we stay inside the brain of
@@ -192,7 +275,8 @@ if exist(sprintf('%s_brain.nii.gz',functionalFN_RE),'file')
 end
 
 %% Now create mask
-niftiFN = sprintf('%s_exfunc.nii',roi_name);
+niftiFN = sprintf('%s_%s.nii',roi_name,maskExt);
+niftiFN = sprintf('%s_%s_UN.nii',roi_name,maskExt); %changed for the corrected version
 maskData = readnifti(niftiFN);
 funcData = readnifti(sprintf('%s_brain.nii',functionalFN_RE));
 
@@ -208,7 +292,10 @@ for j=1:length(mask_indices)
     mask_brain(gX(j),gY(j),gZ(j)) = 1;
 end
 
-% now save mask
+% now save mask-should leave this the same because it's looked for in other
+% codes
+save(fullfile(process_dir, [roi_name '_' Ext '_mask']),'mask_brain')
+
 save(fullfile(process_dir, [roi_name '_mask']),'mask_brain')
 sprintf('done')
 % % test that it's the same thing just not rotated as before
